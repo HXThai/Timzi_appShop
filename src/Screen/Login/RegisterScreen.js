@@ -82,7 +82,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-                    fontFamily: 'Nunito',
+                    
                     width: '87%',
                     height: 40,
                   }}

@@ -125,7 +125,7 @@ const Home = (props) => {
                         style={{
                           height: 45,
                           color: '#000000',
-                          fontFamily: 'Nunito',
+                          
                           borderColor: Color.main,
                           borderWidth: 1,
                           borderRadius: 20,
