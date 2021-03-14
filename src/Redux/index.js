@@ -2,8 +2,14 @@ import {createStore, applyMiddleware, combineReducers} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../Sagas/index';
 
+import homeReducer from './Reducer/homeReducer';
+import loginReducer from './Reducer/loginReducer';
+import orderOnlineReducer from './Reducer/orderOnlineReducer';
+
 const rootReducer = combineReducers({
-  test: require('./TestRedux').reducer,
+  homeReducer,
+  loginReducer,
+  orderOnlineReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

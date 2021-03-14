@@ -80,7 +80,7 @@ const LoginScreen = (props) => {
             }}>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{marginTop: 20}}>
+              style={{marginTop: 0}}>
               {dataPromotion.map((item, index) => {
                 return (
                   <View
@@ -117,18 +117,18 @@ const LoginScreen = (props) => {
                           style={{width: Dimensions.get('window').width - 152}}>
 
                         </View> */}
-                        <Text style={{fontSize: 12, fontWeight: '600'}}>
+                        <Text style={{fontSize: 11, fontWeight: '600'}}>
                           {item.food1}
                         </Text>
-                        <Text style={{fontSize: 12, fontWeight: '600'}}>
+                        <Text style={{fontSize: 11, fontWeight: '600'}}>
                           {item.food2}
                         </Text>
-                        <Text style={{fontSize: 12, fontWeight: '600'}}>
+                        <Text style={{fontSize: 11, fontWeight: '600'}}>
                           {item.food3}
                         </Text>
                         <Text
                           style={{
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: '600',
                             color: Color.main,
                           }}>
@@ -146,7 +146,7 @@ const LoginScreen = (props) => {
                       }}>
                       <View
                         style={{
-                          width: 85,
+                          width: 80,
                           height: 25,
                           backgroundColor:
                             item.status === 1 ? Color.main : Color.buttonColor,
@@ -156,7 +156,7 @@ const LoginScreen = (props) => {
                         }}>
                         <Text
                           style={{
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: '600',
                             color: item.status === 1 ? Color.white : 'black',
                           }}>
@@ -175,7 +175,7 @@ const LoginScreen = (props) => {
                         }}>
                         <Text
                           style={{
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: '600',
                             color: 'black',
                           }}>
@@ -197,7 +197,7 @@ const LoginScreen = (props) => {
                         }}>
                         <Text
                           style={{
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: '600',
                             color: 'black',
                           }}>
@@ -218,9 +218,7 @@ const LoginScreen = (props) => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontWeight: '700', fontSize: 15}}>
-                Từ chối tất cả
-              </Text>
+              <Text style={{fontWeight: '700', fontSize: 15}}>Dừng tất cả</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{

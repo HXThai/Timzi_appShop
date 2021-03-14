@@ -23,13 +23,33 @@ import Swipeout from 'react-native-swipeout';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
+import registerService from '../../Redux/Service/LoginService';
 
 const LoginScreen = (props) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [name, setName] = useState('');
-  const [displayPassword, setDisplayPassword] = useState(false);
+  const [password, setPassword] = useState('');
 
-  const [dataLogin, setDataLogin] = useState([]);
+  const handleRegister = () => {
+    registerService
+      .register({name: name, phone: phoneNumber, password: password})
+      .then(function (response) {
+        // props.onGetList(response?.data);
+        if (response) {
+          console.log(response);
+          if (response?.data?.code === 200) {
+            props.navigation.navigate('ConfirmOTPRegisterScreen');
+          }
+        } else {
+          Alert.alert('Thông báo!', 'Lỗi!', [{text: 'Đồng ý'}]);
+          return;
+        }
+      })
+      .then(function () {
+        // setIsLoadingMore(false);
+        // setIsLoading(false);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -38,7 +58,7 @@ const LoginScreen = (props) => {
           source={Images.background}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{alignItems: 'center', width: '100%'}}>
               {/* <View style={{marginTop: 50}}>
                 <Image
@@ -93,11 +113,35 @@ const LoginScreen = (props) => {
                   keyboardType="number-pad"
                 />
               </View>
+              <View
+                style={{
+                  height: 40,
+                  width: '80%',
+                  marginTop: 30,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: '#333333',
+                }}>
+                <TextInput
+                  style={{
+                    color: '#000000',
+                    fontFamily: 'Nunito',
+                    width: '87%',
+                    height: 40,
+                  }}
+                  placeholder="Mật khẩu"
+                  placeholderTextColor="#333333"
+                  onChangeText={(text) => setPassword(text)}
+                  value={password}
+                  // keyboardType="number-pad"
+                />
+              </View>
               <View style={{width: '80%', marginTop: 40}}>
                 <TouchableOpacity
-                  onPress={() =>
-                    props.navigation.navigate('ConfirmOTPRegisterScreen')
-                  }>
+                  onPress={() => {
+                    handleRegister();
+                  }}>
                   <View
                     style={{
                       height: 40,

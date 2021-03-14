@@ -6,6 +6,8 @@ import {
   View,
   TextInput,
   Alert,
+  BackHandler,
+  ToastAndroid,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -23,17 +25,74 @@ import Swipeout from 'react-native-swipeout';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
+import loginService from '../../Redux/Service/LoginService';
+import storage from '../asyncStorage/Storage';
 
 const LoginScreen = (props) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [displayPassword, setDisplayPassword] = useState(false);
-
   const [dataLogin, setDataLogin] = useState([]);
+  const deviceId = '';
+  // console.log('dv', deviceId);
 
   const onClickLoginButton = async (phone, password) => {
-    props.navigation.navigate('TabNav');
+    // props.navigation.navigate('TabNav');
+    loginService
+      .login({phone: phone, password: password, device_id: deviceId})
+      .then(function (response) {
+        // props.onGetList(response?.data);
+        if (response) {
+          console.log(response);
+          if (response?.data?.code == '200') {
+            // save session login
+            storage.setItem('dataLogin', {
+              phone: phone,
+              password: password,
+              device_id: deviceId,
+            });
+            storage.setItem('userLogin', response?.data?.data?.user);
+            storage.setItem('Authorization', response?.data.data.token);
+            //set router home
+            if (response?.data?.data?.user?.role_id === 2) {
+              props.navigation.navigate('TabNav');
+            } else {
+              props.navigation.navigate('Staff');
+            }
+            // props.navigation.reset({
+            //   index: 0,
+            //   routes: [
+            //     {
+            //       name: 'Home',
+            //       params: {someParam: 'Param1'},
+            //     },
+            //   ],
+            // });
+            // props.navigation.reset();
+          } else {
+            Alert.alert(
+              'Thông báo!',
+              'Số điện thoại hoặc mật khẩu của bạn không chính xác.',
+              [{text: 'Đồng ý'}],
+            );
+            return;
+          }
+        } else {
+          Alert.alert(
+            'Thông báo!',
+            'Số điện thoại hoặc mật khẩu của bạn không chính xác.',
+            [{text: 'Đồng ý'}],
+          );
+          return;
+        }
+      });
   };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => true);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', () => true);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -71,6 +130,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setPhoneNumber(text)}
                   defaultValue={phoneNumber}
+                  keyboardType={'number-pad'}
                 />
               </View>
               <View

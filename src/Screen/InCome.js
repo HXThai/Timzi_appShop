@@ -19,6 +19,10 @@ import Images from '../Theme/Images';
 import styles from './Styles/HomeStyles';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+import Modal from 'react-native-modal';
+import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
+import {connect} from 'react-redux';
+
 const Home = (props) => {
   const [tab, setTab] = useState(0);
   const [dataTab, setDataTab] = useState([
@@ -86,6 +90,17 @@ const Home = (props) => {
     },
   ]);
 
+  const [dataListStore, setDataListStore] = useState([]);
+
+  const [storeName, setStoreName] = useState('');
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    // console.log(props.data.responseListStore?.code);
+    setDataListStore(props.data.responseListStore);
+  }, [props.data.responseListStore]);
+
   return (
     // <View style={{backgroundColor: 'green', flex: 1}}>
     //   <SafeAreaView style={{flex: 1}}>
@@ -100,7 +115,94 @@ const Home = (props) => {
           style={{width: '100%', height: '100%'}}>
           <SafeAreaView style={{flex: 1}}>
             <View style={{padding: 10}}>
+              <Modal
+                style={{alignItems: 'center', justifyContent: 'center'}}
+                isVisible={modalVisible}>
+                <View
+                  style={{
+                    height: '60%',
+                    width: '100%',
+                    backgroundColor: '#fff',
+                    borderRadius: 10,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <ScrollView showsVerticalScrollIndicator={false}>
+                    {dataListStore?.data?.map((item, index) => {
+                      return (
+                        <View style={{padding: 10}}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setStoreName(item.name);
+                              setModalVisible(false);
+                            }}
+                            style={{
+                              height: 45,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderBottomWidth: 1,
+                              borderColor: Color.main,
+                              width: Dimensions.get('window').width * 0.8,
+                            }}
+                            key={index}>
+                            <Text style={{fontWeight: '700', fontSize: 15}}>
+                              {item.name}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
+                  </ScrollView>
+                  <TouchableOpacity
+                    style={{marginTop: 10}}
+                    onPress={() => setModalVisible(false)}>
+                    <View
+                      style={{
+                        width: 90,
+                        height: 35,
+                        backgroundColor: Color.main,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 25,
+                        marginBottom: 10,
+                      }}>
+                      <Text style={[styles.text, {color: '#fff'}]}>Đóng</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
               <ScrollView showsVerticalScrollIndicator={false}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(true);
+                  }}
+                  style={{
+                    height: 45,
+                    width: '100%',
+                    backgroundColor: Color.main,
+                    alignItems: 'center',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    borderColor: Color.main,
+                    marginBottom: 10,
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      fontWeight: '700',
+                      color: Color.white,
+                    }}>
+                    {storeName}
+                  </Text>
+                  <MaterialIcons
+                    name={'keyboard-arrow-down'}
+                    size={25}
+                    color={Color.white}
+                  />
+                </TouchableOpacity>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -419,4 +521,17 @@ const Home = (props) => {
   );
 };
 
-export default Home;
+const mapStateToProps = (state) => {
+  // console.log("data : " ,state.homeReducer);
+  return {
+    data: state.orderOnlineReducer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  onGetListStore: (params) => {
+    dispatch(actionsGetListStore.getListStore(params));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

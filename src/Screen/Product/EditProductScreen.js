@@ -247,7 +247,7 @@ const LoginScreen = (props) => {
                 />
               </View>
             </ScrollView>
-            <View
+            {/* <View
               style={{
                 flexDirection: 'column',
                 marginTop: 5,
@@ -267,7 +267,7 @@ const LoginScreen = (props) => {
                   Xong
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </ImageBackground>
       </View>

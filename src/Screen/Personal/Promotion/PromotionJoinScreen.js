@@ -76,7 +76,7 @@ const LoginScreen = (props) => {
             }}>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{marginTop: 20}}>
+              style={{marginTop: 0}}>
               {dataPromotion.map((item, index) => {
                 return (
                   <View
@@ -132,6 +132,7 @@ const LoginScreen = (props) => {
                           </Text>
                         </Text>
                         <Text
+                          // numberOfLines={1}
                           style={{
                             fontSize: 12,
                             fontWeight: '400',
@@ -139,6 +140,7 @@ const LoginScreen = (props) => {
                           }}>
                           Thời gian: Từ nay đến hết ngày{' '}
                           <Text
+                            numberOfLines={1}
                             style={{
                               color: Color.main,
                               fontSize: 12,

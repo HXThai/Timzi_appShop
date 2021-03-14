@@ -8,6 +8,8 @@ import {
   ImageBackground,
   TextInput,
   Dimensions,
+  Alert,
+  Linking,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -29,7 +31,9 @@ import {
   faClipboardList,
   faKey,
   faSignOutAlt,
+  faPhone,
 } from '@fortawesome/free-solid-svg-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = (props) => {
   const [dataUser, setDataUser] = useState({
@@ -41,13 +45,17 @@ const Home = (props) => {
     date: '12/12/2021',
   });
 
+  const [phone, setPhone] = useState('0986868686');
+
   const [dataCategories, setDataCategories] = useState([
     {icon: faStore, name: 'Quán của bạn (Tokkio - BBQ Nhật Bản)'},
     {icon: faTag, name: 'Chương trình khuyến mãi'},
     {icon: faUser, name: 'Tài khoản nhân viên'},
     {icon: faUsers, name: 'Phân cấp quyền nhân viên'},
     {icon: faClipboardList, name: 'Đánh giá của người dùng'},
+    {icon: faUser, name: 'Tài khoản shipper ruột'},
     {icon: faKey, name: 'Đổi mật khẩu'},
+    {icon: faPhone, name: 'Hỗ trợ'},
     {icon: faSignOutAlt, name: 'Đăng xuất'},
   ]);
 
@@ -63,7 +71,33 @@ const Home = (props) => {
     } else if (index === 4) {
       props.navigation.navigate('RateOfUserScreen');
     } else if (index === 5) {
+      props.navigation.navigate('AccountShipperScreen');
+    } else if (index === 6) {
       props.navigation.navigate('ChangePasswordScreen');
+    } else if (index === 7) {
+      // props.navigation.navigate('ChangePasswordScreen');
+      Linking.openURL(`tel:${phone}`);
+    } else {
+      Alert.alert(
+        'Đăng xuất',
+        'Bạn chắc chắn muốn đăng xuất?',
+        [
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => {},
+          //   style: 'cancel',
+          // },
+          {text: 'Hủy', onPress: () => {}},
+          {
+            text: 'Đồng ý',
+            onPress: async () => {
+              await AsyncStorage.clear();
+              props.navigation.navigate('Login');
+            },
+          },
+        ],
+        {cancelable: false},
+      );
     }
   };
 
@@ -161,7 +195,7 @@ const Home = (props) => {
                     </View>
                   </View>
                 </View>
-                <View style={{}}>
+                <View style={{marginBottom: 60}}>
                   {dataCategories.map((item, index) => {
                     return (
                       <TouchableOpacity

@@ -29,7 +29,9 @@ import ListProductScreen from './../Screen/Product/ListProductScreen';
 import ListTableScreen from './../Screen/Product/ListTableScreen';
 import YourRestaurantScreen from './../Screen/Personal/YourRestaurantScreen';
 import PromotionScreen from './../Screen/Personal/PromotionScreen';
+import AccountShipperScreen from './../Screen/Personal/AccountShipperScreen';
 import PromotionJoinScreen from './../Screen/Personal/Promotion/PromotionJoinScreen';
+import AddShipperScreen from './../Screen/Personal/AccountShipper/AddShipperScreen';
 import PromotionTimziScreen from './../Screen/Personal/Promotion/PromotionTimziScreen';
 import PromotionRestaurantScreen from './../Screen/Personal/Promotion/PromotionRestaurantScreen';
 import PromotionComboScreen from './../Screen/Personal/Promotion/PromotionComboScreen';
@@ -50,6 +52,8 @@ import OrderOfflineReceivedDetailScreen from '../Screen/OrderOffline/OrderOfflin
 import OrderOfflineServingDetailScreen from '../Screen/OrderOffline/OrderOfflineServingDetailScreen';
 import OrderOfflineServedDetailScreen from '../Screen/OrderOffline/OrderOfflineServedDetailScreen';
 import OrderOfflineCancelledDetailScreen from '../Screen/OrderOffline/OrderOfflineCancelledDetailScreen';
+import ChooseRestaurantScreen from '../Screen/Staff/ChooseRestaurantScreen';
+import FindRestaurantScreen from '../Screen/Staff/FindRestaurantScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -158,6 +162,18 @@ const getTabBarVisibility = (route) => {
   if (routename == 'OrderOnlineCancelledDetailScreen') {
     return false;
   }
+  if (routename == 'ChooseRestaurantScreen') {
+    return false;
+  }
+  if (routename == 'FindRestaurantScreen') {
+    return false;
+  }
+  if (routename == 'AccountShipperScreen') {
+    return false;
+  }
+  if (routename == 'AddShipperScreen') {
+    return false;
+  }
   return true;
 };
 
@@ -178,7 +194,7 @@ function TabNav(props) {
             url = focused ? Images.earncoinC : Images.earncoin;
           } else if (routeName === 'Thu nhập') {
             url = focused ? Images.notificationC : Images.notification;
-          } else if (routeName === 'Cá nhân') {
+          } else if (routeName === 'Tài khoản') {
             url = focused ? Images.personalC : Images.personal;
           }
           return <Image source={url} style={{width: size, height: size}} />;
@@ -219,9 +235,9 @@ function TabNav(props) {
         navigationOptions={{tabBarLabel: 'Thông báo'}}
       />
       <Tab.Screen
-        name="Cá nhân"
+        name="Tài khoản"
         component={PersonalStack}
-        navigationOptions={{tabBarLabel: 'Cá nhân'}}
+        navigationOptions={{tabBarLabel: 'Tài khoản'}}
       />
     </Tab.Navigator>
   );
@@ -244,6 +260,88 @@ function App() {
         name="Login"
         component={LoginStack}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Staff"
+        component={StaffStack}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function StaffStack(props) {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ChooseRestaurantScreen"
+        component={ChooseRestaurantScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Chọn cửa hàng',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('EarnCoin');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="FindRestaurantScreen"
+        component={FindRestaurantScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Tìm cửa hàng',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('ChooseRestaurantScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
       />
     </Stack.Navigator>
   );
@@ -1745,6 +1843,108 @@ function PersonalStack(props) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="AccountShipperScreen"
+        component={AccountShipperScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Shipper ruột',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Personal');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('AddShipperScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: Color.buttonColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={{fontSize: 22, color: '#fff', fontWeight: '500'}}>
+                  +
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="AddShipperScreen"
+        component={AddShipperScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Thêm shipper ruột',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('AccountShipperScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('AddPromotionRestaurantScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {/* <Text style={{fontSize: 22, color: '#fff', fontWeight: '500'}}>
+                  +
+                </Text> */}
+              </View>
             </TouchableOpacity>
           ),
         }}

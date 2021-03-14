@@ -6,11 +6,69 @@ import Images from '../Theme/Images';
 
 // Styles
 import styles from './Styles/SplashScreenStyles';
+// import {
+//   getUniqueId,
+//   DeviceInfo,
+//   getManufacturer,
+// } from 'react-native-device-info';
 
+import storage from './asyncStorage/Storage';
+import loginService from '../Redux/Service/LoginService';
+
+// let uniqueId = DeviceInfo.getUniqueId();
+// console.log(getUniqueId());
 const SplashScreen = (props) => {
   useEffect(() => {
     setTimeout(() => {
-      props.navigation.navigate('Login');
+      // storage.setItem('deviceId', getUniqueId());
+      // console.log(getUniqueId().toString());
+      storage.getItem('dataLogin').then((data) => {
+        if (data) {
+          // props.navigation.navigate('TabNav');
+          console.log(data);
+          loginService
+            .login({
+              phone: data.phone,
+              password: data.password,
+              device_id: data.deviceId,
+            })
+            .then(function (response) {
+              // props.onGetList(response?.data);
+              if (response) {
+                // console.log(response?.data.data.user);
+                if (response?.data?.code == '200') {
+                  // save session login
+                  storage.setItem('userLogin', response?.data?.data?.user);
+                  storage.setItem('Authorization', response?.data.data.token);
+                  //set router home
+                  if (response?.data?.data?.user?.role_id === 2) {
+                    props.navigation.navigate('TabNav');
+                  } else {
+                    props.navigation.navigate('Staff');
+                  }
+
+                  // props.navigation.reset({
+                  //   index: 0,
+                  //   routes: [
+                  //     {
+                  //       name: 'Home',
+                  //       params: {someParam: 'Param1'},
+                  //     },
+                  //   ],
+                  // });
+                  // props.navigation.reset();
+                } else {
+                  props.navigation.navigate('Login');
+                }
+              } else {
+                props.navigation.navigate('Login');
+              }
+            });
+          // console.log(data.phone);
+        } else {
+          props.navigation.navigate('Login');
+        }
+      });
     }, 3000);
   }, []);
 
