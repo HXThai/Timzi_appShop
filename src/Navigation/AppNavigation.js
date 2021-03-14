@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  createBottomTabNavigator,
+  BottomTabBar,
+} from '@react-navigation/bottom-tabs';
 import SplashScreen from '../Screen/SplashScreen';
 import Home from '../Screen/OrderOnline';
 import Notification from '../Screen/InCome';
@@ -8,7 +11,7 @@ import EarnCoin from '../Screen/Product';
 import Personal from '../Screen/Personal';
 import Utilities from '../Screen/OrderOffline';
 import Images from '../Theme/Images';
-import {Image, View, TouchableOpacity, Text} from 'react-native';
+import {Image, View, TouchableOpacity, Text, Dimensions, Platform} from 'react-native';
 import Color from '../Theme/Color';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import LoginScreen from './../Screen/Login/LoginScreen';
@@ -176,10 +179,27 @@ const getTabBarVisibility = (route) => {
   }
   return true;
 };
+export function isIPhoneX() {
+  const { width, height } = Dimensions.get('window');
+  return (
+    Platform.OS === 'ios' && !Platform.isPad && !Platform.isTVOS && (height === 812 || width === 812 || (height === 896 || width === 896))
+  );
+}
 
 function TabNav(props) {
   return (
     <Tab.Navigator
+      tabBar={(tab) => (
+        <BottomTabBar
+          {...tab}
+          style={{
+            ...tab.style,
+            height: Platform.OS != 'ios' ? 60 : isIPhoneX ? 80 : 68,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          }}
+        />
+      )}
       screenOptions={({route}) => ({
         tabBarVisible: getTabBarVisibility(route),
         tabBarIcon: ({focused, color}) => {
