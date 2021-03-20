@@ -3,7 +3,13 @@ export default storage = {
   getItem: async (key) => {
     try {
       let result = await AsyncStorage.getItem(key);
-      return JSON.parse(result);
+      // console.log(result);
+      if (result) {
+        // console.log(JSON.parse(result));
+        return JSON.parse(result);
+      } else {
+        return null;
+      }
     } catch (e) {
       throw e;
     }
@@ -11,6 +17,7 @@ export default storage = {
   setItem: async (key, value) => {
     try {
       const item = JSON.stringify(value);
+      // console.log(item);
       return await AsyncStorage.setItem(key, item);
     } catch (e) {
       throw e;

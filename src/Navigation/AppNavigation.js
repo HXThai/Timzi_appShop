@@ -46,6 +46,7 @@ import AddMoneyScreen from './../Screen/Personal/Wallet/AddMoneyScreen';
 import MoneyWithdrawalScreen from './../Screen/Personal/Wallet/MoneyWithdrawalScreen';
 import AddPromotionRestaurantScreen from './../Screen/Personal/Promotion/ActionPromotion/AddPromotionRestaurantScreen';
 import AddComboScreen from './../Screen/Personal/Promotion/ActionPromotion/AddComboScreen';
+import PromotionRestaurantDetailScreen from './../Screen/Personal/Promotion/ActionPromotion/PromotionRestaurantDetailScreen';
 import EditComboScreen from './../Screen/Personal/Promotion/ActionPromotion/EditComboScreen';
 import NewOrderOfflineDetailScreen from '../Screen/OrderOffline/NewOrderOfflineDetailScreen';
 import OrderOfflineReceivedDetailScreen from '../Screen/OrderOffline/OrderOfflineReceivedDetailScreen';
@@ -172,6 +173,9 @@ const getTabBarVisibility = (route) => {
     return false;
   }
   if (routename == 'AddShipperScreen') {
+    return false;
+  }
+  if (routename == 'PromotionRestaurantDetailScreen') {
     return false;
   }
   return true;
@@ -656,7 +660,9 @@ function EarnCoinStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('ListTableScreen');
+                props.navigation.navigate('ListTableScreen', {
+                  store_id: route?.params?.store_id,
+                });
                 // console.log(route);
               }}>
               <View style={{marginLeft: 20}}>
@@ -698,7 +704,14 @@ function EarnCoinStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('ListProductScreen');
+                // props.navigation.reset({
+                //   index: 0,
+                //   routes: [{name: 'ListProductScreen'}],
+                // });
+                props.navigation.navigate('ListProductScreen', {
+                  category_food_id: route?.params?.category_food_id,
+                  store_id: route?.params?.store_id,
+                });
                 // console.log(route);
               }}>
               <View style={{marginLeft: 20}}>
@@ -737,6 +750,10 @@ function EarnCoinStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
+                props.navigation.reset({
+                  index: 0,
+                  routes: [{name: 'EarnCoin'}],
+                });
                 props.navigation.navigate('EarnCoin');
                 // console.log(props);
               }}>
@@ -1712,6 +1729,53 @@ function PersonalStack(props) {
         options={{
           // headerShown: false,
           headerTitle: 'Thêm chương trình',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('PromotionRestaurantScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="PromotionRestaurantDetailScreen"
+        component={PromotionRestaurantDetailScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Chi tiết C.Trình cửa hàng',
           headerTitleStyle: {alignSelf: 'center', color: '#fff'},
           headerStyle: {
             backgroundColor: Color.main,

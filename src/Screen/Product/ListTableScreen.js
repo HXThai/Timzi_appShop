@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -25,20 +26,140 @@ import Swipeout from 'react-native-swipeout';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import services from '../../Redux/Service/productService';
 
 const LoginScreen = (props) => {
-  const [dataOrderTable, setDataOrderTable] = useState([
-    {table: 1, numberSeat: 8, status: 'Đặt bàn'},
-    {table: 2, numberSeat: 8, status: 'Hết chỗ'},
-    {table: 3, numberSeat: 8, status: 'Đặt bàn'},
-    {table: 4, numberSeat: 8, status: 'Đặt bàn'},
-    {table: 5, numberSeat: 8, status: 'Đặt bàn'},
-    {table: 1, numberSeat: 8, status: 'Đặt bàn'},
-    {table: 2, numberSeat: 8, status: 'Hết chỗ'},
-    {table: 3, numberSeat: 8, status: 'Đặt bàn'},
-    {table: 4, numberSeat: 8, status: 'Đặt bàn'},
-    {table: 5, numberSeat: 8, status: 'Đặt bàn'},
-  ]);
+  const store_id = props?.route?.params?.store_id || null;
+
+  const getData = () => {
+    services.storeDetail(store_id).then(function (response) {
+      if (response) {
+        console.log('thai mai', response);
+        if (response.data.code === 200) {
+          // setDataProduct(response?.data?.data?.data);
+          // console.log(response.data.data.data);
+          // console.log(response?.data?.data);
+          setDataOrderTable(response?.data?.data?.store?.table_store);
+        }
+      } else {
+        return;
+      }
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const [dataOrderTable, setDataOrderTable] = useState([]);
+
+  const renderProduct = ({item}) => {
+    return (
+      <View
+        style={{
+          // flexDirection: 'column',
+          // alignItems: 'center',
+          // justifyContent: 'center',
+          width: Dimensions.get('window').width * 0.45,
+          marginBottom: 15,
+        }}>
+        <View
+          style={{
+            width: '85%',
+            borderRadius: 8,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            // marginRight: 10,
+            marginTop: 15,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              width: '100%',
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 10,
+              }}>
+              <Image
+                source={
+                  item.status === 'Hết chỗ'
+                    ? Images.iconOrderOfflineGrey
+                    : Images.iconOrderOfflineYellow
+                }
+                style={{height: 64, width: 64}}
+              />
+              <Text style={{color: '#fff', position: 'absolute'}}>
+                {item.number_table}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: '700',
+                marginTop: 10,
+              }}>
+              Bàn số {item.number_table}
+            </Text>
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: '400',
+                marginTop: 5,
+              }}>
+              {item.number_people_max} chỗ ngồi
+            </Text>
+            <View
+              style={{
+                height: 35,
+                width: 128,
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                marginTop: 10,
+                borderTopWidth: 1,
+                borderTopColor: '#E0E0E0',
+                flexDirection: 'row',
+              }}>
+              <TouchableOpacity
+                style={{
+                  width: 42,
+                  height: 20,
+                  backgroundColor: Color.buttonColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 4,
+                }}>
+                <Text style={{fontSize: 11}}>Xóa</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  props.navigation.navigate('EditTableScreen', {
+                    status: 'edit',
+                    // data: dataOrderTable[index],
+                    numberTable: '3',
+                    minPerson: '1',
+                    maxPerson: '8',
+                    floor: '4',
+                  })
+                }
+                style={{
+                  width: 42,
+                  height: 20,
+                  backgroundColor: Color.buttonColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 4,
+                }}>
+                <Text style={{fontSize: 11}}>Sửa</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -54,131 +175,31 @@ const LoginScreen = (props) => {
               justifyContent: 'space-between',
               height: '100%',
             }}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: Dimensions.get('window').width - 10,
-                  alignItems: 'center',
-                  // marginTop: 5,
-                  // marginLeft: 5,
-                  borderRadius: 5,
-                  // marginTop: 15,
-                  marginBottom: 20,
-                  flexWrap: 'wrap',
-                  // justifyContent: 'space-between',
-                  flex: 1,
-                }}>
-                {dataOrderTable.map((item, index) => {
-                  return (
-                    <View
-                      key={index}
-                      style={{
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '50%',
-                      }}>
-                      <View
-                        key={index}
-                        style={{
-                          width: '80%',
-                          borderRadius: 8,
-                          backgroundColor: '#fff',
-                          alignItems: 'center',
-                          marginRight: 10,
-                          marginTop: 15,
-                        }}>
-                        <View
-                          style={{
-                            alignItems: 'center',
-                            width: '100%',
-                          }}>
-                          <View
-                            style={{
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              marginTop: 10,
-                            }}>
-                            <Image
-                              source={
-                                item.status === 'Hết chỗ'
-                                  ? Images.iconOrderOfflineGrey
-                                  : Images.iconOrderOfflineYellow
-                              }
-                              style={{height: 64, width: 64}}
-                            />
-                            <Text style={{color: '#fff', position: 'absolute'}}>
-                              {item.table}
-                            </Text>
-                          </View>
-                          <Text
-                            style={{
-                              fontSize: 13,
-                              fontWeight: '700',
-                              marginTop: 10,
-                            }}>
-                            Bàn số {item.table}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 11,
-                              fontWeight: '400',
-                              marginTop: 5,
-                            }}>
-                            {item.numberSeat} chỗ ngồi
-                          </Text>
-                          <View
-                            style={{
-                              height: 35,
-                              width: 128,
-                              alignItems: 'center',
-                              justifyContent: 'space-evenly',
-                              marginTop: 10,
-                              borderTopWidth: 1,
-                              borderTopColor: '#E0E0E0',
-                              flexDirection: 'row',
-                            }}>
-                            <TouchableOpacity
-                              style={{
-                                width: 42,
-                                height: 20,
-                                backgroundColor: Color.buttonColor,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: 4,
-                              }}>
-                              <Text style={{fontSize: 11}}>Xóa</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              onPress={() =>
-                                props.navigation.navigate('EditTableScreen', {
-                                  status: 'edit',
-                                  // data: dataOrderTable[index],
-                                  numberTable: '3',
-                                  minPerson: '1',
-                                  maxPerson: '8',
-                                  floor: '4',
-                                })
-                              }
-                              style={{
-                                width: 42,
-                                height: 20,
-                                backgroundColor: Color.buttonColor,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: 4,
-                              }}>
-                              <Text style={{fontSize: 11}}>Sửa</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            </ScrollView>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+              style={{
+                width: Dimensions.get('window').width - 10,
+                marginTop: 5,
+                marginLeft: 10,
+                borderRadius: 5,
+                marginBottom: 10,
+                flex: 1,
+                paddingLeft: 5,
+                paddingRight: 5,
+              }}
+              data={dataOrderTable}
+              renderItem={renderProduct}
+              keyExtractor={(item, index) => index.toString()}
+              // onEndReached={handleLoadMore}
+              // onEndReachedThreshold={0}
+              // ListFooterComponent={renderFooter}
+            />
           </View>
         </ImageBackground>
       </View>

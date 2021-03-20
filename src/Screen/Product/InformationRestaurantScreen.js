@@ -25,6 +25,7 @@ import Swipeout from 'react-native-swipeout';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import productService from '../../Redux/Service/productService';
 
 const LoginScreen = (props) => {
   const [dataRestaurant, setDataRestaurant] = useState({
@@ -36,6 +37,17 @@ const LoginScreen = (props) => {
     star: 4.5,
     status: 'Yêu thích',
   });
+
+  const [data, setdata] = useState([]);
+  const store_params = props?.route?.params?.store_params || null;
+
+  useEffect(() => {
+    (async () => {
+      const res = await productService.storeDetail(store_params);
+      setdata(res?.data?.data?.store);
+      console.log(res?.data?.data?.store);
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -53,7 +65,7 @@ const LoginScreen = (props) => {
             }}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <Image
-                source={Images.bannerShop}
+                source={{uri: data?.image}}
                 style={{height: 140, width: '100%', borderRadius: 8}}
               />
               <View
@@ -80,7 +92,7 @@ const LoginScreen = (props) => {
                   <Text style={{fontSize: 11, color: Color.main}}>
                     Tên quán
                   </Text>
-                  <Text style={{fontSize: 15}}>{dataRestaurant.name}</Text>
+                  <Text style={{fontSize: 15}}>{data.name}</Text>
                 </View>
               </View>
               <View
@@ -105,10 +117,10 @@ const LoginScreen = (props) => {
                     marginLeft: 5,
                   }}>
                   <Text style={{fontSize: 11, color: Color.main}}>Địa chỉ</Text>
-                  <Text style={{fontSize: 15}}>{dataRestaurant.address}</Text>
+                  <Text style={{fontSize: 15}}>{data.address}</Text>
                 </View>
               </View>
-              <View
+              {/* <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -159,7 +171,7 @@ const LoginScreen = (props) => {
                   <Text style={{fontSize: 11, color: Color.main}}>Email</Text>
                   <Text style={{fontSize: 15}}>{dataRestaurant.email}</Text>
                 </View>
-              </View>
+              </View> */}
               <View
                 style={{
                   flexDirection: 'row',
@@ -182,7 +194,7 @@ const LoginScreen = (props) => {
                     marginLeft: 5,
                   }}>
                   <Text style={{fontSize: 11, color: Color.main}}>Hotline</Text>
-                  <Text style={{fontSize: 15}}>{dataRestaurant.hotline}</Text>
+                  <Text style={{fontSize: 15}}>{data.hotline}</Text>
                 </View>
               </View>
               <View
@@ -198,7 +210,7 @@ const LoginScreen = (props) => {
                 }}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={{fontSize: 15, color: 'black', marginRight: 5}}>
-                    Số sao: {dataRestaurant.star}
+                    Số sao: {data.star}
                   </Text>
                   <MaterialIcons
                     name={'star'}

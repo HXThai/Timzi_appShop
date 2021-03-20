@@ -8,6 +8,7 @@ import {
   ImageBackground,
   TextInput,
   Dimensions,
+  BackHandler,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -64,6 +65,8 @@ const Home = (props) => {
 
   const [storeName, setStoreName] = useState('');
 
+  const [storeId, setStoreId] = useState(null);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   // console.log(props?.route?.params?.tab);
@@ -80,6 +83,12 @@ const Home = (props) => {
     }
   };
 
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => true);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', () => true);
+  }, []);
+
   useFocusEffect(
     React.useCallback(() => {
       if (props?.route?.params?.tab) {
@@ -94,7 +103,24 @@ const Home = (props) => {
 
   useEffect(() => {
     // console.log(props.data.responseListStore?.code);
+    storage.getItem('dataStore').then((data) => {
+      // console.log(data);
+      if (data) {
+        setStoreName(data.name);
+        setStoreId(data.id);
+      } else {
+        setStoreName(props.data.responseListStore?.data[0]?.name);
+        setStoreId(props.data.responseListStore?.data[0]?.id);
+        storage.setItem('dataStore', props.data.responseListStore?.data[0]);
+      }
+    });
     setDataListStore(props.data.responseListStore);
+
+    // if (dataStore) {
+    //   setStoreName(dataStore);
+    // } else {
+    //   setStoreName(props.data.responseListStore?.data[0]?.name);
+    // }
   }, [props.data.responseListStore]);
 
   return (
@@ -127,10 +153,11 @@ const Home = (props) => {
                   <ScrollView showsVerticalScrollIndicator={false}>
                     {dataListStore?.data?.map((item, index) => {
                       return (
-                        <View style={{padding: 10}}>
+                        <View style={{padding: 10}} key={index}>
                           <TouchableOpacity
                             onPress={() => {
                               setStoreName(item.name);
+                              storage.setItem('dataStore', item);
                               setModalVisible(false);
                             }}
                             style={{
@@ -224,7 +251,7 @@ const Home = (props) => {
                         style={{
                           height: 45,
                           color: '#000000',
-                          
+
                           borderColor: Color.main,
                           borderWidth: 1,
                           borderRadius: 20,

@@ -127,7 +127,7 @@ const LoginScreen = (props) => {
                             color: Color.main,
                           }}>
                           Số lượng: {item.number}{' '}
-                          {item.type === 1 ? 'Chưowng trình' : 'Combo'}
+                          {item.type === 1 ? 'Combo' : 'Chương trình'}
                         </Text>
                       </View>
                     </View>

@@ -94,11 +94,29 @@ const Home = (props) => {
 
   const [storeName, setStoreName] = useState('');
 
+  const [storeId, setStoreId] = useState(null);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     // console.log(props.data.responseListStore?.code);
+    dataStore = storage.getItem('dataStore').then((data) => {
+      // console.log(data);
+      if (data) {
+        setStoreName(data.name);
+        setStoreId(data.id);
+      } else {
+        setStoreName(props.data.responseListStore?.data[0]?.name);
+        setStoreId(props.data.responseListStore?.data[0]?.id);
+      }
+    });
     setDataListStore(props.data.responseListStore);
+
+    // if (dataStore) {
+    //   setStoreName(dataStore);
+    // } else {
+    //   setStoreName(props.data.responseListStore?.data[0]?.name);
+    // }
   }, [props.data.responseListStore]);
 
   return (
@@ -131,10 +149,11 @@ const Home = (props) => {
                   <ScrollView showsVerticalScrollIndicator={false}>
                     {dataListStore?.data?.map((item, index) => {
                       return (
-                        <View style={{padding: 10}}>
+                        <View style={{padding: 10}} key={index}>
                           <TouchableOpacity
                             onPress={() => {
                               setStoreName(item.name);
+                              storage.setItem('dataStore', item);
                               setModalVisible(false);
                             }}
                             style={{

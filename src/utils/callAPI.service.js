@@ -5,7 +5,7 @@ import storage from '../Screen/asyncStorage/Storage';
 const callApiService = {
   get: async (url, body) => {
     let authorization = await storage.getItem('Authorization');
-    console.log(authorization);
+    // console.log(authorization);
     return axios({
       method: 'get',
       url: url,
@@ -13,6 +13,8 @@ const callApiService = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer' + authorization,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        // Accept: 'application/json',
       },
     })
       .then(function (response) {
@@ -26,15 +28,43 @@ const callApiService = {
       });
   },
   post: async (url, body) => {
-    // console.log('body', body);
+    console.log('body', body);
     let authorization = await storage.getItem('Authorization');
     return axios({
       method: 'post',
       url: url,
       data: body,
       headers: {
+        // 'Content-Type': body.image ? 'multipart/form-data' : 'application/json',
         'Content-Type': 'application/json',
         Authorization: 'Bearer' + authorization,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        // Accept: 'application/json',
+      },
+    })
+      .then(function (response) {
+        // console.log('reaaaa post: ', response);
+        if (response) {
+          return response;
+        } else return null;
+      })
+      .catch(function (error) {
+        console.log('error post: ' + JSON.stringify(error));
+      });
+  },
+  postFD: async (url, body) => {
+    console.log('body', body);
+    let authorization = await storage.getItem('Authorization');
+    return axios({
+      method: 'post',
+      url: url,
+      data: body,
+      headers: {
+        // 'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
+        Authorization: 'Bearer' + authorization,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        // Accept: 'application/json',
       },
     })
       .then(function (response) {
