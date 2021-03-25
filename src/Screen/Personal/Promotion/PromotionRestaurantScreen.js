@@ -8,6 +8,7 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import Images from '../../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -19,7 +20,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../../Styles/NotificationStyles';
 import Color from '../../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -71,7 +72,12 @@ const LoginScreen = (props) => {
 
   const renderProduct = ({item}) => {
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('PromotionRestaurantDetailScreen', {
+            id: item.id,
+          });
+        }}
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -87,12 +93,7 @@ const LoginScreen = (props) => {
             alignItems: 'center',
             // backgroundColor: 'red',
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              props.navigation.navigate('PromotionRestaurantDetailScreen', {
-                id: item.id,
-              });
-            }}>
+          <View>
             <Image
               source={{uri: item.image}}
               style={{
@@ -102,7 +103,7 @@ const LoginScreen = (props) => {
                 borderBottomLeftRadius: 10,
               }}
             />
-          </TouchableOpacity>
+          </View>
           <View
             style={{
               marginLeft: 5,
@@ -149,7 +150,7 @@ const LoginScreen = (props) => {
                 }}>
                 {item.time_open}
               </Text>{' '}
-              đến hết ngày{' '}
+              đến{' '}
               <Text
                 numberOfLines={1}
                 style={{
@@ -213,7 +214,7 @@ const LoginScreen = (props) => {
           style={{}}
           color={Color.main}
         /> */}
-      </View>
+      </TouchableOpacity>
     );
   };
 

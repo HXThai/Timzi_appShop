@@ -20,6 +20,7 @@ import styles from './../../Styles/HomeStyles';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {useFocusEffect} from '@react-navigation/native';
+import services from '../../../Redux/Service/shipperService';
 
 const Home = (props) => {
   // useFocusEffect(
@@ -57,6 +58,25 @@ const Home = (props) => {
       role: 'Nhân viên',
     },
   ]);
+
+  const getData = () => {
+    services.getListShipper({}).then(function (response) {
+      // console.log(response);
+      if (response) {
+        console.log('thai mai', response);
+        if (response.data.code === 200) {
+          // setDataRestaurant(response?.data?.data);
+          // setProvince(response?.data?.data[0].name);
+        }
+      } else {
+        return;
+      }
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     // <View style={{backgroundColor: 'green', flex: 1}}>

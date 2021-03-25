@@ -77,6 +77,56 @@ const callApiService = {
         console.log('error post: ' + JSON.stringify(error));
       });
   },
+  delete: async (url, body) => {
+    console.log('body', body);
+    let authorization = await storage.getItem('Authorization');
+    return axios({
+      method: 'delete',
+      url: url,
+      data: body,
+      headers: {
+        // 'Content-Type': body.image ? 'multipart/form-data' : 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer' + authorization,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        // Accept: 'application/json',
+      },
+    })
+      .then(function (response) {
+        // console.log('reaaaa post: ', response);
+        if (response) {
+          return response;
+        } else return null;
+      })
+      .catch(function (error) {
+        console.log('error post: ' + JSON.stringify(error));
+      });
+  },
+  put: async (url, body) => {
+    console.log('body', body);
+    let authorization = await storage.getItem('Authorization');
+    return axios({
+      method: 'put',
+      url: url,
+      data: body,
+      headers: {
+        // 'Content-Type': body.image ? 'multipart/form-data' : 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer' + authorization,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        // Accept: 'application/json',
+      },
+    })
+      .then(function (response) {
+        // console.log('reaaaa post: ', response);
+        if (response) {
+          return response;
+        } else return null;
+      })
+      .catch(function (error) {
+        console.log('error post: ' + JSON.stringify(error));
+      });
+  },
 };
 
 export default callApiService;

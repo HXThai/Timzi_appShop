@@ -37,11 +37,11 @@ const LoginScreen = (props) => {
   const [name, setName] = useState(props?.route?.params?.name?.toString());
   const [price, setPrice] = useState(props?.route?.params?.price?.toString());
   const [status, setStatus] = useState(props.route.params.statusFood);
-  const [promotion, setPromotion] = useState(props.route.params.promotion);
+  const [promotion, setPromotion] = useState(
+    props.route.params.promotion.toString(),
+  );
   const [image, setImage] = useState(props.route.params.image);
   const [imageName, setImageName] = useState(null);
-  const [nameSize, setNameSize] = useState('');
-  const [priceSize, setPriceSize] = useState('');
   // const test = props?.route?.params?.status;
   // console.log('thai', test);
   const statusFood = props.route.params.status;
@@ -49,7 +49,6 @@ const LoginScreen = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
-  const [modalVisibleSize, setModalVisibleSize] = useState(false);
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -174,8 +173,6 @@ const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
 
   const id = props?.route?.params?.id || null;
-
-  const [dataSize, setDataSize] = useState([]);
 
   // console.log('id', id);
 
@@ -450,70 +447,6 @@ const LoginScreen = (props) => {
                 </View>
               </View>
             </Modal>
-            <Modal
-              onBackdropPress={() => setModalVisibleSize(false)}
-              style={{alignItems: 'center', justifyContent: 'center'}}
-              isVisible={modalVisibleSize}>
-              <View
-                style={{
-                  height: Dimensions.get('window').height * 0.35,
-                  width: '100%',
-                  backgroundColor: '#fff',
-                  borderRadius: 10,
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                }}>
-                <View>
-                  <Text>Tên size</Text>
-                  <TextInput
-                    style={{
-                      height: 40,
-                      borderBottomWidth: 0.8,
-                      borderBottomColor: '#333333',
-                      width: Dimensions.get('window').width * 0.7,
-                    }}
-                    placeholder="Tên size"
-                    placeholderTextColor="#333333"
-                    onChangeText={(text) => setNameSize(text)}
-                    defaultValue={nameSize}
-                  />
-                  <Text style={{marginTop: 15}}>Giá tiền</Text>
-                  <TextInput
-                    style={{
-                      width: Dimensions.get('window').width * 0.7,
-                      height: 40,
-                      borderBottomWidth: 0.8,
-                      borderBottomColor: '#333333',
-                    }}
-                    placeholder="Giá tiền"
-                    placeholderTextColor="#333333"
-                    onChangeText={(text) => setPriceSize(text)}
-                    defaultValue={priceSize}
-                    keyboardType={'number-pad'}
-                  />
-                  <TouchableOpacity
-                    onPress={() => {
-                      var newData = {name: nameSize, price: priceSize};
-                      var data = dataSize;
-                      data.push(newData);
-                      // console.log(data);
-                      setModalVisibleSize(false);
-                    }}
-                    style={{
-                      width: Dimensions.get('window').width * 0.7,
-                      marginTop: 20,
-                      height: 40,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: Color.buttonColor,
-                      borderRadius: 8,
-                    }}>
-                    <Text>Thêm size</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View
@@ -602,6 +535,24 @@ const LoginScreen = (props) => {
                   <Text style={{fontSize: 12}}>Tình trạng</Text>
                 </View>
               ) : null}
+              {/* <View
+                style={{
+                  width: '100%',
+                  marginBottom: 20,
+                  justifyContent: 'center',
+                }}>
+                <TextInput
+                  style={{
+                    height: 40,
+                    borderBottomWidth: 0.8,
+                    borderBottomColor: '#333333',
+                  }}
+                  placeholder="Tình trạng"
+                  placeholderTextColor="#333333"
+                  onChangeText={(text) => setStatus(text)}
+                  defaultValue={status}
+                />
+              </View> */}
               <TouchableOpacity
                 onPress={() => setModalVisibleStatus(true)}
                 style={{
@@ -644,30 +595,6 @@ const LoginScreen = (props) => {
                   defaultValue={promotion}
                 />
               </View>
-              <View style={{marginTop: 10}}>
-                <Text style={{fontSize: 12, marginBottom: 5}}>Size</Text>
-              </View>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                {dataSize.map((item, index) => {
-                  return (
-                    <View
-                      key={index}
-                      style={{
-                        padding: 10,
-                        marginRight: 10,
-                        backgroundColor: Color.white,
-                        borderRadius: 6,
-                      }}>
-                      <Text>Tên size: {item.name}</Text>
-                      <Text style={{marginTop: 5}}>
-                        Giá: {styles.dynamicSort(item.price)} đ
-                      </Text>
-                    </View>
-                  );
-                })}
-              </ScrollView>
               {statusFood === 'edit' ? (
                 <View
                   style={{
@@ -716,25 +643,25 @@ const LoginScreen = (props) => {
                 </View>
               )}
             </ScrollView>
-            <ActionButton buttonColor={Color.main}>
+            {/* <ActionButton buttonColor={Color.main}>
               <ActionButton.Item
                 buttonColor="#9b59b6"
-                title="Thêm size"
-                onPress={() => setModalVisibleSize(true)}>
+                title="New Task"
+                onPress={() => console.log('notes tapped!')}>
                 <MaterialIcons
-                  name={'add'}
+                  name={'home'}
                   size={26}
-                  style={{color: Color.white}}
+                  style={{color: Color.main}}
                 />
               </ActionButton.Item>
               <ActionButton.Item
                 buttonColor="#3498db"
-                title="Thêm danh mục topping"
+                title="Notifications"
                 onPress={() => {}}>
                 <MaterialIcons
-                  name={'fastfood'}
+                  name={'home'}
                   size={26}
-                  style={{color: Color.white}}
+                  style={{color: Color.main}}
                 />
               </ActionButton.Item>
               <ActionButton.Item
@@ -747,7 +674,7 @@ const LoginScreen = (props) => {
                   style={{color: Color.main}}
                 />
               </ActionButton.Item>
-            </ActionButton>
+            </ActionButton> */}
           </View>
         </ImageBackground>
       </View>

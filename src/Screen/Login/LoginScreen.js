@@ -59,22 +59,10 @@ const LoginScreen = (props) => {
             } else {
               props.navigation.navigate('Staff');
             }
-            // props.navigation.reset({
-            //   index: 0,
-            //   routes: [
-            //     {
-            //       name: 'Home',
-            //       params: {someParam: 'Param1'},
-            //     },
-            //   ],
-            // });
-            // props.navigation.reset();
           } else {
-            Alert.alert(
-              'Thông báo!',
-              'Số điện thoại hoặc mật khẩu của bạn không chính xác.',
-              [{text: 'Đồng ý'}],
-            );
+            Alert.alert('Thông báo!', response?.data?.message, [
+              {text: 'Đồng ý'},
+            ]);
             return;
           }
         } else {

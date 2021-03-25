@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   createBottomTabNavigator,
@@ -11,7 +11,15 @@ import EarnCoin from '../Screen/Product';
 import Personal from '../Screen/Personal';
 import Utilities from '../Screen/OrderOffline';
 import Images from '../Theme/Images';
-import {Image, View, TouchableOpacity, Text, Dimensions, Platform} from 'react-native';
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  Text,
+  Dimensions,
+  Platform,
+} from 'react-native';
+import Modal from 'react-native-modal';
 import Color from '../Theme/Color';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import LoginScreen from './../Screen/Login/LoginScreen';
@@ -50,6 +58,7 @@ import MoneyWithdrawalScreen from './../Screen/Personal/Wallet/MoneyWithdrawalSc
 import AddPromotionRestaurantScreen from './../Screen/Personal/Promotion/ActionPromotion/AddPromotionRestaurantScreen';
 import AddComboScreen from './../Screen/Personal/Promotion/ActionPromotion/AddComboScreen';
 import PromotionRestaurantDetailScreen from './../Screen/Personal/Promotion/ActionPromotion/PromotionRestaurantDetailScreen';
+import PromotionComboDetailScreen from './../Screen/Personal/Promotion/ActionPromotion/PromotionComboDetailScreen';
 import EditComboScreen from './../Screen/Personal/Promotion/ActionPromotion/EditComboScreen';
 import NewOrderOfflineDetailScreen from '../Screen/OrderOffline/NewOrderOfflineDetailScreen';
 import OrderOfflineReceivedDetailScreen from '../Screen/OrderOffline/OrderOfflineReceivedDetailScreen';
@@ -181,12 +190,18 @@ const getTabBarVisibility = (route) => {
   if (routename == 'PromotionRestaurantDetailScreen') {
     return false;
   }
+  if (routename == 'PromotionComboDetailScreen') {
+    return false;
+  }
   return true;
 };
 export function isIPhoneX() {
-  const { width, height } = Dimensions.get('window');
+  const {width, height} = Dimensions.get('window');
   return (
-    Platform.OS === 'ios' && !Platform.isPad && !Platform.isTVOS && (height === 812 || width === 812 || (height === 896 || width === 896))
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    (height === 812 || width === 812 || height === 896 || width === 896)
   );
 }
 
@@ -295,6 +310,8 @@ function App() {
 }
 
 function StaffStack(props) {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -335,10 +352,10 @@ function StaffStack(props) {
       <Stack.Screen
         name="FindRestaurantScreen"
         component={FindRestaurantScreen}
-        options={{
-          // headerShown: false,
+        options={({route}) => ({
+          headerShown: false,
           headerTitle: 'Tìm cửa hàng',
-          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerTitleStyle: {color: '#fff'},
           headerStyle: {
             backgroundColor: Color.main,
             elevation: 0,
@@ -350,22 +367,45 @@ function StaffStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={Color.white}
+                />
               </View>
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                // props.navigation.navigate('LoginScreen');
-                // console.log(props);
-              }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
-              </View>
-            </TouchableOpacity>
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={{
+                  height: 56,
+                  width: 15,
+                  backgroundColor: '#F2F2F2',
+                }}></View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  // props.navigation.navigate('LoginScreen');
+                  // console.log('test');
+                }}
+                style={{
+                  width: Dimensions.get('window').width * 0.35,
+                  height: 56,
+                  backgroundColor: Color.buttonColor,
+                  // marginRight: 50,
+                }}>
+                <View style={{marginLeft: 20}}>
+                  <MaterialIcons
+                    name={'arrow-back-ios'}
+                    size={26}
+                    color={null}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
           ),
-        }}
+        })}
       />
     </Stack.Navigator>
   );
@@ -1805,6 +1845,53 @@ function PersonalStack(props) {
             <TouchableOpacity
               onPress={() => {
                 props.navigation.navigate('PromotionRestaurantScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="PromotionComboDetailScreen"
+        component={PromotionComboDetailScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Chi tiết combo cửa hàng',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('PromotionComboScreen');
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>

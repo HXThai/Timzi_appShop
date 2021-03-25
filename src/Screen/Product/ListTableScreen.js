@@ -138,10 +138,8 @@ const LoginScreen = (props) => {
                   props.navigation.navigate('EditTableScreen', {
                     status: 'edit',
                     // data: dataOrderTable[index],
-                    numberTable: '3',
-                    minPerson: '1',
-                    maxPerson: '8',
-                    floor: '4',
+                    dataTable: item,
+                    store_id: store_id,
                   })
                 }
                 style={{

@@ -25,29 +25,151 @@ import Swipeout from 'react-native-swipeout';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import services from '../../Redux/Service/productService';
 
 const LoginScreen = (props) => {
   const [numberTable, setNumberTable] = useState(
-    props.route.params.numberTable,
+    props?.route?.params?.dataTable?.number_table?.toString(),
   );
   const [minNumberPerson, setMinNumberPerson] = useState(
-    props.route.params.minPerson,
+    props?.route?.params?.dataTable?.number_people_min?.toString(),
   );
   const [maxNumberPerson, setMaxNumberPerson] = useState(
-    props.route.params.maxPerson,
+    props?.route?.params?.dataTable?.number_people_max?.toString(),
   );
-  const [location, setLocation] = useState(props.route.params.floor);
+  const [location, setLocation] = useState(
+    props?.route?.params?.dataTable?.number_floor?.toString(),
+  );
+  const idTable = props?.route?.params?.dataTable?.id;
   const [service, setService] = useState('');
   // const test = props?.route?.params?.status;
   // console.log('thai', test);
 
   // console.log(props.route.params.status);
   const status = props.route.params.status;
+
   // console.log(props.route.params.numberTable);
 
   useEffect(() => {
     // console.log(props?.route?.params?.data);
+    // console.log(props.route.params.dataTable);
   }, []);
+
+  const store_id = props?.route?.params?.store_id || null;
+
+  const handleAddTable = () => {
+    var body = {
+      store_id: store_id,
+      number_table: numberTable,
+      number_people_min: minNumberPerson,
+      number_people_max: maxNumberPerson,
+      number_floor: location,
+    };
+    services.addTable(body).then(function (response) {
+      // props.onGetList(response?.data);
+      if (response) {
+        console.log('thai', response);
+        if (response.data.code === 200) {
+          Alert.alert(
+            'Thông báo!',
+            'Thêm bàn thành công!',
+            [
+              {
+                text: 'Đồng ý',
+                onPress: async () => {
+                  props.navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'ListTableScreen',
+                        params: {
+                          store_id: store_id,
+                        },
+                      },
+                    ],
+                  });
+                  props.navigation.navigate('ListTableScreen', {
+                    store_id: store_id,
+                  });
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+      } else {
+        Alert.alert(
+          'Thông báo!',
+          response.data.message,
+          [
+            {
+              text: 'Đồng ý',
+              onPress: async () => {},
+            },
+          ],
+          {cancelable: false},
+        );
+        return;
+      }
+    });
+  };
+
+  const handleEditTable = () => {
+    var body = {
+      store_id: store_id,
+      number_table: numberTable,
+      number_people_min: minNumberPerson,
+      number_people_max: maxNumberPerson,
+      number_floor: location,
+    };
+    services.editTable(body, idTable).then(function (response) {
+      // props.onGetList(response?.data);
+      if (response) {
+        console.log('thai', response);
+        if (response.data.code === 200) {
+          Alert.alert(
+            'Thông báo!',
+            'Sửa bàn thành công!',
+            [
+              {
+                text: 'Đồng ý',
+                onPress: async () => {
+                  props.navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'ListTableScreen',
+                        params: {
+                          store_id: store_id,
+                        },
+                      },
+                    ],
+                  });
+                  props.navigation.navigate('ListTableScreen', {
+                    store_id: store_id,
+                  });
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+      } else {
+        Alert.alert(
+          'Thông báo!',
+          response.data.message,
+          [
+            {
+              text: 'Đồng ý',
+              onPress: async () => {},
+            },
+          ],
+          {cancelable: false},
+        );
+        return;
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -67,10 +189,19 @@ const LoginScreen = (props) => {
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View
                   style={{width: '100%', alignItems: 'center', marginTop: 10}}>
-                  <Image
+                  <ImageBackground
                     source={Images.iconOrderOfflineYellow}
-                    style={{height: 80, width: 80, borderRadius: 8}}
-                  />
+                    style={{
+                      height: 80,
+                      width: 80,
+                      borderRadius: 8,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={{color: Color.white, fontWeight: '700'}}>
+                      {numberTable}
+                    </Text>
+                  </ImageBackground>
                 </View>
               </View>
               {status === 'edit' ? (
@@ -94,6 +225,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setNumberTable(text)}
                   defaultValue={numberTable}
+                  keyboardType={'number-pad'}
                 />
               </View>
               {status === 'edit' ? (
@@ -117,6 +249,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setMinNumberPerson(text)}
                   defaultValue={minNumberPerson}
+                  keyboardType={'number-pad'}
                 />
               </View>
               {status === 'edit' ? (
@@ -140,6 +273,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setMaxNumberPerson(text)}
                   defaultValue={maxNumberPerson}
+                  keyboardType={'number-pad'}
                 />
               </View>
               {status === 'edit' ? (
@@ -163,6 +297,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setLocation(text)}
                   defaultValue={location}
+                  keyboardType={'number-pad'}
                 />
               </View>
             </ScrollView>
@@ -171,20 +306,41 @@ const LoginScreen = (props) => {
                 flexDirection: 'column',
                 marginTop: 5,
               }}>
-              <TouchableOpacity
-                style={{
-                  height: 50,
-                  width: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 50,
-                  backgroundColor: Color.main,
-                  marginTop: 10,
-                }}>
-                <Text style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
-                  Xong
-                </Text>
-              </TouchableOpacity>
+              {status === 'edit' ? (
+                <TouchableOpacity
+                  onPress={() => handleEditTable()}
+                  style={{
+                    height: 50,
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 50,
+                    backgroundColor: Color.main,
+                    marginTop: 10,
+                  }}>
+                  <Text
+                    style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
+                    Sửa bàn
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => handleAddTable()}
+                  style={{
+                    height: 50,
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 50,
+                    backgroundColor: Color.main,
+                    marginTop: 10,
+                  }}>
+                  <Text
+                    style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
+                    Thêm bàn
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </ImageBackground>

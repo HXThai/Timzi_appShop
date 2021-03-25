@@ -358,6 +358,7 @@ const Home = (props) => {
                       onPress={() =>
                         props.navigation.navigate('EditTableScreen', {
                           status: 'add',
+                          store_id: storeId,
                         })
                       }
                       style={{
@@ -466,10 +467,7 @@ const Home = (props) => {
                                 props.navigation.navigate('EditTableScreen', {
                                   status: 'edit',
                                   // data: dataOrderTable[index],
-                                  numberTable: '3',
-                                  minPerson: '1',
-                                  maxPerson: '8',
-                                  floor: '4',
+                                  dataTable: item,
                                   store_id: storeId,
                                 })
                               }
@@ -546,7 +544,7 @@ const Home = (props) => {
                         style={{marginTop: 20, marginBottom: 10}}>
                         {data?.category_food[index]?.food.map((item, index) => {
                           return (
-                            <View
+                            <TouchableOpacity
                               key={index}
                               style={{
                                 width: 130,
@@ -672,7 +670,7 @@ const Home = (props) => {
                                   </TouchableOpacity>
                                 </View>
                               </View>
-                            </View>
+                            </TouchableOpacity>
                           );
                         })}
                       </ScrollView>

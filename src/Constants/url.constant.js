@@ -13,6 +13,23 @@ const API_BASE_URL = {
   GET_LIST_STORE_PROMOTION: ROOT_DOMAIN + '/program-store/list-program-store',
   PROMOTION_STORE_DETAIL: ROOT_DOMAIN + '/program-store/program-store-detail',
   ADD_PROMOTION_STORE: ROOT_DOMAIN + '/program-store/create-program-store',
+
+  GET_LIST_COMBO_STORE: ROOT_DOMAIN + '/combo-food/list-combo-food',
+  ADD_COMBO_STORE: ROOT_DOMAIN + '/combo-food/create-combo-food',
+  PROMOTION_COMBO_DETAIL: ROOT_DOMAIN + '/combo-food/combo-food-detail',
+  EDIT_COMBO_STORE: ROOT_DOMAIN + '/combo-food/update-combo-food',
+  DELETE_COMBO_STORE: ROOT_DOMAIN + '/combo-food/delete-combo-food',
+
+  ADD_TABLE: ROOT_DOMAIN + '/table-store/create-table-store',
+  EDIT_TABLE: ROOT_DOMAIN + '/table-store/update-table-store',
+
+  GET_LIST_PROVINCE: ROOT_DOMAIN + '/list-province',
+  SEARCH_STORE: ROOT_DOMAIN + '/store/search-store-with-staff',
+  CHOOSE_STORE: ROOT_DOMAIN + '/store/choose-store',
+  STORE_STAFF_CHOOSE: ROOT_DOMAIN + '/store/store-staff',
+  DELETE_CHOOSE_STORE: ROOT_DOMAIN + '/store/delete-choose-store',
+
+  GET_LIST_SHIPPER: ROOT_DOMAIN + '/store-shipper/list-shipper',
 };
 
 export {API_BASE_URL};

@@ -27,6 +27,7 @@ import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import services from '../../Redux/Service/shipperService';
 
 const LoginScreen = (props) => {
   const [tab, setTab] = useState(0);
@@ -63,6 +64,25 @@ const LoginScreen = (props) => {
       role: 'Nhân viên',
     },
   ]);
+
+  // const getData = () => {
+  //   services.getListShipper({}).then(function (response) {
+  //     // console.log(response);
+  //     if (response) {
+  //       console.log('thai mai', response);
+  //       if (response.data.code === 200) {
+  //         // setDataRestaurant(response?.data?.data);
+  //         // setProvince(response?.data?.data[0].name);
+  //       }
+  //     } else {
+  //       return;
+  //     }
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   return (
     <View style={styles.container}>

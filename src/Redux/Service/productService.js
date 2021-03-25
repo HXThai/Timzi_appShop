@@ -22,4 +22,15 @@ export default homeService = {
     let response = callApiService.postFD(url, params);
     return response;
   },
+
+  addTable: async (params) => {
+    let url = `${API_BASE_URL.ADD_TABLE}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
+  editTable: async (params, id) => {
+    let url = `${API_BASE_URL.EDIT_TABLE}/${id}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };
