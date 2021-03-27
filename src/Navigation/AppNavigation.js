@@ -18,7 +18,21 @@ import {
   Text,
   Dimensions,
   Platform,
+  Alert,
 } from 'react-native';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {
+  faStore,
+  faChevronRight,
+  faUsers,
+  faUser,
+  faTag,
+  faClipboardList,
+  faKey,
+  faSignOutAlt,
+  faPhone,
+} from '@fortawesome/free-solid-svg-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
 import Color from '../Theme/Color';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
@@ -34,6 +48,7 @@ import OrderOnlineHasTakenDetailScreen from '../Screen/OrderOnline/OrderOnlineHa
 import OrderOnlineCancelledDetailScreen from '../Screen/OrderOnline/OrderOnlineCancelledDetailScreen';
 import InformationRestaurantScreen from './../Screen/Product/InformationRestaurantScreen';
 import EditInformationRestaurantScreen from './../Screen/Product/EditInformationRestaurantScreen';
+import AddRestaurantScreen from './../Screen/Product/AddRestaurantScreen';
 import EditTableScreen from './../Screen/Product/EditTableScreen';
 import EditProductScreen from './../Screen/Product/EditProductScreen';
 import ListProductScreen from './../Screen/Product/ListProductScreen';
@@ -193,6 +208,9 @@ const getTabBarVisibility = (route) => {
   if (routename == 'PromotionComboDetailScreen') {
     return false;
   }
+  if (routename == 'AddRestaurantScreen') {
+    return false;
+  }
   return true;
 };
 export function isIPhoneX() {
@@ -338,13 +356,36 @@ function StaffStack(props) {
           ),
           headerRight: () => (
             <TouchableOpacity
+              style={{marginRight: 15, padding: 5}}
               onPress={() => {
-                // props.navigation.navigate('LoginScreen');
-                // console.log(props);
+                Alert.alert(
+                  'Đăng xuất',
+                  'Bạn chắc chắn muốn đăng xuất?',
+                  [
+                    // {
+                    //   text: 'Cancel',
+                    //   onPress: () => {},
+                    //   style: 'cancel',
+                    // },
+                    {text: 'Hủy', onPress: () => {}},
+                    {
+                      text: 'Đồng ý',
+                      onPress: async () => {
+                        await AsyncStorage.clear();
+                        props.navigation.navigate('Login');
+                      },
+                    },
+                  ],
+                  {cancelable: false},
+                );
               }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
-              </View>
+              <FontAwesomeIcon
+                color="#898989"
+                icon={faSignOutAlt}
+                size={24}
+                style={{}}
+                color={Color.white}
+              />
             </TouchableOpacity>
           ),
         }}
@@ -681,6 +722,45 @@ function EarnCoinStack(props) {
             <TouchableOpacity
               onPress={() => {
                 props.navigation.navigate('InformationRestaurantScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="AddRestaurantScreen"
+        component={AddRestaurantScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Thêm quán',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('EarnCoin');
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>

@@ -243,14 +243,6 @@ const LoginScreen = (props) => {
   };
 
   const handleConfirmDateOpen = (date) => {
-    // console.log(
-    //   'A date has been picked: ',
-    //   moment(new Date(date.toString().substr(0, 16))).format('DD/MM/YYYY'),
-    // );
-    // console.log(
-    //   moment(new Date(date.toString().substr(0, 16))).format('YYYY-MM-DD') ===
-    //     '2021-02-28',
-    // );
     setDateOpen(
       moment(new Date(date.toString().substr(0, 16))).format('DD-MM-YYYY'),
     );
@@ -274,14 +266,6 @@ const LoginScreen = (props) => {
   };
 
   const handleConfirmDateClose = (date) => {
-    // console.log(
-    //   'A date has been picked: ',
-    //   moment(new Date(date.toString().substr(0, 16))).format('DD/MM/YYYY'),
-    // );
-    // console.log(
-    //   moment(new Date(date.toString().substr(0, 16))).format('YYYY-MM-DD') ===
-    //     '2021-02-28',
-    // );
     setDateClose(
       moment(new Date(date.toString().substr(0, 16))).format('DD-MM-YYYY'),
     );

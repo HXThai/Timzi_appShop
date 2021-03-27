@@ -120,7 +120,7 @@ const LoginScreen = (props) => {
                   <Text style={{fontSize: 15}}>{data.address}</Text>
                 </View>
               </View>
-              {/* <View
+              <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -131,7 +131,7 @@ const LoginScreen = (props) => {
                   padding: 8,
                 }}>
                 <MaterialIcons
-                  name={'business-center'}
+                  name={'location-on'}
                   size={33}
                   style={{color: Color.main}}
                 />
@@ -142,9 +142,11 @@ const LoginScreen = (props) => {
                     marginLeft: 5,
                   }}>
                   <Text style={{fontSize: 11, color: Color.main}}>
-                    Lĩnh vực kinh doanh
+                    Giá trung bình
                   </Text>
-                  <Text style={{fontSize: 15}}>{dataRestaurant.field}</Text>
+                  <Text style={{fontSize: 15}}>
+                    {styles.dynamicSort(data.average_price)} đ
+                  </Text>
                 </View>
               </View>
               <View
@@ -158,7 +160,7 @@ const LoginScreen = (props) => {
                   padding: 8,
                 }}>
                 <MaterialIcons
-                  name={'email'}
+                  name={'location-on'}
                   size={33}
                   style={{color: Color.main}}
                 />
@@ -168,10 +170,39 @@ const LoginScreen = (props) => {
                     justifyContent: 'space-evenly',
                     marginLeft: 5,
                   }}>
-                  <Text style={{fontSize: 11, color: Color.main}}>Email</Text>
-                  <Text style={{fontSize: 15}}>{dataRestaurant.email}</Text>
+                  <Text style={{fontSize: 11, color: Color.main}}>
+                    Giờ mở cửa
+                  </Text>
+                  <Text style={{fontSize: 15}}>{data.open_hours}</Text>
                 </View>
-              </View> */}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 10,
+                  width: '100%',
+                  backgroundColor: '#fff',
+                  borderRadius: 8,
+                  padding: 8,
+                }}>
+                <MaterialIcons
+                  name={'location-on'}
+                  size={33}
+                  style={{color: Color.main}}
+                />
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    justifyContent: 'space-evenly',
+                    marginLeft: 5,
+                  }}>
+                  <Text style={{fontSize: 11, color: Color.main}}>
+                    Giờ đóng cửa
+                  </Text>
+                  <Text style={{fontSize: 15}}>{data.close_hours}</Text>
+                </View>
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
@@ -242,7 +273,9 @@ const LoginScreen = (props) => {
               }}>
               <TouchableOpacity
                 onPress={() =>
-                  props.navigation.navigate('EditInformationRestaurantScreen')
+                  props.navigation.navigate('EditInformationRestaurantScreen', {
+                    dataStore: data,
+                  })
                 }
                 style={{
                   height: 50,

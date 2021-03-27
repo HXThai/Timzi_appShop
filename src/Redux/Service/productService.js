@@ -33,4 +33,10 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+
+  editStore: async (params, id) => {
+    let url = `${API_BASE_URL.EDIT_STORE}/${id}`;
+    let response = callApiService.postFD(url, params);
+    return response;
+  },
 };

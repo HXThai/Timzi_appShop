@@ -30,6 +30,7 @@ const API_BASE_URL = {
   DELETE_CHOOSE_STORE: ROOT_DOMAIN + '/store/delete-choose-store',
 
   GET_LIST_SHIPPER: ROOT_DOMAIN + '/store-shipper/list-shipper',
+  EDIT_STORE: ROOT_DOMAIN + '/store/update-store',
 };
 
 export {API_BASE_URL};
