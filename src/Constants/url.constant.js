@@ -1,4 +1,5 @@
 const ROOT_DOMAIN = 'http://103.226.249.210:8020/api';
+// const ROOT_DOMAIN = 'http://127.0.0.1:8002/api';
 
 const API_BASE_URL = {
   LOGIN: ROOT_DOMAIN + '/login-staff',
@@ -30,7 +31,18 @@ const API_BASE_URL = {
   DELETE_CHOOSE_STORE: ROOT_DOMAIN + '/store/delete-choose-store',
 
   GET_LIST_SHIPPER: ROOT_DOMAIN + '/store-shipper/list-shipper',
+  GET_LIST_SHIPPER_STORE:
+    ROOT_DOMAIN + '/store-shipper/list-shipper-with-store',
+  CHOOSE_SHIPPER: ROOT_DOMAIN + '/store-shipper/choose-shipper',
+  DELETE_SHIPPER: ROOT_DOMAIN + '/store-shipper/cancel-shipper-with-store',
+
   EDIT_STORE: ROOT_DOMAIN + '/store/update-store',
+
+  GET_LIST_STAFF_WAIT_CONNECT: ROOT_DOMAIN + '/store/list-staff-in-store',
+  DELETE_STAFF: ROOT_DOMAIN + '/store/delete-staff',
+  CONFIRM_STAFF: ROOT_DOMAIN + '/store/confirm-staff',
+  STOP_STAFF: ROOT_DOMAIN + '/store/stop-staff',
+  ACTIVE_STAFF: ROOT_DOMAIN + '/store/active-staff',
 };
 
 export {API_BASE_URL};

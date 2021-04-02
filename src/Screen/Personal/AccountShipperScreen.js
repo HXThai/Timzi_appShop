@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -18,7 +19,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,6 +31,9 @@ import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import services from '../../Redux/Service/shipperService';
 
 const LoginScreen = (props) => {
+  const store_id = props?.route?.params?.store_id || null;
+  console.log(store_id);
+
   const [tab, setTab] = useState(0);
 
   const [dataTab, setDataTab] = useState([
@@ -38,51 +42,27 @@ const LoginScreen = (props) => {
     {id: 2, name: 'Chờ kết nối'},
   ]);
 
-  const [dataStaff, setDataStaff] = useState([
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-  ]);
+  const [dataStaff, setDataStaff] = useState([]);
 
-  // const getData = () => {
-  //   services.getListShipper({}).then(function (response) {
-  //     // console.log(response);
-  //     if (response) {
-  //       console.log('thai mai', response);
-  //       if (response.data.code === 200) {
-  //         // setDataRestaurant(response?.data?.data);
-  //         // setProvince(response?.data?.data[0].name);
-  //       }
-  //     } else {
-  //       return;
-  //     }
-  //   });
-  // };
+  const getData = () => {
+    services.getListShipperStore(null, store_id, 0).then(function (response) {
+      // console.log(response);
+      if (response) {
+        console.log('thai mai', response);
+        if (response.data.code === 200) {
+          // setDataRestaurant(response?.data?.data);
+          // setProvince(response?.data?.data[0].name);
+          setDataStaff(response.data.data);
+        }
+      } else {
+        return;
+      }
+    });
+  };
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -110,13 +90,13 @@ const LoginScreen = (props) => {
                       marginTop: 15,
                     }}>
                     <Image
-                      source={item.image}
+                      source={{uri: item.avatar}}
                       style={{width: 48, height: 48}}
                     />
                     <View
                       style={{
                         flexDirection: 'column',
-                        // justifyContent: 'space-between',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginLeft: 10,
@@ -135,39 +115,71 @@ const LoginScreen = (props) => {
                           {item.phone}
                         </Text>
                       </View>
-                      {/* <View
+                      <TouchableOpacity
+                        onPress={() => {
+                          Alert.alert(
+                            'Thông báo',
+                            'Bạn chắc chắn muốn huỷ hợp tác với shipper?',
+                            [
+                              {text: 'Hủy', onPress: () => {}},
+                              {
+                                text: 'Đồng ý',
+                                onPress: async () => {
+                                  services
+                                    .deleteShipper({
+                                      store_id: store_id,
+                                      shipper_id: item.id,
+                                    })
+                                    .then(function (response) {
+                                      // console.log(response);
+                                      // props.onGetList(response?.data);
+                                      if (response) {
+                                        // console.log('thai mai', response);
+                                        if (response.data.code === 200) {
+                                          props.navigation.reset({
+                                            index: 0,
+                                            routes: [
+                                              {
+                                                name: 'AccountShipperScreen',
+                                                params: {
+                                                  store_id: store_id,
+                                                },
+                                              },
+                                            ],
+                                          });
+                                        }
+                                      } else {
+                                        Alert.alert(
+                                          'Thông báo',
+                                          response.data.message,
+                                          [
+                                            {
+                                              text: 'Đồng ý',
+                                              onPress: async () => {},
+                                            },
+                                          ],
+                                          {cancelable: false},
+                                        );
+                                        return;
+                                      }
+                                    });
+                                },
+                              },
+                            ],
+                            {cancelable: false},
+                          );
+                        }}
                         style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
+                          height: 25,
+                          width: 80,
+                          backgroundColor: Color.buttonColor,
+                          borderRadius: 4,
                           alignItems: 'center',
+                          justifyContent: 'center',
+                          alignSelf: 'flex-end',
                         }}>
-                        <Text
-                          style={{
-                            fontSize: 12,
-                            fontWeight: '400',
-                            color: Color.buttonColor,
-                          }}>
-                          Vai trò: {item.role}
-                        </Text>
-                        <View style={{flexDirection: 'row'}}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              props.navigation.navigate(
-                                'ActionDecentralizationStaffScreen',
-                              );
-                            }}
-                            style={{
-                              width: 80,
-                              height: 25,
-                              borderRadius: 4,
-                              backgroundColor: Color.buttonColor,
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}>
-                            <Text style={{fontSize: 12}}>Phân quyền</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View> */}
+                        <Text style={{fontSize: 11}}>Huỷ hợp tác</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 );

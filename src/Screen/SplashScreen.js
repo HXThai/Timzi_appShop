@@ -41,10 +41,14 @@ const SplashScreen = (props) => {
                   storage.setItem('userLogin', response?.data?.data?.user);
                   storage.setItem('Authorization', response?.data.data.token);
                   //set router home
-                  if (response?.data?.data?.user?.role_id === 2) {
-                    props.navigation.navigate('TabNav');
-                  } else {
+                  if (response?.data?.data?.user?.role_id === 3) {
                     props.navigation.navigate('Staff');
+                  } else {
+                    props.navigation.navigate('TabNav');
+                    props.navigation.reset({
+                      index: 0,
+                      routes: [{name: 'TabNav'}],
+                    });
                   }
 
                   // props.navigation.reset({

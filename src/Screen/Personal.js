@@ -34,8 +34,27 @@ import {
   faPhone,
 } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {connect} from 'react-redux';
+import storage from './asyncStorage/Storage';
 
 const Home = (props) => {
+  const [storeId, setStoreId] = useState(null);
+
+  useEffect(() => {
+    // console.log('thai meo');
+    // console.log(props.data.responseListStore?.code);
+    storage.getItem('dataStore').then((data) => {
+      // console.log(data);
+      if (data) {
+        // setStoreName(data.name);
+        setStoreId(data.id);
+      } else {
+        // setStoreName(props.data.responseListStore?.data[0]?.name);
+        setStoreId(props.data.responseListStore?.data[0]?.id);
+      }
+    });
+  }, [props.data.responseListStore]);
+
   const [dataUser, setDataUser] = useState({
     image: Images.avatar,
     name: 'HOÀNG XUÂN THÁI',
@@ -47,17 +66,43 @@ const Home = (props) => {
 
   const [phone, setPhone] = useState('0986868686');
 
-  const [dataCategories, setDataCategories] = useState([
-    {icon: faStore, name: 'Quán của bạn (Tokkio - BBQ Nhật Bản)'},
-    {icon: faTag, name: 'Chương trình khuyến mãi'},
-    {icon: faUser, name: 'Tài khoản nhân viên'},
-    {icon: faUsers, name: 'Phân cấp quyền nhân viên'},
-    {icon: faClipboardList, name: 'Đánh giá của người dùng'},
-    {icon: faUser, name: 'Tài khoản shipper ruột'},
-    {icon: faKey, name: 'Đổi mật khẩu'},
-    {icon: faPhone, name: 'Hỗ trợ'},
-    {icon: faSignOutAlt, name: 'Đăng xuất'},
-  ]);
+  const [roleId, setRoleId] = useState('');
+
+  useEffect(() => {
+    storage.getItem('role_id').then((data) => {
+      // console.log(data);
+      if (data) {
+        // console.log('role', data);
+        setRoleId(data);
+        data === 6
+          ? setDataCategories([
+              {icon: faStore, name: 'Quán của bạn (Tokkio - BBQ Nhật Bản)'},
+              {icon: faTag, name: 'Chương trình khuyến mãi'},
+              {icon: faUser, name: 'Tài khoản nhân viên'},
+              {icon: faUsers, name: 'Phân cấp quyền nhân viên'},
+              {icon: faClipboardList, name: 'Đánh giá của người dùng'},
+              {icon: faUser, name: 'Tài khoản shipper ruột'},
+              {icon: faKey, name: 'Đổi mật khẩu'},
+              {icon: faPhone, name: 'Hỗ trợ'},
+              {icon: faSignOutAlt, name: 'Đăng xuất'},
+            ])
+          : setDataCategories([
+              {icon: faStore, name: 'Quán của bạn (Tokkio - BBQ Nhật Bản)'},
+              {icon: faTag, name: 'Chương trình khuyến mãi'},
+              // {icon: faUser, name: 'Tài khoản nhân viên'},
+              {icon: faUsers, name: 'Phân cấp quyền nhân viên'},
+              {icon: faClipboardList, name: 'Đánh giá của người dùng'},
+              // {icon: faUser, name: 'Tài khoản shipper ruột'},
+              {icon: faKey, name: 'Đổi mật khẩu'},
+              {icon: faPhone, name: 'Hỗ trợ'},
+              {icon: faSignOutAlt, name: 'Đăng xuất'},
+            ]);
+      } else {
+      }
+    });
+  }, []);
+
+  const [dataCategories, setDataCategories] = useState([]);
 
   const onClickCate = (index, props) => {
     if (index === 0) {
@@ -65,13 +110,55 @@ const Home = (props) => {
     } else if (index === 1) {
       props.navigation.navigate('PromotionScreen');
     } else if (index === 2) {
-      props.navigation.navigate('ManageAccountStaffScreen');
+      props.navigation.navigate('DecentralizationStaffScreen');
+    } else if (index === 3) {
+      props.navigation.navigate('RateOfUserScreen');
+    } else if (index === 4) {
+      props.navigation.navigate('ChangePasswordScreen');
+    } else if (index === 5) {
+      // props.navigation.navigate('ChangePasswordScreen');
+      Linking.openURL(`tel:${phone}`);
+    } else {
+      Alert.alert(
+        'Đăng xuất',
+        'Bạn chắc chắn muốn đăng xuất?',
+        [
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => {},
+          //   style: 'cancel',
+          // },
+          {text: 'Hủy', onPress: () => {}},
+          {
+            text: 'Đồng ý',
+            onPress: async () => {
+              await AsyncStorage.clear();
+              props.navigation.navigate('Login');
+            },
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+  };
+
+  const onClickCateShop = (index, props) => {
+    if (index === 0) {
+      props.navigation.navigate('YourRestaurantScreen');
+    } else if (index === 1) {
+      props.navigation.navigate('PromotionScreen');
+    } else if (index === 2) {
+      props.navigation.navigate('ManageAccountStaffScreen', {
+        store_id: storeId,
+      });
     } else if (index === 3) {
       props.navigation.navigate('DecentralizationStaffScreen');
     } else if (index === 4) {
       props.navigation.navigate('RateOfUserScreen');
     } else if (index === 5) {
-      props.navigation.navigate('AccountShipperScreen');
+      props.navigation.navigate('AccountShipperScreen', {
+        store_id: storeId,
+      });
     } else if (index === 6) {
       props.navigation.navigate('ChangePasswordScreen');
     } else if (index === 7) {
@@ -199,7 +286,11 @@ const Home = (props) => {
                   {dataCategories.map((item, index) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => onClickCate(index, props)}
+                        onPress={() =>
+                          roleId === 6
+                            ? onClickCateShop(index, props)
+                            : onClickCate(index, props)
+                        }
                         key={index}
                         style={{
                           padding: 15,
@@ -248,4 +339,17 @@ const Home = (props) => {
   );
 };
 
-export default Home;
+const mapStateToProps = (state) => {
+  // console.log("data : " ,state.homeReducer);
+  return {
+    data: state.orderOnlineReducer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  onGetListStore: (params) => {
+    dispatch(actionsGetListStore.getListStore(params));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

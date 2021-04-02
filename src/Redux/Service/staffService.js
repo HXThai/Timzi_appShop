@@ -27,4 +27,30 @@ export default homeService = {
     let response = callApiService.delete(url);
     return response;
   },
+
+  getListStaffWaitConnect: async (params, id, status) => {
+    let url = `${API_BASE_URL.GET_LIST_STAFF_WAIT_CONNECT}?store_id=${id}&status=${status}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  deleteStaff: async (params) => {
+    let url = `${API_BASE_URL.DELETE_STAFF}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
+  confirmStaff: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_STAFF}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
+  stopStaff: async (params) => {
+    let url = `${API_BASE_URL.STOP_STAFF}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
+  activeStaff: async (params) => {
+    let url = `${API_BASE_URL.ACTIVE_STAFF}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };

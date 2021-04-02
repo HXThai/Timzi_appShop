@@ -30,6 +30,8 @@ import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 
 const LoginScreen = (props) => {
   const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   return (
     <View style={styles.container}>
@@ -51,9 +53,9 @@ const LoginScreen = (props) => {
                 style={{
                   marginTop: '45%',
                   fontSize: 20,
-                  fontFamily: 'UTM Ericsson Capital',
+                  // fontFamily: 'UTM Ericsson Capital',
                 }}>
-                MẬT KHẨU CŨ
+                ĐỔI MẬT KHẨU
               </Text>
               <View
                 style={{
@@ -68,7 +70,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-                    
+
                     width: '87%',
                     height: 40,
                   }}
@@ -79,11 +81,48 @@ const LoginScreen = (props) => {
                   keyboardType="number-pad"
                 />
               </View>
+              <View
+                style={{width: '80%', marginTop: 30, justifyContent: 'center'}}>
+                <TextInput
+                  style={{
+                    height: 40,
+                    borderBottomWidth: 0.8,
+                    borderBottomColor: '#333333',
+                  }}
+                  placeholder="Mật khẩu mới"
+                  placeholderTextColor="#333333"
+                  onChangeText={(text) => setNewPassword(text)}
+                  defaultValue={newPassword}
+                />
+              </View>
+              <View
+                style={{
+                  height: 40,
+                  width: '80%',
+                  marginTop: 30,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: '#333333',
+                }}>
+                <TextInput
+                  style={{
+                    color: '#000000',
+
+                    width: '87%',
+                    height: 40,
+                  }}
+                  placeholder="Nhập lại mật khẩu mới"
+                  placeholderTextColor="#333333"
+                  onChangeText={(text) => setConfirmNewPassword(text)}
+                  value={confirmNewPassword}
+                />
+              </View>
               <View style={{width: '80%', marginTop: 60}}>
                 <TouchableOpacity
-                  onPress={() =>
-                    props.navigation.navigate('ConfirmChangePasswordScreen')
-                  }>
+                  onPress={() => {
+                    // props.navigation.navigate('ConfirmChangePasswordScreen')
+                  }}>
                   <View
                     style={{
                       height: 40,

@@ -44,8 +44,8 @@ const Home = (props) => {
   useEffect(() => {
     // console.log('thai meo');
     // console.log(props.data.responseListStore?.code);
-    dataStore = storage.getItem('dataStore').then((data) => {
-      console.log(data);
+    storage.getItem('dataStore').then((data) => {
+      // console.log(data);
       if (data) {
         setStoreName(data.name);
         setStoreId(data.id);
@@ -87,6 +87,19 @@ const Home = (props) => {
     });
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
+
+  const [roleId, setRoleId] = useState('');
+
+  useEffect(() => {
+    storage.getItem('role_id').then((data) => {
+      // console.log(data);
+      if (data) {
+        console.log('role', data);
+        setRoleId(data);
+      } else {
+      }
+    });
+  }, []);
 
   return (
     // <View style={{backgroundColor: 'green', flex: 1}}>
@@ -164,36 +177,38 @@ const Home = (props) => {
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 style={{marginBottom: 20}}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(true);
-                  }}
-                  style={{
-                    height: 45,
-                    width: '100%',
-                    backgroundColor: Color.main,
-                    alignItems: 'center',
-                    borderRadius: 20,
-                    borderWidth: 1,
-                    borderColor: Color.main,
-                    marginBottom: 10,
-                    justifyContent: 'center',
-                    flexDirection: 'row',
-                  }}>
-                  <Text
+                {roleId === 2 ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(true);
+                    }}
                     style={{
-                      fontSize: 17,
-                      fontWeight: '700',
-                      color: Color.white,
+                      height: 45,
+                      width: '100%',
+                      backgroundColor: Color.main,
+                      alignItems: 'center',
+                      borderRadius: 20,
+                      borderWidth: 1,
+                      borderColor: Color.main,
+                      marginBottom: 10,
+                      justifyContent: 'center',
+                      flexDirection: 'row',
                     }}>
-                    {storeName}
-                  </Text>
-                  <MaterialIcons
-                    name={'keyboard-arrow-down'}
-                    size={25}
-                    color={Color.white}
-                  />
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        fontWeight: '700',
+                        color: Color.white,
+                      }}>
+                      {storeName}
+                    </Text>
+                    <MaterialIcons
+                      name={'keyboard-arrow-down'}
+                      size={25}
+                      color={Color.white}
+                    />
+                  </TouchableOpacity>
+                ) : null}
                 <View
                   style={{
                     // marginTop: 20,

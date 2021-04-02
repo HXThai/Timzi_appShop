@@ -119,6 +119,19 @@ const Home = (props) => {
     // }
   }, [props.data.responseListStore]);
 
+  const [roleId, setRoleId] = useState('');
+
+  useEffect(() => {
+    storage.getItem('role_id').then((data) => {
+      // console.log(data);
+      if (data) {
+        console.log('role', data);
+        setRoleId(data);
+      } else {
+      }
+    });
+  }, []);
+
   return (
     // <View style={{backgroundColor: 'green', flex: 1}}>
     //   <SafeAreaView style={{flex: 1}}>
@@ -192,36 +205,38 @@ const Home = (props) => {
                 </View>
               </Modal>
               <ScrollView showsVerticalScrollIndicator={false}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(true);
-                  }}
-                  style={{
-                    height: 45,
-                    width: '100%',
-                    backgroundColor: Color.main,
-                    alignItems: 'center',
-                    borderRadius: 20,
-                    borderWidth: 1,
-                    borderColor: Color.main,
-                    marginBottom: 10,
-                    justifyContent: 'center',
-                    flexDirection: 'row',
-                  }}>
-                  <Text
+                {roleId === 2 ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(true);
+                    }}
                     style={{
-                      fontSize: 17,
-                      fontWeight: '700',
-                      color: Color.white,
+                      height: 45,
+                      width: '100%',
+                      backgroundColor: Color.main,
+                      alignItems: 'center',
+                      borderRadius: 20,
+                      borderWidth: 1,
+                      borderColor: Color.main,
+                      marginBottom: 10,
+                      justifyContent: 'center',
+                      flexDirection: 'row',
                     }}>
-                    {storeName}
-                  </Text>
-                  <MaterialIcons
-                    name={'keyboard-arrow-down'}
-                    size={25}
-                    color={Color.white}
-                  />
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        fontWeight: '700',
+                        color: Color.white,
+                      }}>
+                      {storeName}
+                    </Text>
+                    <MaterialIcons
+                      name={'keyboard-arrow-down'}
+                      size={25}
+                      color={Color.white}
+                    />
+                  </TouchableOpacity>
+                ) : null}
                 <View
                   style={{
                     flexDirection: 'row',
@@ -239,14 +254,14 @@ const Home = (props) => {
                         }}
                         // key={index}
                         style={{
-                          height: 32,
+                          height: 35,
                           width: '30%',
                           alignItems: 'center',
                           justifyContent: 'center',
                           borderWidth: 1,
                           borderColor: tab === index ? Color.main : '#fff',
                           borderRadius: 6,
-                          padding: 10,
+                          padding: 5,
                           margin: 5,
                         }}>
                         <Text>{item.name}</Text>

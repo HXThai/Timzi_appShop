@@ -174,7 +174,7 @@ const LoginScreen = (props) => {
                       }}
                       // key={index}
                       style={{
-                        height: 32,
+                        height: 35,
                         width: Dimensions.get('window').width * 0.25,
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -342,6 +342,7 @@ const LoginScreen = (props) => {
                   borderRadius: 50,
                   backgroundColor: Color.buttonColor,
                   marginTop: 10,
+                  marginBottom: 15
                 }}>
                 <Text style={{fontWeight: '700', fontSize: 15, color: 'black'}}>
                   Tìm cửa hàng của bạn

@@ -350,7 +350,7 @@ function StaffStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -500,9 +500,7 @@ function LoginStack(props) {
                 // props.navigation.navigate('AirTicketScreen');
                 // console.log(props);
               }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
-              </View>
+              <View style={{marginLeft: 20}}></View>
             </TouchableOpacity>
           ),
         }}
@@ -548,7 +546,7 @@ function LoginStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -594,9 +592,7 @@ function LoginStack(props) {
                 // props.navigation.navigate('AirTicketScreen');
                 // console.log(props);
               }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
-              </View>
+              <View style={{marginLeft: 20}}></View>
             </TouchableOpacity>
           ),
         }}
@@ -820,9 +816,7 @@ function EarnCoinStack(props) {
                 // props.navigation.navigate('LoginScreen');
                 // console.log(props);
               }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
-              </View>
+              <View style={{marginLeft: 20}}></View>
             </TouchableOpacity>
           ),
         })}
@@ -869,9 +863,7 @@ function EarnCoinStack(props) {
                 // props.navigation.navigate('LoginScreen');
                 // console.log(props);
               }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
-              </View>
+              <View style={{marginLeft: 20}}></View>
             </TouchableOpacity>
           ),
         })}
@@ -913,7 +905,7 @@ function EarnCoinStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -952,7 +944,7 @@ function EarnCoinStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1215,7 +1207,7 @@ function PersonalStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1254,7 +1246,7 @@ function PersonalStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1293,7 +1285,7 @@ function PersonalStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1332,7 +1324,7 @@ function PersonalStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1669,7 +1661,7 @@ function PersonalStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1716,7 +1708,7 @@ function PersonalStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -2101,7 +2093,7 @@ function PersonalStack(props) {
       <Stack.Screen
         name="AccountShipperScreen"
         component={AccountShipperScreen}
-        options={{
+        options={({route}) => ({
           // headerShown: false,
           headerTitle: 'Shipper ruột',
           headerTitleStyle: {alignSelf: 'center', color: '#fff'},
@@ -2127,7 +2119,9 @@ function PersonalStack(props) {
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('AddShipperScreen');
+                props.navigation.navigate('AddShipperScreen', {
+                  store_id: route?.params?.store_id,
+                });
                 // console.log(props);
               }}>
               <View
@@ -2147,7 +2141,7 @@ function PersonalStack(props) {
               </View>
             </TouchableOpacity>
           ),
-        }}
+        })}
       />
       <Stack.Screen
         name="AddShipperScreen"

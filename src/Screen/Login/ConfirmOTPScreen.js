@@ -28,7 +28,7 @@ const ConfirmOTPScreen = (props) => {
                 style={{
                   marginTop: '45%',
                   fontSize: 20,
-                  fontFamily: 'UTM Ericsson Capital',
+                  // fontFamily: 'UTM Ericsson Capital',
                 }}>
                 XÁC NHẬN OTP
               </Text>

@@ -7,6 +7,22 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+  getListShipperStore: async (params, storeId, status) => {
+    let url = `${API_BASE_URL.GET_LIST_SHIPPER_STORE}?store_id=${storeId}&status=${status}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  chooseShipper: async (params) => {
+    let url = `${API_BASE_URL.CHOOSE_SHIPPER}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
+  deleteShipper: async (params) => {
+    let url = `${API_BASE_URL.DELETE_SHIPPER}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
+
   searchStore: async (params, name, province_id) => {
     let url = `${API_BASE_URL.SEARCH_STORE}?name=${name}&province_id=${province_id}`;
     let response = callApiService.get(url);

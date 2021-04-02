@@ -93,7 +93,7 @@ const callApiService = {
       },
     })
       .then(function (response) {
-        // console.log('reaaaa post: ', response);
+        console.log('delete post: ', response);
         if (response) {
           return response;
         } else return null;

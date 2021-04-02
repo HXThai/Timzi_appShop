@@ -71,7 +71,7 @@ const LoginScreen = (props) => {
                 style={{
                   marginTop: '45%',
                   fontSize: 20,
-                  fontFamily: 'UTM Ericsson Capital',
+                  // fontFamily: 'UTM Ericsson Capital',
                 }}>
                 ĐĂNG KÝ
               </Text>
@@ -126,7 +126,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-                    fontFamily: 'Nunito',
+                    // fontFamily: 'Nunito',
                     width: '87%',
                     height: 40,
                   }}

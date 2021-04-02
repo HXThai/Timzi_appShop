@@ -8,11 +8,13 @@ import {
   Alert,
   BackHandler,
   ToastAndroid,
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import Modal from 'react-native-modal';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -35,16 +37,20 @@ const LoginScreen = (props) => {
   const [dataLogin, setDataLogin] = useState([]);
   const deviceId = '';
   // console.log('dv', deviceId);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const onClickLoginButton = async (phone, password) => {
     // props.navigation.navigate('TabNav');
     loginService
       .login({phone: phone, password: password, device_id: deviceId})
       .then(function (response) {
+        // setModalVisible(false);
         // props.onGetList(response?.data);
         if (response) {
-          console.log(response);
+          // setModalVisible(false);
+          // console.log(response);
           if (response?.data?.code === 200) {
+            setModalVisible(false);
             // save session login
             storage.setItem('dataLogin', {
               phone: phone,
@@ -53,15 +59,25 @@ const LoginScreen = (props) => {
             });
             storage.setItem('userLogin', response?.data?.data?.user);
             storage.setItem('Authorization', response?.data.data.token);
+            storage.setItem('role_id', response?.data?.data?.user?.role_id);
             //set router home
-            if (response?.data?.data?.user?.role_id === 2) {
-              props.navigation.navigate('TabNav');
-            } else {
+            if (response?.data?.data?.user?.role_id === 3) {
               props.navigation.navigate('Staff');
+            } else {
+              props.navigation.navigate('TabNav');
+              props.navigation.reset({
+                index: 0,
+                routes: [{name: 'TabNav'}],
+              });
             }
           } else {
             Alert.alert('Thông báo!', response?.data?.message, [
-              {text: 'Đồng ý'},
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  setModalVisible(false);
+                },
+              },
             ]);
             return;
           }
@@ -69,10 +85,21 @@ const LoginScreen = (props) => {
           Alert.alert(
             'Thông báo!',
             'Số điện thoại hoặc mật khẩu của bạn không chính xác.',
-            [{text: 'Đồng ý'}],
+            [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  setModalVisible(false);
+                },
+              },
+            ],
           );
           return;
         }
+      })
+      .then(function () {
+        // setIsLoadingMore(false);
+        // setModalVisible(false);
       });
   };
 
@@ -89,6 +116,22 @@ const LoginScreen = (props) => {
           source={Images.background}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          <Modal
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            isVisible={modalVisible}>
+            <View
+              style={{
+                height: 70,
+                width: 70,
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          </Modal>
           <ScrollView>
             <View style={{alignItems: 'center', width: '100%'}}>
               <View style={{marginTop: 50}}>
@@ -102,10 +145,11 @@ const LoginScreen = (props) => {
                 style={{
                   marginTop: 40,
                   fontSize: 20,
-                  fontFamily: 'UTM Ericsson Capital',
+                  // fontFamily: 'UTM Ericsson Capital',
                 }}>
                 ĐĂNG NHẬP
               </Text>
+
               <View
                 style={{width: '80%', marginTop: 30, justifyContent: 'center'}}>
                 <TextInput
@@ -134,7 +178,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-                    fontFamily: 'Nunito',
+                    // fontFamily: 'Nunito',
                     width: '87%',
                     height: 40,
                   }}
@@ -179,7 +223,10 @@ const LoginScreen = (props) => {
               </View>
               <View style={{width: '80%', marginTop: 30}}>
                 <TouchableOpacity
-                  onPress={() => onClickLoginButton(phoneNumber, password)}>
+                  onPress={() => {
+                    setModalVisible(true),
+                      onClickLoginButton(phoneNumber, password);
+                  }}>
                   <View
                     style={{
                       height: 40,
