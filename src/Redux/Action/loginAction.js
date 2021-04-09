@@ -22,6 +22,34 @@ const loginFaild = (response) => {
   };
 };
 
+//-----------------
+
+const ACTION_GET_USER_INFORMATION = '[USER] ACTION_GET_USER_INFORMATION';
+const getUserInformation = (params) => {
+  return {
+    type: ACTION_GET_USER_INFORMATION,
+    payload: params,
+  };
+};
+
+const ACTION_GET_USER_INFORMATION_SUCCESS =
+  '[USER] ACTION_GET_USER_INFORMATION_SUCCESS';
+const getUserInformationSuccess = (response) => {
+  return {
+    type: ACTION_GET_USER_INFORMATION_SUCCESS,
+    payload: response,
+  };
+};
+
+const ACTION_GET_USER_INFORMATION_FAILD =
+  '[USER] ACTION_GET_USER_INFORMATION_FAILD';
+const getUserInformationFaild = (response) => {
+  return {
+    type: ACTION_GET_USER_INFORMATION_FAILD,
+    payload: response,
+  };
+};
+
 export {
   ACTION_LOGIN,
   login,
@@ -29,4 +57,11 @@ export {
   loginSuccess,
   ACTION_LOGIN_FAILD,
   loginFaild,
+  //------------------
+  ACTION_GET_USER_INFORMATION,
+  getUserInformation,
+  ACTION_GET_USER_INFORMATION_SUCCESS,
+  getUserInformationSuccess,
+  ACTION_GET_USER_INFORMATION_FAILD,
+  getUserInformationFaild,
 };

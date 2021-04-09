@@ -9,6 +9,9 @@ import {
   TextInput,
   Dimensions,
   BackHandler,
+  FlatList,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -22,7 +25,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
+import * as actionsLogin from '../Redux/Action/loginAction';
 import Modal from 'react-native-modal';
+import loginService from '../Redux/Service/LoginService';
+import services from '../Redux/Service/orderOnlineService';
 
 const Home = (props) => {
   const [tab, setTab] = useState(props?.route?.params?.tab ? 2 : 0);
@@ -34,32 +40,7 @@ const Home = (props) => {
     {id: 4, name: 'Đã hủy'},
   ]);
 
-  const [dataOrder, setDataOrder] = useState([
-    {
-      minute: 30,
-      name: 'Trần Văn Tét',
-      code: 'TZ001 - 12122021',
-      distance: 2.5,
-      number: 6,
-      left: 5,
-    },
-    {
-      minute: 30,
-      name: 'Trần Văn Tét',
-      code: 'TZ001 - 12122021',
-      distance: 2.5,
-      number: 6,
-      left: 5,
-    },
-    {
-      minute: 30,
-      name: 'Trần Văn Tét',
-      code: 'TZ001 - 12122021',
-      distance: 2.5,
-      number: 6,
-      left: 5,
-    },
-  ]);
+  const [dataOrder, setDataOrder] = useState([]);
 
   const [dataListStore, setDataListStore] = useState([]);
 
@@ -69,17 +50,22 @@ const Home = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
   // console.log(props?.route?.params?.tab);
 
-  const onClickDetail = () => {
+  const onClickDetail = (id) => {
+    console.log(id);
     if (tab === 0) {
-      props.navigation.navigate('NewOrderOnlineDetailScreen');
+      props.navigation.navigate('NewOrderOnlineDetailScreen', {id: id});
     } else if (tab === 1) {
-      props.navigation.navigate('OrderOnlineRecievedDetailScreen');
+      props.navigation.navigate('OrderOnlineRecievedDetailScreen', {id: id});
     } else if (tab === 2) {
       props.navigation.navigate('OrderOnlineHasTakenDetailScreen');
     } else if (tab === 3) {
-      props.navigation.navigate('OrderOnlineCancelledDetailScreen');
+      // props.navigation.navigate('OrderOnlineCancelledDetailScreen');
+    } else if (tab === 4) {
+      props.navigation.navigate('OrderOnlineCancelledDetailScreen', {id: id});
     }
   };
 
@@ -97,25 +83,46 @@ const Home = (props) => {
     }, [props?.route?.params?.tab]),
   );
 
-  useEffect(() => {
-    props.onGetListStore({});
-  }, [props.onGetListStore]);
+  // useEffect(() => {
+  //   props.onGetListStore({});
+  // }, [props.onGetListStore]);
 
   useEffect(() => {
     // console.log(props.data.responseListStore?.code);
     storage.getItem('dataStore').then((data) => {
-      // console.log(data);
       if (data) {
-        // console.log(data)
         setStoreName(data.name);
         setStoreId(data.id);
+        services.getListOrderOnline(null, data.id, 1).then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataOrder(response.data.data);
+            }
+          } else {
+            return;
+          }
+        });
       } else {
         setStoreName(props.data.responseListStore?.data[0]?.name);
         setStoreId(props.data.responseListStore?.data[0]?.id);
         storage.setItem('dataStore', props.data.responseListStore?.data[0]);
+        services
+          .getListOrderOnline(
+            null,
+            props.data.responseListStore?.data[0]?.id,
+            1,
+          )
+          .then(function (response) {
+            if (response) {
+              if (response.data.code === 200) {
+                setDataOrder(response.data.data);
+              }
+            } else {
+              return;
+            }
+          });
       }
     });
-    // console.log(props.data.responseListStore)
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
 
@@ -123,27 +130,435 @@ const Home = (props) => {
 
   useEffect(() => {
     storage.getItem('role_id').then((data) => {
-      // console.log(data);
       if (data) {
-        console.log('role', data);
         setRoleId(data);
+        if (data === 6) {
+          storage.setItem(
+            'dataStore',
+            props.dataLogin.responseUserInformation?.data?.data?.store,
+          );
+          setStoreName(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.name,
+          );
+          setStoreId(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+          );
+          // console.log(
+          //   props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+          // );
+          services
+            .getListOrderOnline(
+              null,
+              props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+              1,
+            )
+            .then(function (response) {
+              if (response) {
+                if (response.data.code === 200) {
+                  setDataOrder(response.data.data);
+                  setStoreId(
+                    props.dataLogin.responseUserInformation?.data?.data?.store
+                      ?.id,
+                  );
+                }
+              } else {
+                return;
+              }
+            });
+        } else {
+          storage.getItem('dataStore').then((data) => {
+            if (data) {
+              setStoreName(data.name);
+              setStoreId(data.id);
+              services
+                .getListOrderOnline(null, data.id, 1)
+                .then(function (response) {
+                  if (response) {
+                    if (response.data.code === 200) {
+                      setDataOrder(response.data.data);
+                    }
+                  } else {
+                    return;
+                  }
+                });
+            } else {
+              // console.log('thaimai', props.data.responseListStore);
+              setStoreName(props.data.responseListStore?.data[0]?.name);
+              setStoreId(props.data.responseListStore?.data[0]?.id);
+              storage.setItem(
+                'dataStore',
+                props.data.responseListStore?.data[0],
+              );
+              services
+                .getListOrderOnline(
+                  null,
+                  props.data.responseListStore?.data[0]?.id,
+                  1,
+                )
+                .then(function (response) {
+                  if (response) {
+                    if (response.data.code === 200) {
+                      setDataOrder(response.data.data);
+                    }
+                  } else {
+                    return;
+                  }
+                });
+            }
+          });
+          // setDataListStore(props.data.responseListStore);
+        }
       } else {
       }
     });
-  }, []);
+  }, [props.dataLogin.responseUserInformation]);
+
+  const handleChangeTab = (index) => {
+    // console.log(storeId);
+    setDataOrder([]);
+    setTab(index);
+    setModalVisibleLoading(true);
+    services
+      .getListOrderOnline(null, storeId, index + 1)
+      .then(function (response) {
+        // console.log(response);
+        // props.onGetList(response?.data);
+        if (response) {
+          // console.log('thai mai', response);
+          if (response.data.code === 200) {
+            setDataOrder(response.data.data);
+            setModalVisibleLoading(false);
+          }
+        } else {
+          return;
+        }
+      });
+  };
+
+  const renderProduct = ({item}) => {
+    return (
+      <TouchableOpacity
+        onPress={() => onClickDetail(item?.id)}
+        style={{
+          height: 100,
+          backgroundColor: '#fff',
+          borderRadius: 8,
+          marginBottom: 10,
+          flexDirection: 'row',
+          padding: 8,
+        }}>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+          }}>
+          <View
+            style={{
+              height: 75,
+              width: 75,
+              borderRadius: 6,
+              borderColor: tab === 4 ? 'red' : Color.main,
+              borderWidth: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginLeft: 5,
+            }}>
+            <Image
+              source={tab === 4 ? Images.iconPrintRed : Images.iconPrint}
+              style={{height: 32, width: 32}}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginLeft: 10,
+              width: Dimensions.get('window').width - 130,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={Images.iconPersonal}
+                style={{height: 10, width: 10}}
+              />
+              <Text
+                style={{
+                  fontWeight: '600',
+                  fontSize: 13,
+                  marginLeft: 5,
+                }}>
+                {item?.user_name}
+              </Text>
+            </View>
+            <View>
+              <Text style={{fontSize: 12, color: '#828282'}}>
+                {'Khoảng cách: '}
+                {item?.distance}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginLeft: 10,
+              width: Dimensions.get('window').width - 130,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontWeight: '400',
+                  fontSize: 12,
+                  // marginLeft: 5,
+                }}>
+                {item?.code}
+              </Text>
+            </View>
+            <View>
+              <Text style={{fontSize: 12, color: '#828282'}}>
+                {'Nhận từ khách: '}
+                {item?.quantity}
+                {' món'}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginLeft: 10,
+              width: Dimensions.get('window').width - 130,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}></View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignSelf: 'flex-end',
+              }}>
+              {tab === 0 ? (
+                <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    style={{marginRight: 10}}
+                    onPress={() => {
+                      // setTab(1);
+                      // console.log(item.id);
+                      Alert.alert(
+                        'Xác nhận đơn hàng',
+                        'Bạn chắc chắn muốn xác nhận đơn hàng?',
+                        [
+                          {text: 'Hủy', onPress: () => {}},
+                          {
+                            text: 'Đồng ý',
+                            onPress: async () => {
+                              services
+                                .confirmOrderOnline(null, item.id)
+                                .then(function (response) {
+                                  // console.log(response);
+                                  // props.onGetList(response?.data);
+                                  if (response) {
+                                    // console.log('thai mai', response);
+                                    if (response.data.code === 200) {
+                                      handleChangeTab(1);
+                                    }
+                                  } else {
+                                    return;
+                                  }
+                                });
+                            },
+                          },
+                        ],
+                        {cancelable: false},
+                      );
+                    }}
+                    style={{
+                      height: 19,
+                      width: 56,
+                      borderRadius: 4,
+                      marginRight: 10,
+                      borderColor: tab === 3 ? 'red' : Color.main,
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: tab === 3 ? 'red' : Color.main,
+                        fontSize: 12,
+                      }}>
+                      Xác nhận
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // setTab(1);
+                      // console.log(item.id);
+                      Alert.alert(
+                        'Hủy đơn hàng',
+                        'Bạn chắc chắn muốn hủy đơn hàng?',
+                        [
+                          {text: 'Hủy', onPress: () => {}},
+                          {
+                            text: 'Đồng ý',
+                            onPress: async () => {
+                              services
+                                .cancelOrderOnline(null, item.id)
+                                .then(function (response) {
+                                  // console.log(response);
+                                  // props.onGetList(response?.data);
+                                  if (response) {
+                                    // console.log('thai mai', response);
+                                    if (response.data.code === 200) {
+                                      handleChangeTab(4);
+                                    }
+                                  } else {
+                                    return;
+                                  }
+                                });
+                            },
+                          },
+                        ],
+                        {cancelable: false},
+                      );
+                    }}
+                    style={{
+                      height: 19,
+                      width: 56,
+                      borderRadius: 4,
+                      marginRight: 10,
+                      borderColor: 'red',
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: 'red',
+                        fontSize: 12,
+                      }}>
+                      Hủy
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : tab === 1 ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    Alert.alert(
+                      'Xác nhận đã lấy hàng',
+                      'Bạn chắc chắn muốn xác nhận đơn hàng này đã được shipper lấy?',
+                      [
+                        {text: 'Hủy', onPress: () => {}},
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {
+                            services
+                              .confirmOrderOnlineReceived(null, item.id)
+                              .then(function (response) {
+                                // console.log(response);
+                                // props.onGetList(response?.data);
+                                if (response) {
+                                  // console.log('thai mai', response);
+                                  if (response.data.code === 200) {
+                                    handleChangeTab(2);
+                                  }
+                                } else {
+                                  return;
+                                }
+                              });
+                          },
+                        },
+                      ],
+                      {cancelable: false},
+                    );
+                  }}
+                  style={{
+                    height: 19,
+                    width: 75,
+                    borderRadius: 4,
+                    marginRight: 10,
+                    borderColor: tab === 3 ? 'red' : Color.main,
+                    borderWidth: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: tab === 3 ? 'red' : Color.main,
+                      fontSize: 12,
+                    }}>
+                    Đã lấy hàng
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+              <TouchableOpacity
+                onPress={() => {
+                  onClickDetail(item?.id);
+                }}
+                style={{
+                  height: 19,
+                  width: 56,
+                  borderRadius: 4,
+                  borderColor: tab === 4 ? 'red' : Color.main,
+                  borderWidth: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: tab === 4 ? 'red' : Color.main,
+                    fontSize: 12,
+                  }}>
+                  Chi tiết
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
-    // <View style={{backgroundColor: 'green', flex: 1}}>
-    //   <SafeAreaView style={{flex: 1}}>
-    //     <View style={styles.container}></View>
-    //   </SafeAreaView>
-    // </View>
     <View style={styles.container}>
       <View style={styles.contend}>
         <ImageBackground
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          {modalVisibleLoading === true ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
           <SafeAreaView style={{flex: 1}}>
             <View style={{padding: 10}}>
               <Modal
@@ -151,7 +566,7 @@ const Home = (props) => {
                 isVisible={modalVisible}>
                 <View
                   style={{
-                    height: '60%',
+                    height: '40%',
                     width: '100%',
                     backgroundColor: '#fff',
                     borderRadius: 10,
@@ -167,13 +582,17 @@ const Home = (props) => {
                             onPress={() => {
                               setStoreName(item.name);
                               storage.setItem('dataStore', item);
+                              props.navigation.reset({
+                                index: 0,
+                                routes: [{name: 'TabNav'}],
+                              });
                               setModalVisible(false);
                             }}
                             style={{
                               height: 45,
                               alignItems: 'center',
                               justifyContent: 'center',
-                              borderBottomWidth: 1,
+                              borderBottomWidth: 0.5,
                               borderColor: Color.main,
                               width: Dimensions.get('window').width * 0.8,
                             }}
@@ -204,7 +623,7 @@ const Home = (props) => {
                   </TouchableOpacity>
                 </View>
               </Modal>
-              <ScrollView>
+              <View>
                 {roleId === 2 ? (
                   <TouchableOpacity
                     onPress={() => {
@@ -242,7 +661,7 @@ const Home = (props) => {
                     // marginTop: 20,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '100%',
+                    // width: '100%',
                   }}>
                   <View
                     style={{
@@ -268,7 +687,7 @@ const Home = (props) => {
                           borderRadius: 20,
                           paddingLeft: 20,
                         }}
-                        placeholder="Tìm cửa hàng?"
+                        placeholder="Tìm đơn?"
                         placeholderTextColor="gray"
                       />
                     </View>
@@ -276,7 +695,7 @@ const Home = (props) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '100%',
+                      // width: '100%',
                       justifyContent: 'flex-end',
                       alignSelf: 'flex-end',
                       height: 45,
@@ -302,7 +721,7 @@ const Home = (props) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
-                          setTab(index);
+                          handleChangeTab(index);
                         }}
                         key={index}
                         style={{
@@ -314,235 +733,29 @@ const Home = (props) => {
                           borderColor: tab === index ? Color.main : '#fff',
                           borderRadius: 6,
                         }}>
-                        <Text style={{fontSize: 12}}>{item.name}</Text>
+                        <Text style={{fontSize: 13}}>{item.name}</Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-                <View style={{marginTop: 10}}>
-                  {dataOrder.map((item, index) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => onClickDetail()}
-                        key={index}
-                        style={{
-                          height: 100,
-                          backgroundColor: '#fff',
-                          borderRadius: 8,
-                          marginTop: 10,
-                          flexDirection: 'row',
-                          padding: 8,
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'column',
-                            justifyContent: 'space-around',
-                          }}>
-                          <View
-                            style={{
-                              height: 75,
-                              width: 75,
-                              borderRadius: 6,
-                              borderColor: tab === 4 ? 'red' : Color.main,
-                              borderWidth: 1,
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              marginLeft: 5,
-                            }}>
-                            <Image
-                              source={
-                                tab === 4
-                                  ? Images.iconPrintRed
-                                  : Images.iconPrint
-                              }
-                              style={{height: 32, width: 32}}
-                            />
-                          </View>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'column',
-                            justifyContent: 'space-around',
-                          }}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              marginLeft: 10,
-                              width: Dimensions.get('window').width - 130,
-                            }}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                              }}>
-                              <Image
-                                source={Images.iconPersonal}
-                                style={{height: 10, width: 10}}
-                              />
-                              <Text
-                                style={{
-                                  fontWeight: '600',
-                                  fontSize: 13,
-                                  marginLeft: 5,
-                                }}>
-                                {item.name}
-                              </Text>
-                            </View>
-                            <View>
-                              <Text style={{fontSize: 12, color: '#828282'}}>
-                                {'Khoảng cách '}
-                                {item.distance}
-                              </Text>
-                            </View>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              marginLeft: 10,
-                              width: Dimensions.get('window').width - 130,
-                            }}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                              }}>
-                              <Text
-                                style={{
-                                  fontWeight: '400',
-                                  fontSize: 12,
-                                  // marginLeft: 5,
-                                }}>
-                                {item.code}
-                              </Text>
-                            </View>
-                            <View>
-                              <Text style={{fontSize: 12, color: '#828282'}}>
-                                {'Nhận từ khách: '}
-                                {item.number}
-                                {' món'}
-                              </Text>
-                            </View>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              marginLeft: 10,
-                              width: Dimensions.get('window').width - 130,
-                            }}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                              }}>
-                              {/* <Image
-                                source={Images.iconBike}
-                                style={{height: 10, width: 15}}
-                              /> */}
-                              <Text
-                                style={{
-                                  fontWeight: '600',
-                                  fontSize: 13,
-                                  marginLeft: 5,
-                                  color: null,
-                                }}>
-                                {'Còn lại: '}
-                                {item.left}
-                                {' phút'}
-                              </Text>
-                            </View>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                alignSelf: 'flex-end',
-                              }}>
-                              {tab === 0 ? (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    // props.navigation.navigate(
-                                    //   'OrderOnlineDetailScreen',
-                                    // );
-                                    setTab(1);
-                                  }}
-                                  style={{
-                                    height: 19,
-                                    width: 56,
-                                    borderRadius: 6,
-                                    marginRight: 10,
-                                    borderColor: tab === 3 ? 'red' : Color.main,
-                                    borderWidth: 1,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                  }}>
-                                  <Text
-                                    style={{
-                                      color: tab === 3 ? 'red' : Color.main,
-                                      fontSize: 12,
-                                    }}>
-                                    Xác nhận
-                                  </Text>
-                                </TouchableOpacity>
-                              ) : tab === 1 ? (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    // props.navigation.navigate(
-                                    //   'OrderOnlineDetailScreen',
-                                    // );
-                                    setTab(2);
-                                  }}
-                                  style={{
-                                    height: 19,
-                                    width: 75,
-                                    borderRadius: 6,
-                                    marginRight: 10,
-                                    borderColor: tab === 3 ? 'red' : Color.main,
-                                    borderWidth: 1,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                  }}>
-                                  <Text
-                                    style={{
-                                      color: tab === 3 ? 'red' : Color.main,
-                                      fontSize: 12,
-                                    }}>
-                                    Đã lấy hàng
-                                  </Text>
-                                </TouchableOpacity>
-                              ) : null}
-                              <TouchableOpacity
-                                onPress={() => {
-                                  onClickDetail();
-                                }}
-                                style={{
-                                  height: 19,
-                                  width: 56,
-                                  borderRadius: 6,
-                                  borderColor: tab === 4 ? 'red' : Color.main,
-                                  borderWidth: 1,
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}>
-                                <Text
-                                  style={{
-                                    color: tab === 4 ? 'red' : Color.main,
-                                    fontSize: 12,
-                                  }}>
-                                  Chi tiết
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </ScrollView>
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                  style={{
+                    marginTop: 10,
+                    marginBottom: 230,
+                  }}
+                  data={dataOrder}
+                  renderItem={renderProduct}
+                  keyExtractor={(item, index) => index.toString()}
+                  // onEndReached={handleLoadMore}
+                  // onEndReachedThreshold={0}
+                  // ListFooterComponent={renderFooter}
+                />
+              </View>
             </View>
           </SafeAreaView>
         </ImageBackground>
@@ -555,12 +768,16 @@ const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
     data: state.orderOnlineReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onGetListStore: (params) => {
     dispatch(actionsGetListStore.getListStore(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
   },
 });
 

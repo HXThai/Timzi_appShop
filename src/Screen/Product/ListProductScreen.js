@@ -176,6 +176,7 @@ const LoginScreen = (props) => {
                     category_food_id: category_food_id,
                     store_id: store_id,
                     image: item.image,
+                    productDetail: item,
                   });
                 }}
                 style={{

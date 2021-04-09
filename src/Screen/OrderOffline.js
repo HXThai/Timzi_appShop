@@ -164,13 +164,17 @@ const Home = (props) => {
                             onPress={() => {
                               setStoreName(item.name);
                               storage.setItem('dataStore', item);
+                              props.navigation.reset({
+                                index: 0,
+                                routes: [{name: 'TabNav'}],
+                              });
                               setModalVisible(false);
                             }}
                             style={{
                               height: 45,
                               alignItems: 'center',
                               justifyContent: 'center',
-                              borderBottomWidth: 1,
+                              borderBottomWidth: 0.5,
                               borderColor: Color.main,
                               width: Dimensions.get('window').width * 0.8,
                             }}
@@ -273,7 +277,7 @@ const Home = (props) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '100%',
+                      // width: '100%',
                       justifyContent: 'flex-end',
                       alignSelf: 'flex-end',
                       height: 45,
@@ -306,7 +310,7 @@ const Home = (props) => {
                         }}
                         // key={index}
                         style={{
-                          height: 35,
+                          height: 38,
                           // width: '25%',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -316,7 +320,7 @@ const Home = (props) => {
                           padding: 10,
                           margin: 5,
                         }}>
-                        <Text>{item.name}</Text>
+                        <Text style={{fontSize: 13}}>{item.name}</Text>
                       </TouchableOpacity>
                     );
                   })}

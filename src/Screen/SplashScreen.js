@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, View} from 'react-native';
 import Images from '../Theme/Images';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -14,6 +14,8 @@ import styles from './Styles/SplashScreenStyles';
 
 import storage from './asyncStorage/Storage';
 import loginService from '../Redux/Service/LoginService';
+import * as actionsLogin from '../Redux/Action/loginAction';
+import {connect} from 'react-redux';
 
 // let uniqueId = DeviceInfo.getUniqueId();
 // console.log(getUniqueId());
@@ -25,7 +27,7 @@ const SplashScreen = (props) => {
       storage.getItem('dataLogin').then((data) => {
         if (data) {
           // props.navigation.navigate('TabNav');
-          console.log(data);
+          // console.log(data);
           loginService
             .login({
               phone: data.phone,
@@ -40,10 +42,15 @@ const SplashScreen = (props) => {
                   // save session login
                   storage.setItem('userLogin', response?.data?.data?.user);
                   storage.setItem('Authorization', response?.data.data.token);
+                  props.getUserInformation(null);
                   //set router home
                   if (response?.data?.data?.user?.role_id === 3) {
                     props.navigation.navigate('Staff');
                   } else {
+                    // storage.setItem('dataStore', props.data.responseListStore?.data[0]);
+                    // console.log(props.dataLogin.responseUserInformation);
+                    // const dataUser = props.dataLogin.responseUserInformation;
+                    // console.log(props.dataLogin.responseUserInformation);
                     props.navigation.navigate('TabNav');
                     props.navigation.reset({
                       index: 0,
@@ -93,4 +100,17 @@ const SplashScreen = (props) => {
   );
 };
 
-export default SplashScreen;
+const mapStateToProps = (state) => {
+  // console.log("data : " ,state.homeReducer);
+  return {
+    dataLogin: state.loginReducer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);

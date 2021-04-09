@@ -39,4 +39,15 @@ export default homeService = {
     let response = callApiService.postFD(url, params);
     return response;
   },
+
+  updateSize: async (params, id) => {
+    let url = `${API_BASE_URL.UPDATE_SIZE}/${id}`;
+    let response = callApiService.postFD(url, params);
+    return response;
+  },
+  updateCategoryTopping: async (params, id) => {
+    let url = `${API_BASE_URL.UPDATE_CATEGORY_TOPPING}/${id}`;
+    let response = callApiService.postFD(url, params);
+    return response;
+  },
 };

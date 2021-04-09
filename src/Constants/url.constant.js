@@ -6,6 +6,8 @@ const API_BASE_URL = {
   REGISTER: ROOT_DOMAIN + '/register-staff',
   LOGOUT: ROOT_DOMAIN + '/auth/logout',
   USER: ROOT_DOMAIN + '/users',
+  GET_USER_INFORMATION: ROOT_DOMAIN + '/get-user-infomation',
+
   GET_LIST_STORE: ROOT_DOMAIN + '/store/list-store-with-owner',
   STORE_DETAIL: ROOT_DOMAIN + '/store/store-detail-with-owner',
   GET_LIST_PRODUCT: ROOT_DOMAIN + '/store/list-food-with-category',
@@ -43,6 +45,18 @@ const API_BASE_URL = {
   CONFIRM_STAFF: ROOT_DOMAIN + '/store/confirm-staff',
   STOP_STAFF: ROOT_DOMAIN + '/store/stop-staff',
   ACTIVE_STAFF: ROOT_DOMAIN + '/store/active-staff',
+
+  CHANGE_PASSWORD: ROOT_DOMAIN + '/change-password',
+
+  GET_LIST_ORDER_ONLINE: ROOT_DOMAIN + '/order/list-order-with-owner',
+  ORDER_ONLINE_DETAIL: ROOT_DOMAIN + '/order/order-detail-with-owner',
+  CONFIRM_ORDER_ONLINE: ROOT_DOMAIN + '/order/confirm-order-with-owner',
+  CONFIRM_ORDER_ONLINE_RECEIVED:
+    ROOT_DOMAIN + '/order/shipper-received-order-with-owner',
+  CANCEL_ORDER_ONLINE: ROOT_DOMAIN + '/order/cancel-order-with-owner',
+
+  UPDATE_SIZE: ROOT_DOMAIN + '/food/update-size-food',
+  UPDATE_CATEGORY_TOPPING: ROOT_DOMAIN + '/food/update-category-topping-food',
 };
 
 export {API_BASE_URL};

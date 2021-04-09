@@ -66,7 +66,7 @@ const LoginScreen = (props) => {
     services
       .getListStaffWaitConnect(null, store_id, 0)
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         // props.onGetList(response?.data);
         if (response) {
           // console.log('thai mai', response);

@@ -26,7 +26,8 @@ import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
-// import * as actionsLogin from '../Redux/Action/loginAction';
+import * as actionsLogin from '../../Redux/Action/loginAction';
+import * as actionsGetListStore from '../../Redux/Action/orderOnlineAction';
 import loginService from '../../Redux/Service/LoginService';
 import storage from '../asyncStorage/Storage';
 
@@ -39,16 +40,20 @@ const LoginScreen = (props) => {
   // console.log('dv', deviceId);
   const [modalVisible, setModalVisible] = useState(false);
 
+  // useEffect(() => {
+  //   props.onGetListStore({});
+  // }, [props.onGetListStore]);
+
+  // useEffect(() => {
+  //   props.onGetListStore({});
+  // }, [props.onGetListStore]);
+
   const onClickLoginButton = async (phone, password) => {
     // props.navigation.navigate('TabNav');
     loginService
       .login({phone: phone, password: password, device_id: deviceId})
       .then(function (response) {
-        // setModalVisible(false);
-        // props.onGetList(response?.data);
         if (response) {
-          // setModalVisible(false);
-          // console.log(response);
           if (response?.data?.code === 200) {
             setModalVisible(false);
             // save session login
@@ -60,10 +65,12 @@ const LoginScreen = (props) => {
             storage.setItem('userLogin', response?.data?.data?.user);
             storage.setItem('Authorization', response?.data.data.token);
             storage.setItem('role_id', response?.data?.data?.user?.role_id);
+            props.getUserInformation(null);
             //set router home
             if (response?.data?.data?.user?.role_id === 3) {
               props.navigation.navigate('Staff');
             } else {
+              props.onGetListStore({});
               props.navigation.navigate('TabNav');
               props.navigation.reset({
                 index: 0,
@@ -279,13 +286,19 @@ const LoginScreen = (props) => {
 const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
-    data: state.loginReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onLogin: (params) => {
     dispatch(actionsLogin.login(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
+  },
+  onGetListStore: (params) => {
+    dispatch(actionsGetListStore.getListStore(params));
   },
 });
 

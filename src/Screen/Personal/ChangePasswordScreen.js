@@ -27,11 +27,57 @@ import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import services from '../../Redux/Service/LoginService';
 
 const LoginScreen = (props) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  const [displayPassword, setDisplayPassword] = useState(false);
+  const [displayConfirmPassword, setDisplayConfirmPassword] = useState(false);
+
+  const handleChangePassword = () => {
+    services
+      .changePassword({
+        current_password: oldPassword,
+        password: newPassword,
+        password_confirmation: confirmNewPassword,
+      })
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            Alert.alert(
+              'Thông báo',
+              response.data.message,
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {
+                    props.navigation.goBack();
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
+          } else {
+            Alert.alert(
+              'Thông báo',
+              response.data.message,
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {},
+                },
+              ],
+              {cancelable: false},
+            );
+          }
+        } else {
+          return;
+        }
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -82,18 +128,47 @@ const LoginScreen = (props) => {
                 />
               </View>
               <View
-                style={{width: '80%', marginTop: 30, justifyContent: 'center'}}>
+                style={{
+                  height: 40,
+                  width: '80%',
+                  marginTop: 30,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: '#333333',
+                }}>
                 <TextInput
                   style={{
+                    color: '#000000',
+                    // fontFamily: 'Nunito',
+                    width: '87%',
                     height: 40,
-                    borderBottomWidth: 0.8,
-                    borderBottomColor: '#333333',
                   }}
                   placeholder="Mật khẩu mới"
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setNewPassword(text)}
-                  defaultValue={newPassword}
+                  value={newPassword}
+                  secureTextEntry={displayPassword === true ? false : true}
                 />
+                <View
+                  style={{
+                    height: 40,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => setDisplayPassword(!displayPassword)}>
+                    <MaterialIcons
+                      name={
+                        displayPassword === true
+                          ? 'visibility'
+                          : 'visibility-off'
+                      }
+                      size={22}
+                      color={'black'}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
               <View
                 style={{
@@ -108,7 +183,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-
+                    // fontFamily: 'Nunito',
                     width: '87%',
                     height: 40,
                   }}
@@ -116,12 +191,36 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setConfirmNewPassword(text)}
                   value={confirmNewPassword}
+                  secureTextEntry={
+                    displayConfirmPassword === true ? false : true
+                  }
                 />
+                <View
+                  style={{
+                    height: 40,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setDisplayConfirmPassword(!displayConfirmPassword)
+                    }>
+                    <MaterialIcons
+                      name={
+                        displayConfirmPassword === true
+                          ? 'visibility'
+                          : 'visibility-off'
+                      }
+                      size={22}
+                      color={'black'}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
               <View style={{width: '80%', marginTop: 60}}>
                 <TouchableOpacity
                   onPress={() => {
-                    // props.navigation.navigate('ConfirmChangePasswordScreen')
+                    handleChangePassword();
                   }}>
                   <View
                     style={{

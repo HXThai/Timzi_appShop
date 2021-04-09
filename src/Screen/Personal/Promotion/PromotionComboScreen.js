@@ -310,6 +310,7 @@ const LoginScreen = (props) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginTop: 10,
+                marginBottom: 10,
               }}>
               <Text
                 style={{fontWeight: '700', fontSize: 15, color: Color.white}}>

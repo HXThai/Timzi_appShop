@@ -26,7 +26,7 @@ import services from '../../../Redux/Service/shipperService';
 const Home = (props) => {
   const store_id = props?.route?.params?.store_id || null;
 
-  console.log(store_id);
+  // console.log(store_id);
   // useFocusEffect(
   //   React.useCallback(() => {
   //     // console.log('thai', props?.route?.params?.tab);

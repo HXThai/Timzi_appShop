@@ -698,6 +698,7 @@ const LoginScreen = (props) => {
                     marginTop: 15,
                     textAlignVertical: 'top',
                     borderRadius: 10,
+                    height: 100,
                   },
                 ]}
                 multiline={true}
@@ -863,6 +864,7 @@ const LoginScreen = (props) => {
                   borderRadius: 50,
                   backgroundColor: Color.main,
                   marginTop: 10,
+                  marginBottom: 10,
                 }}>
                 <Text style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
                   Xác nhận

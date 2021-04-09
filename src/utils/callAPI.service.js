@@ -4,6 +4,7 @@ import storage from '../Screen/asyncStorage/Storage';
 
 const callApiService = {
   get: async (url, body) => {
+    // console.log(url);
     let authorization = await storage.getItem('Authorization');
     // console.log(authorization);
     return axios({

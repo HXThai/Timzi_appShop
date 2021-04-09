@@ -697,7 +697,7 @@ function EarnCoinStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -736,7 +736,7 @@ function EarnCoinStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -775,7 +775,7 @@ function EarnCoinStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1011,7 +1011,7 @@ function HomeStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1050,7 +1050,7 @@ function HomeStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1089,7 +1089,7 @@ function HomeStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),
@@ -1128,7 +1128,7 @@ function HomeStack(props) {
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
               </View>
             </TouchableOpacity>
           ),

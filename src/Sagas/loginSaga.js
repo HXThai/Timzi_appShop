@@ -11,6 +11,17 @@ export function* login(params) {
   }
 }
 
+export function* userInformation(params) {
+  try {
+    let data = yield call(services.getUserInformation, params.payload);
+    // console.log('data', data);
+    yield put(actions.getUserInformationSuccess(data));
+  } catch (error) {
+    yield put(actions.getUserInformationFaild(error.message));
+  }
+}
+
 export function* watchLogin() {
   yield takeLatest(actions.ACTION_LOGIN, login);
+  yield takeLatest(actions.ACTION_GET_USER_INFORMATION, userInformation);
 }

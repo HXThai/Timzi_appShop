@@ -21,4 +21,19 @@ export default homeService = {
     // console.log(response);
     return response;
   },
+
+  getUserInformation: async (params) => {
+    let url = `${API_BASE_URL.GET_USER_INFORMATION}`;
+    let response = callApiService.get(url, params);
+    // console.log(url, params);
+    // console.log(response);
+    return response;
+  },
+
+  changePassword: async (params) => {
+    let url = `${API_BASE_URL.CHANGE_PASSWORD}`;
+    let response = callApiService.put(url, params);
+    // console.log(response);
+    return response;
+  },
 };

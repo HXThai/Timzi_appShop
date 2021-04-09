@@ -317,6 +317,7 @@ const LoginScreen = (props) => {
                     borderRadius: 50,
                     backgroundColor: Color.main,
                     marginTop: 10,
+                    marginBottom: 10,
                   }}>
                   <Text
                     style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
@@ -334,6 +335,7 @@ const LoginScreen = (props) => {
                     borderRadius: 50,
                     backgroundColor: Color.main,
                     marginTop: 10,
+                    marginBottom: 10,
                   }}>
                   <Text
                     style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>

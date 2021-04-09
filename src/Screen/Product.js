@@ -94,7 +94,7 @@ const Home = (props) => {
     storage.getItem('role_id').then((data) => {
       // console.log(data);
       if (data) {
-        console.log('role', data);
+        // console.log('role', data);
         setRoleId(data);
       } else {
       }
@@ -137,13 +137,21 @@ const Home = (props) => {
                               // console.log(item);
                               setStoreName(item.name);
                               storage.setItem('dataStore', item);
+                              props.navigation.reset({
+                                index: 0,
+                                routes: [{name: 'TabNav'}],
+                              });
+                              // props.navigation.reset({
+                              //   index: 0,
+                              //   routes: [{name: 'EarnCoin'}],
+                              // });
                               setModalVisible(false);
                             }}
                             style={{
                               height: 45,
                               alignItems: 'center',
                               justifyContent: 'center',
-                              borderBottomWidth: 1,
+                              borderBottomWidth: 0.5,
                               borderColor: Color.main,
                               width: Dimensions.get('window').width * 0.8,
                             }}
@@ -248,7 +256,7 @@ const Home = (props) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '100%',
+                      // width: '100%',
                       justifyContent: 'flex-end',
                       alignSelf: 'flex-end',
                       height: 45,
@@ -670,6 +678,7 @@ const Home = (props) => {
                                             item.category_food_id,
                                           store_id: storeId,
                                           image: item.image,
+                                          productDetail: item,
                                         },
                                       );
                                     }}

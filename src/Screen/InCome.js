@@ -167,13 +167,17 @@ const Home = (props) => {
                             onPress={() => {
                               setStoreName(item.name);
                               storage.setItem('dataStore', item);
+                              props.navigation.reset({
+                                index: 0,
+                                routes: [{name: 'TabNav'}],
+                              });
                               setModalVisible(false);
                             }}
                             style={{
                               height: 45,
                               alignItems: 'center',
                               justifyContent: 'center',
-                              borderBottomWidth: 1,
+                              borderBottomWidth: 0.5,
                               borderColor: Color.main,
                               width: Dimensions.get('window').width * 0.8,
                             }}

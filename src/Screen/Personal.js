@@ -102,6 +102,11 @@ const Home = (props) => {
     });
   }, []);
 
+  useEffect(() => {
+    setDataUser(props.dataLogin.responseUserInformation?.data?.data);
+    // console.log(props.dataLogin.responseUserInformation?.data?.data);
+  }, [props.dataLogin.responseUserInformation]);
+
   const [dataCategories, setDataCategories] = useState([]);
 
   const onClickCate = (index, props) => {
@@ -178,7 +183,8 @@ const Home = (props) => {
           {
             text: 'Đồng ý',
             onPress: async () => {
-              await AsyncStorage.clear();
+              // await AsyncStorage.clear();
+              await AsyncStorage.removeItem('dataLogin');
               props.navigation.navigate('Login');
             },
           },
@@ -212,29 +218,29 @@ const Home = (props) => {
                     borderRadius: 10,
                   }}>
                   <Image
-                    source={dataUser.image}
+                    source={{uri: dataUser?.avatar}}
                     style={{width: 60, height: 60}}
                   />
                   <View style={{marginLeft: 10, flexDirection: 'column'}}>
                     <Text style={{fontSize: 15, fontWeight: '700'}}>
-                      {dataUser.name}
+                      {dataUser?.name}
                     </Text>
                     <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
-                      Vai trò: {dataUser.role}
+                      Địa chỉ: {dataUser?.address}
                     </Text>
                     <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
-                      Cửa hàng: {dataUser.restaurant}
+                      email: {dataUser?.email}
                     </Text>
                     <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
-                      Số điện thoại: {dataUser.phone}
+                      Số điện thoại: {dataUser?.phone}
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Ngày tham gia: {dataUser.date}
-                    </Text>
+                    </Text> */}
                     <View style={{flexDirection: 'row', marginTop: 10}}>
                       <TouchableOpacity
                         style={{
@@ -343,12 +349,16 @@ const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
     data: state.orderOnlineReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onGetListStore: (params) => {
     dispatch(actionsGetListStore.getListStore(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
   },
 });
 
