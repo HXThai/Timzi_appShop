@@ -45,7 +45,11 @@ const LoginScreen = (props) => {
   const [limitTopping, setLimitTopping] = useState('');
   const [priceSize, setPriceSize] = useState('');
   const [toppingDetail, setToppingDetail] = useState('');
+  const [priceTopping, setPriceTopping] = useState('');
   const [currentCategoryTopping, setCurrentCategoryTopping] = useState();
+  const [currentCategoryToppingId, setCurrentCategoryToppingId] = useState();
+  const [data, setData] = useState([]);
+  const [dataToppingDetail, setDataToppingDetail] = useState([{}]);
   // const test = props?.route?.params?.status;
   // console.log('thai', test);
   const statusFood = props.route.params.status;
@@ -191,33 +195,26 @@ const LoginScreen = (props) => {
 
   const [dataSize, setDataSize] = useState([]);
   const [dataCategoryTopping, setDataCategoryTopping] = useState([]);
-  const [dataShowToping, setDataShowToping] = useState([]);
+  const [dataShowToping, setDataShowTopping] = useState([]);
 
   useEffect(() => {
     setName(props?.route?.params?.name?.toString());
     setPrice(props?.route?.params?.price?.toString());
     setPromotion(props?.route?.params?.promotion?.toString());
     setImage(props?.route?.params?.image);
-    // setDataCategoryTopping(
-    //   props?.route?.params?.productDetail?.category_topping_food,
-    // );
+    setDataCategoryTopping(
+      props?.route?.params?.productDetail?.category_topping_food,
+    );
     // setDataSize(props?.route?.params?.productDetail?.size);
     // props?.route?.params?.productDetail?.size?
     // console.log(props?.route?.params?.productDetail?.category_topping_food);
     var newDataSize = [];
-    var newDataCategoryTopping = [];
+
     props?.route?.params?.productDetail?.size?.forEach((element) => {
       var data = {name: element.name, price: element.price};
       newDataSize.push(data);
     });
     setDataSize(newDataSize);
-    props?.route?.params?.productDetail?.category_topping_food?.forEach(
-      (element) => {
-        var data = {name: element.name, limit: element.limit};
-        newDataCategoryTopping.push(data);
-      },
-    );
-    setDataCategoryTopping(newDataCategoryTopping);
   }, [props?.route?.params?.name]);
 
   const handleAddFood = () => {
@@ -235,12 +232,6 @@ const LoginScreen = (props) => {
     body.append('category_food_id', category_food_id);
     // body.append('quantity', number);
     body.append('price_discount', promotion);
-    // console.log('check', body);
-
-    // props.navigation.navigate('ListProductScreen', {
-    //   category_food_id: category_food_id,
-    //   store_id: store_id,
-    // });
     services.addFood(body).then(function (response) {
       // props.onGetList(response?.data);
       if (response) {
@@ -533,14 +524,10 @@ const LoginScreen = (props) => {
                       var data = dataSize;
                       data.push(newData);
                       var body = new FormData();
-                      // console.log(data);
                       body.append('size', JSON.stringify(data));
                       body.append('_method', 'put');
-                      // console.log(data);
                       services.updateSize(body, id).then(function (response) {
-                        // props.onGetList(response?.data);
                         if (response) {
-                          // console.log('thai', response);
                           if (response.data.code === 200) {
                             setModalVisibleSize(false);
                           }
@@ -573,7 +560,7 @@ const LoginScreen = (props) => {
                 </View>
               </View>
             </Modal>
-            {/* Modal thêm Topping */}
+            {/* Modal thêm danh mục Topping */}
             <Modal
               onBackdropPress={() => setModalVisibleCategoryTopping(false)}
               style={{alignItems: 'center', justifyContent: 'center'}}
@@ -622,21 +609,38 @@ const LoginScreen = (props) => {
                         name: nameCategoryTopping,
                         limit: limitTopping,
                       };
-                      var data = dataCategoryTopping;
-                      data.push(newData);
-                      // console.log(data);
+                      var newDataCategoryTopping = [];
+                      props?.route?.params?.productDetail?.category_topping_food?.forEach(
+                        (element) => {
+                          var data = {name: element.name, limit: element.limit};
+                          newDataCategoryTopping.push(data);
+                        },
+                      );
+                      newDataCategoryTopping.push(newData);
                       var body = new FormData();
-                      // console.log(data);
-                      body.append('category_topping', JSON.stringify(data));
+                      body.append(
+                        'category_topping',
+                        JSON.stringify(newDataCategoryTopping),
+                      );
                       body.append('_method', 'put');
-                      // console.log(data);
                       services
                         .updateCategoryTopping(body, id)
                         .then(function (response) {
-                          // props.onGetList(response?.data);
                           if (response) {
-                            // console.log('thai', response);
                             if (response.data.code === 200) {
+                              services
+                                .listCategoryTopping(null, id)
+                                .then(function (response) {
+                                  if (response) {
+                                    if (response.data.code === 200) {
+                                      setDataCategoryTopping(
+                                        response?.data?.data,
+                                      );
+                                    }
+                                  } else {
+                                    return;
+                                  }
+                                });
                               setModalVisibleCategoryTopping(false);
                             }
                           } else {
@@ -668,13 +672,18 @@ const LoginScreen = (props) => {
                 </View>
               </View>
             </Modal>
-            {/* Modal danh mục topping */}
+            {/* Modal chi tiết topping */}
             <Modal
-              onBackdropPress={() => setModalVisibleToppingDetail(false)}
+              onBackdropPress={() => {
+                setModalVisibleToppingDetail(false);
+                setDataToppingDetail([0]);
+              }}
               style={{alignItems: 'center', justifyContent: 'center'}}
               isVisible={modalVisibleToppingDetail}>
               <Modal
-                onBackdropPress={() => setModalVisibleListCate(false)}
+                onBackdropPress={() => {
+                  setModalVisibleListCate(false);
+                }}
                 style={{alignItems: 'center', justifyContent: 'center'}}
                 isVisible={modalVisibleListCate}>
                 <View
@@ -688,11 +697,12 @@ const LoginScreen = (props) => {
                     // justifyContent: 'space-around',
                   }}>
                   <ScrollView>
-                    {dataCategoryTopping?.map((item, index) => {
+                    {data?.map((item, index) => {
                       return (
                         <TouchableOpacity
                           onPress={() => {
                             setCurrentCategoryTopping(item.name);
+                            setCurrentCategoryToppingId(item.id);
                             setModalVisibleListCate(false);
                           }}
                           key={index}
@@ -713,7 +723,7 @@ const LoginScreen = (props) => {
               </Modal>
               <View
                 style={{
-                  height: Dimensions.get('window').height * 0.35,
+                  height: Dimensions.get('window').height * 0.4,
                   width: '100%',
                   backgroundColor: '#fff',
                   borderRadius: 10,
@@ -740,26 +750,149 @@ const LoginScreen = (props) => {
                     }}>
                     <Text>{currentCategoryTopping}</Text>
                   </TouchableOpacity>
-                  <Text style={{marginTop: 15}}>Chi tiết topping</Text>
-                  <TextInput
-                    style={{
-                      height: 40,
-                      borderBottomWidth: 0.8,
-                      borderBottomColor: '#333333',
-                      width: Dimensions.get('window').width * 0.7,
-                    }}
-                    placeholder="Chi tiết topping"
-                    placeholderTextColor="#9C9C9C"
-                    onChangeText={(text) => setToppingDetail(text)}
-                    defaultValue={toppingDetail}
-                  />
+                  <View style={{height: 120}}>
+                    <ScrollView style={{marginTop: 5}}>
+                      {dataToppingDetail.map((item, index) => {
+                        return (
+                          <View
+                            key={index}
+                            style={{
+                              padding: 10,
+                              backgroundColor: '#E8E8E8',
+                              borderRadius: 8,
+                              marginTop: 10,
+                            }}>
+                            <TextInput
+                              style={{
+                                height: 40,
+                                borderBottomWidth: 0.8,
+                                borderBottomColor: '#333333',
+                                width:
+                                  Dimensions.get('window').width * 0.7 - 20,
+                              }}
+                              placeholder="Chi tiết topping"
+                              placeholderTextColor="#9C9C9C"
+                              onChangeText={(text) => setToppingDetail(text)}
+                              defaultValue={item?.name}
+                            />
+                            <TextInput
+                              style={{
+                                height: 40,
+                                borderBottomWidth: 0.8,
+                                borderBottomColor: '#333333',
+                                width:
+                                  Dimensions.get('window').width * 0.7 - 20,
+                                marginTop: 5,
+                              }}
+                              placeholder="Giá tiền"
+                              placeholderTextColor="#9C9C9C"
+                              onChangeText={(text) => setPriceTopping(text)}
+                              defaultValue={item?.price}
+                            />
+                          </View>
+                        );
+                      })}
+                    </ScrollView>
+                  </View>
                   <TouchableOpacity
                     onPress={() => {
-                      // var newData = {name: nameCategoryTopping};
-                      // var data = dataCategoryTopping;
-                      // data.push(newData);
-                      // console.log(data);
-                      setModalVisibleToppingDetail(false);
+                      var data = dataToppingDetail;
+                      data.push({name: toppingDetail, price: priceTopping});
+                      const newData = [...data];
+                      // newData.push({name: toppingDetail, price: priceTopping});
+                      setDataToppingDetail(newData);
+                    }}
+                    style={{
+                      height: 35,
+                      width: 35,
+                      borderRadius: 4,
+                      backgroundColor: Color.main,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      alignSelf: 'flex-end',
+                      marginTop: 5,
+                    }}>
+                    <MaterialIcons
+                      name={'add'}
+                      size={26}
+                      style={{color: Color.white}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      const dataCF = [...dataToppingDetail];
+                      dataCF.push({name: toppingDetail, price: priceTopping});
+                      dataCF.shift();
+                      console.log('thaimai', dataCF);
+                      var body = new FormData();
+                      body.append('topping_food', JSON.stringify(dataCF));
+                      body.append('_method', 'put');
+                      services
+                        .updateToppingFood(body, currentCategoryToppingId)
+                        .then(function (response) {
+                          if (response) {
+                            if (response.data.code === 200) {
+                              Alert.alert(
+                                'Thông báo!',
+                                'Cập nhật chi tiết topping thành công!',
+                                [
+                                  {
+                                    text: 'Đồng ý',
+                                    onPress: () => {
+                                      services
+                                        .listCategoryTopping(null, id)
+                                        .then(function (response) {
+                                          if (response) {
+                                            if (response.data.code === 200) {
+                                              setDataCategoryTopping(
+                                                response?.data?.data,
+                                              );
+                                            }
+                                          } else {
+                                            return;
+                                          }
+                                        });
+                                      setDataToppingDetail([0]);
+                                      setModalVisibleToppingDetail(false);
+                                    },
+                                  },
+                                ],
+                                {cancelable: false},
+                              );
+                            } else {
+                              Alert.alert(
+                                'Thông báo!',
+                                response.data.message,
+                                [
+                                  {
+                                    text: 'Đồng ý',
+                                    onPress: () => {
+                                      setDataToppingDetail([0]);
+                                      setModalVisibleToppingDetail(false);
+                                    },
+                                  },
+                                ],
+                                {cancelable: false},
+                              );
+                            }
+                          } else {
+                            Alert.alert(
+                              'Thông báo!',
+                              'Lỗi hệ thống!',
+                              [
+                                {
+                                  text: 'Đồng ý',
+                                  onPress: () => {
+                                    setDataToppingDetail([0]);
+                                    setModalVisibleToppingDetail(false);
+                                  },
+                                },
+                              ],
+                              {cancelable: false},
+                            );
+                            return;
+                          }
+                        });
                     }}
                     style={{
                       width: Dimensions.get('window').width * 0.7,
@@ -790,7 +923,7 @@ const LoginScreen = (props) => {
                   // justifyContent: 'space-around',
                 }}>
                 <ScrollView>
-                  {dataShowToping.map((item, index) => {
+                  {dataShowToping?.map((item, index) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {}}
@@ -909,11 +1042,7 @@ const LoginScreen = (props) => {
                   height: 45,
                   borderRadius: 8,
                   backgroundColor: '#fff',
-                  // elevation: 3,
-                  // alignItems: 'center',
                   padding: 10,
-                  // marginLeft: 5,
-                  // marginRight: 5,
                   justifyContent: 'center',
                 }}>
                 <Text>{status === 1 ? 'Còn hàng' : 'Hết hàng'}</Text>
@@ -982,7 +1111,8 @@ const LoginScreen = (props) => {
                   return (
                     <TouchableOpacity
                       onPress={() => {
-                        setDataShowToping(item.topping_food);
+                        // console.log(item.topping_food);
+                        setDataShowTopping(item.topping_food);
                         setModalVisibleShowTopping(true);
                       }}
                       key={index}
@@ -1048,7 +1178,7 @@ const LoginScreen = (props) => {
                 </View>
               )}
             </ScrollView>
-            <ActionButton buttonColor={Color.main}>
+            <ActionButton buttonColor={Color.buttonColor}>
               <ActionButton.Item
                 buttonColor="#9b59b6"
                 title="Thêm size"
@@ -1076,7 +1206,19 @@ const LoginScreen = (props) => {
                 title="Thêm chi tiết topping"
                 onPress={() => {
                   setCurrentCategoryTopping(dataCategoryTopping[0]?.name);
+                  setCurrentCategoryToppingId(dataCategoryTopping[0]?.id);
                   setModalVisibleToppingDetail(true);
+                  services
+                    .listCategoryTopping(null, id)
+                    .then(function (response) {
+                      if (response) {
+                        if (response.data.code === 200) {
+                          setData(response?.data?.data);
+                        }
+                      } else {
+                        return;
+                      }
+                    });
                 }}>
                 <MaterialIcons
                   name={'fastfood'}

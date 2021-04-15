@@ -131,7 +131,7 @@ const LoginScreen = (props) => {
                   padding: 8,
                 }}>
                 <MaterialIcons
-                  name={'location-on'}
+                  name={'attach-money'}
                   size={33}
                   style={{color: Color.main}}
                 />
@@ -160,7 +160,7 @@ const LoginScreen = (props) => {
                   padding: 8,
                 }}>
                 <MaterialIcons
-                  name={'location-on'}
+                  name={'schedule'}
                   size={33}
                   style={{color: Color.main}}
                 />
@@ -187,7 +187,7 @@ const LoginScreen = (props) => {
                   padding: 8,
                 }}>
                 <MaterialIcons
-                  name={'location-on'}
+                  name={'schedule'}
                   size={33}
                   style={{color: Color.main}}
                 />
@@ -285,6 +285,7 @@ const LoginScreen = (props) => {
                   borderRadius: 50,
                   backgroundColor: Color.main,
                   marginTop: 10,
+                  marginBottom: 10,
                 }}>
                 <Text style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
                   Chỉnh sửa

@@ -30,6 +30,11 @@ import * as actionsLogin from '../../Redux/Action/loginAction';
 import * as actionsGetListStore from '../../Redux/Action/orderOnlineAction';
 import loginService from '../../Redux/Service/LoginService';
 import storage from '../asyncStorage/Storage';
+import {
+  getUniqueId,
+  DeviceInfo,
+  getManufacturer,
+} from 'react-native-device-info';
 
 const LoginScreen = (props) => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -50,17 +55,23 @@ const LoginScreen = (props) => {
 
   const onClickLoginButton = async (phone, password) => {
     // props.navigation.navigate('TabNav');
+    // storage.setItem('deviceId', getUniqueId().toString());
     loginService
-      .login({phone: phone, password: password, device_id: deviceId})
+      .login({
+        phone: phone,
+        password: password,
+        device_id: getUniqueId().toString(),
+      })
       .then(function (response) {
         if (response) {
           if (response?.data?.code === 200) {
             setModalVisible(false);
+            // console.log(getUniqueId().toString());
             // save session login
             storage.setItem('dataLogin', {
               phone: phone,
               password: password,
-              device_id: deviceId,
+              device_id: getUniqueId().toString(),
             });
             storage.setItem('userLogin', response?.data?.data?.user);
             storage.setItem('Authorization', response?.data.data.token);

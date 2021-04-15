@@ -16,8 +16,6 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
 import Images from '../Theme/Images';
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
 
 // Styles
 import styles from './Styles/HomeStyles';
@@ -61,7 +59,7 @@ const Home = (props) => {
     } else if (tab === 1) {
       props.navigation.navigate('OrderOnlineRecievedDetailScreen', {id: id});
     } else if (tab === 2) {
-      props.navigation.navigate('OrderOnlineHasTakenDetailScreen');
+      props.navigation.navigate('OrderOnlineHasTakenDetailScreen', {id: id});
     } else if (tab === 3) {
       // props.navigation.navigate('OrderOnlineCancelledDetailScreen');
     } else if (tab === 4) {
@@ -69,11 +67,11 @@ const Home = (props) => {
     }
   };
 
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => true);
-    return () =>
-      BackHandler.removeEventListener('hardwareBackPress', () => true);
-  }, []);
+  // useEffect(() => {
+  //   BackHandler.addEventListener('hardwareBackPress', () => true);
+  //   return () =>
+  //     BackHandler.removeEventListener('hardwareBackPress', () => true);
+  // }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -83,25 +81,26 @@ const Home = (props) => {
     }, [props?.route?.params?.tab]),
   );
 
-  // useEffect(() => {
-  //   props.onGetListStore({});
-  // }, [props.onGetListStore]);
+  useEffect(() => {
+    props.onGetListStore({});
+  }, [props.onGetListStore]);
 
   useEffect(() => {
-    // console.log(props.data.responseListStore?.code);
     storage.getItem('dataStore').then((data) => {
       if (data) {
         setStoreName(data.name);
         setStoreId(data.id);
-        services.getListOrderOnline(null, data.id, 1).then(function (response) {
-          if (response) {
-            if (response.data.code === 200) {
-              setDataOrder(response.data.data);
+        services
+          .getListOrderOnline(null, data?.id, 1)
+          .then(function (response) {
+            if (response) {
+              if (response.data.code === 200) {
+                setDataOrder(response?.data?.data);
+              }
+            } else {
+              return;
             }
-          } else {
-            return;
-          }
-        });
+          });
       } else {
         setStoreName(props.data.responseListStore?.data[0]?.name);
         setStoreId(props.data.responseListStore?.data[0]?.id);
@@ -115,7 +114,7 @@ const Home = (props) => {
           .then(function (response) {
             if (response) {
               if (response.data.code === 200) {
-                setDataOrder(response.data.data);
+                setDataOrder(response?.data?.data);
               }
             } else {
               return;
@@ -155,7 +154,7 @@ const Home = (props) => {
             .then(function (response) {
               if (response) {
                 if (response.data.code === 200) {
-                  setDataOrder(response.data.data);
+                  setDataOrder(response?.data?.data);
                   setStoreId(
                     props.dataLogin.responseUserInformation?.data?.data?.store
                       ?.id,
@@ -168,21 +167,20 @@ const Home = (props) => {
         } else {
           storage.getItem('dataStore').then((data) => {
             if (data) {
-              setStoreName(data.name);
-              setStoreId(data.id);
+              setStoreName(data?.name);
+              setStoreId(data?.id);
               services
-                .getListOrderOnline(null, data.id, 1)
+                .getListOrderOnline(null, data?.id, 1)
                 .then(function (response) {
                   if (response) {
                     if (response.data.code === 200) {
-                      setDataOrder(response.data.data);
+                      setDataOrder(response?.data?.data);
                     }
                   } else {
                     return;
                   }
                 });
             } else {
-              // console.log('thaimai', props.data.responseListStore);
               setStoreName(props.data.responseListStore?.data[0]?.name);
               setStoreId(props.data.responseListStore?.data[0]?.id);
               storage.setItem(
@@ -197,8 +195,8 @@ const Home = (props) => {
                 )
                 .then(function (response) {
                   if (response) {
-                    if (response.data.code === 200) {
-                      setDataOrder(response.data.data);
+                    if (response?.data?.code === 200) {
+                      setDataOrder(response?.data?.data);
                     }
                   } else {
                     return;
@@ -226,7 +224,7 @@ const Home = (props) => {
         if (response) {
           // console.log('thai mai', response);
           if (response.data.code === 200) {
-            setDataOrder(response.data.data);
+            setDataOrder(response?.data?.data);
             setModalVisibleLoading(false);
           }
         } else {
@@ -303,7 +301,7 @@ const Home = (props) => {
             <View>
               <Text style={{fontSize: 12, color: '#828282'}}>
                 {'Khoảng cách: '}
-                {item?.distance}
+                {item?.distance?.text}
               </Text>
             </View>
           </View>
@@ -371,7 +369,7 @@ const Home = (props) => {
                             text: 'Đồng ý',
                             onPress: async () => {
                               services
-                                .confirmOrderOnline(null, item.id)
+                                .confirmOrderOnline(null, item?.id)
                                 .then(function (response) {
                                   // console.log(response);
                                   // props.onGetList(response?.data);
@@ -421,7 +419,7 @@ const Home = (props) => {
                             text: 'Đồng ý',
                             onPress: async () => {
                               services
-                                .cancelOrderOnline(null, item.id)
+                                .cancelOrderOnline(null, item?.id)
                                 .then(function (response) {
                                   // console.log(response);
                                   // props.onGetList(response?.data);
@@ -471,7 +469,7 @@ const Home = (props) => {
                           text: 'Đồng ý',
                           onPress: async () => {
                             services
-                              .confirmOrderOnlineReceived(null, item.id)
+                              .confirmOrderOnlineReceived(null, item?.id)
                               .then(function (response) {
                                 // console.log(response);
                                 // props.onGetList(response?.data);
@@ -577,7 +575,7 @@ const Home = (props) => {
                   <ScrollView showsVerticalScrollIndicator={false}>
                     {dataListStore?.data?.map((item, index) => {
                       return (
-                        <View style={{padding: 10}} key={index}>
+                        <View style={{}} key={index}>
                           <TouchableOpacity
                             onPress={() => {
                               setStoreName(item.name);
@@ -589,7 +587,7 @@ const Home = (props) => {
                               setModalVisible(false);
                             }}
                             style={{
-                              height: 45,
+                              // height: 45,
                               alignItems: 'center',
                               justifyContent: 'center',
                               borderBottomWidth: 0.5,
@@ -597,7 +595,13 @@ const Home = (props) => {
                               width: Dimensions.get('window').width * 0.8,
                             }}
                             key={index}>
-                            <Text style={{fontWeight: '700', fontSize: 15}}>
+                            <Text
+                              style={{
+                                fontWeight: '700',
+                                fontSize: 15,
+                                marginBottom: 15,
+                                marginTop: 15,
+                              }}>
                               {item.name}
                             </Text>
                           </TouchableOpacity>
@@ -739,6 +743,7 @@ const Home = (props) => {
                   })}
                 </View>
                 <FlatList
+                  // key={}
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{
                     justifyContent: 'space-between',
@@ -750,7 +755,9 @@ const Home = (props) => {
                   }}
                   data={dataOrder}
                   renderItem={renderProduct}
+                  // renderItem={({item}) =><TouchableOpacity></TouchableOpacity> <Text>{item.user_name}</Text>}
                   keyExtractor={(item, index) => index.toString()}
+                  // extraData={dataOrder}
                   // onEndReached={handleLoadMore}
                   // onEndReachedThreshold={0}
                   // ListFooterComponent={renderFooter}

@@ -53,4 +53,15 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+
+  listStoreOwner: async (params, id) => {
+    let url = `${API_BASE_URL.LIST_STORE_OWNER}/${id}`;
+    let response = callApiService.get(url, params);
+    return response;
+  },
+  confirmStoreOwner: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_STORE_OWNER}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };

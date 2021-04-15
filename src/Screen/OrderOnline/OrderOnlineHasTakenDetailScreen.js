@@ -165,7 +165,7 @@ const LoginScreen = (props) => {
                           <View>
                             <Text style={{fontSize: 12, color: '#828282'}}>
                               {'Khoảng cách '}
-                              {item.distance}
+                              {item.distance.text}
                             </Text>
                           </View>
                         </View>

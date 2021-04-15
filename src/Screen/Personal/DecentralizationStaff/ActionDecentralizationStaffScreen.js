@@ -50,33 +50,6 @@ const LoginScreen = (props) => {
               height: '100%',
             }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              {/* {dataRole.map((item, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={{
-                      padding: 15,
-                      flexDirection: 'row',
-                      borderRadius: 8,
-                      backgroundColor: Color.white,
-                      marginTop: 15,
-                    }}>
-                    <Image
-                      source={
-                        item.isCheck === false
-                          ? Images.notChecked
-                          : Images.checked
-                      }
-                      style={{height: 21, width: 21}}
-                    />
-                    <Text
-                      style={{fontSize: 15, fontWeight: '400', marginLeft: 10}}>
-                      {item.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })} */}
-
               <TouchableOpacity
                 onPress={() => setCheck1(!check1)}
                 // key={index}

@@ -22,6 +22,21 @@ export default homeService = {
     let response = callApiService.postFD(url, params);
     return response;
   },
+  foodDetail: async (params, id) => {
+    let url = `${API_BASE_URL.FOOD_DETAIL}/${id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  listCategoryTopping: async (params, id) => {
+    let url = `${API_BASE_URL.LIST_CATEGORY_TOPPING}/${id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  updateToppingFood: async (params, id) => {
+    let url = `${API_BASE_URL.UPDATE_TOPPING_FOOD}/${id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
 
   addTable: async (params) => {
     let url = `${API_BASE_URL.ADD_TABLE}`;
@@ -48,6 +63,27 @@ export default homeService = {
   updateCategoryTopping: async (params, id) => {
     let url = `${API_BASE_URL.UPDATE_CATEGORY_TOPPING}/${id}`;
     let response = callApiService.postFD(url, params);
+    return response;
+  },
+  updateToppingFood: async (params, id) => {
+    let url = `${API_BASE_URL.UPDATE_TOPPING_FOOD}/${id}`;
+    let response = callApiService.postFD(url, params);
+    return response;
+  },
+
+  getListProvince: async (params) => {
+    let url = `${API_BASE_URL.GET_LIST_PROVINCE}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  getListDistrict: async (params, province_id) => {
+    let url = `${API_BASE_URL.GET_LIST_DISTRICT}?province_id=${province_id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  getListWard: async (params, province_id, district_id) => {
+    let url = `${API_BASE_URL.GET_LIST_WARD}?province_id=${province_id}&district_id=${district_id}`;
+    let response = callApiService.get(url);
     return response;
   },
 };

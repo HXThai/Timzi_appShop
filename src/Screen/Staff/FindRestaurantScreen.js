@@ -261,7 +261,7 @@ const LoginScreen = (props) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      width: '100%',
+                      // width: '100%',
                       justifyContent: 'flex-end',
                       alignSelf: 'flex-end',
                       height: 45,
@@ -347,7 +347,7 @@ const LoginScreen = (props) => {
                                           .then(function (response) {
                                             // console.log(response);
                                             if (response) {
-                                              console.log('thai mai', response);
+                                              // console.log('thai mai', response);
                                               if (response.data.code === 200) {
                                                 Alert.alert(
                                                   'Thông báo!',
@@ -392,20 +392,7 @@ const LoginScreen = (props) => {
                                                 [
                                                   {
                                                     text: 'Đồng ý',
-                                                    onPress: () => {
-                                                      props.navigation.reset({
-                                                        index: 0,
-                                                        routes: [
-                                                          {
-                                                            name:
-                                                              'PromotionComboScreen',
-                                                          },
-                                                        ],
-                                                      });
-                                                      props.navigation.navigate(
-                                                        'PromotionComboScreen',
-                                                      );
-                                                    },
+                                                    onPress: () => {},
                                                   },
                                                 ],
                                                 {cancelable: false},

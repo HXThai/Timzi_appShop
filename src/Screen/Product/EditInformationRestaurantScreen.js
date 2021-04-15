@@ -53,6 +53,21 @@ const LoginScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [filePath, setFilePath] = useState({});
   const [dataLocation, setDataLocation] = useState(null);
+  const [categoryId, setCategoryId] = useState([]);
+  const [categoryBusiness, setCategoryBusiness] = useState([]);
+  const [dataProvince, setDataProvince] = useState([]);
+  const [dataDistrict, setDataDistrict] = useState([]);
+  const [dataWard, setDataWard] = useState([]);
+  const [currentProvince, setCurrentProvince] = useState('');
+  const [currentDistrict, setCurrentDistrict] = useState('');
+  const [currentWard, setCurrentWard] = useState('');
+  const [currentProvinceId, setCurrentProvinceId] = useState('');
+  const [currentDistrictId, setCurrentDistrictId] = useState('');
+  const [currentWardId, setCurrentWardId] = useState('');
+
+  const [modalVisibleProvince, setModalVisibleProvince] = useState(false);
+  const [modalVisibleDistrict, setModalVisibleDistrict] = useState(false);
+  const [modalVisibleWard, setModalVisibleWard] = useState(false);
 
   useEffect(() => {
     GetLocation.getCurrentPosition({
@@ -77,6 +92,66 @@ const LoginScreen = (props) => {
     setDateClose(props?.route?.params?.dataStore?.close_hours);
     setHotline(props?.route?.params?.dataStore?.hotline.toString());
     setImage(props?.route?.params?.dataStore?.image);
+    setCategoryId(props?.route?.params?.dataStore?.category);
+    setCategoryBusiness(props?.route?.params?.dataStore?.category_store_detail);
+    services.getListProvince(null).then(function (response) {
+      if (response) {
+        // console.log('thai mai', response);
+        if (response.data.code === 200) {
+          setDataProvince(response?.data?.data);
+          response?.data?.data?.forEach((element) => {
+            if (element.id === props?.route?.params?.dataStore?.province_id) {
+              setCurrentProvince(element.name);
+              setCurrentProvinceId(element.id);
+              services
+                .getListDistrict(null, element.id)
+                .then(function (response) {
+                  if (response) {
+                    // console.log('thai mai', response);
+                    if (response.data.code === 200) {
+                      setDataDistrict(response?.data?.data);
+                      response?.data?.data?.forEach((elementD) => {
+                        if (
+                          elementD.id ===
+                          props?.route?.params?.dataStore?.district_id
+                        ) {
+                          setCurrentDistrict(elementD.name);
+                          setCurrentDistrictId(elementD.id);
+                          services
+                            .getListWard(null, element.id, elementD.id)
+                            .then(function (response) {
+                              if (response) {
+                                // console.log('thai mai', response);
+                                if (response.data.code === 200) {
+                                  setDataWard(response?.data?.data);
+                                  response?.data?.data?.forEach((elementW) => {
+                                    if (
+                                      elementW.id ===
+                                      props?.route?.params?.dataStore?.ward_id
+                                    ) {
+                                      setCurrentWard(elementW.name);
+                                      setCurrentWardId(elementW.id);
+                                    }
+                                  });
+                                }
+                              } else {
+                                return;
+                              }
+                            });
+                        }
+                      });
+                    }
+                  } else {
+                    return;
+                  }
+                });
+            }
+          });
+        }
+      } else {
+        return;
+      }
+    });
   }, [props?.route?.params?.dataStore?.id]);
 
   const [isDatePickerOpenVisible, setDatePickerOpenVisibility] = useState(
@@ -241,8 +316,8 @@ const LoginScreen = (props) => {
   };
 
   const handleEdit = () => {
-    console.log(dataLocation.longitude);
-    console.log(props?.route?.params?.dataStore?.id);
+    // console.log(dataLocation.longitude);
+    // console.log(props?.route?.params?.dataStore);
     var body = new FormData();
     // // body.append('store_id', store_id.toString());
     body.append('name', name);
@@ -259,58 +334,74 @@ const LoginScreen = (props) => {
     body.append('open_hours', dateOpen);
     body.append('close_hours', dateClose);
     body.append('hotline', hotline);
-    // body.append('_method', 'put');
-    // body.append('price_discount', promotion);
-    // services.editStore(body, id).then(function (response) {
-    //   // props.onGetList(response?.data);
-    //   if (response) {
-    //     console.log('thai', response);
-    //     if (response.data.code === 200) {
-    //       Alert.alert(
-    //         'Thông báo!',
-    //         'Sửa món ăn thành công!',
-    //         [
-    //           {
-    //             text: 'Đồng ý',
-    //             onPress: async () => {
-    //               props.navigation.reset({
-    //                 index: 0,
-    //                 routes: [
-    //                   {
-    //                     name: 'ListProductScreen',
-    //                     params: {
-    //                       category_food_id: category_food_id,
-    //                       store_id: store_id,
-    //                     },
-    //                   },
-    //                 ],
-    //               });
-    //               props.navigation.navigate('ListProductScreen', {
-    //                 category_food_id: category_food_id,
-    //                 store_id: store_id,
-    //               });
-    //             },
-    //           },
-    //         ],
-    //         {cancelable: false},
-    //       );
-    //       // setDataProduct(response?.data?.data?.data);
-    //       // console.log(response.data.data.data);
-    //     }
-    //   } else {
-    //     Alert.alert(
-    //       'Thông báo!',
-    //       'Sửa món ăn thất bại!',
-    //       [
-    //         {
-    //           text: 'Đồng ý',
-    //         },
-    //       ],
-    //       {cancelable: false},
-    //     );
-    //     return;
-    //   }
-    // });
+    body.append('province_id', currentProvinceId);
+    body.append('district_id', currentDistrictId);
+    body.append('ward_id', currentWardId);
+    body.append('_method', 'put');
+    categoryId.forEach((element) => {
+      body.append('category_id[]', element.id);
+    });
+    categoryBusiness.forEach((element) => {
+      body.append('category_business[]', element.category_name);
+    });
+    services
+      .editStore(body, props?.route?.params?.dataStore?.id)
+      .then(function (response) {
+        if (response) {
+          // console.log('thai', response);
+          if (response.data.code === 200) {
+            Alert.alert(
+              'Thông báo!',
+              'Sửa cửa hàng thành công!',
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {
+                    props.navigation.reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: 'InformationRestaurantScreen',
+                          params: {
+                            store_params: props?.route?.params?.dataStore?.id,
+                          },
+                        },
+                      ],
+                    });
+                    props.navigation.navigate('InformationRestaurantScreen', {
+                      store_params: props?.route?.params?.dataStore?.id,
+                    });
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
+          } else {
+            Alert.alert(
+              'Thông báo!',
+              response.data.message,
+              [
+                {
+                  text: 'Đồng ý',
+                },
+              ],
+              {cancelable: false},
+            );
+          }
+        } else {
+          Alert.alert(
+            'Thông báo!',
+            'Lỗi hệ thống!',
+            [
+              {
+                text: 'Đồng ý',
+              },
+            ],
+            {cancelable: false},
+          );
+          return;
+        }
+      });
   };
 
   return (
@@ -320,6 +411,7 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          {/* Modal image */}
           <Modal
             onBackdropPress={() => setModalVisible(false)}
             style={{alignItems: 'center', justifyContent: 'center'}}
@@ -379,6 +471,173 @@ const LoginScreen = (props) => {
                   </Text>
                 </TouchableOpacity>
               </View>
+            </View>
+          </Modal>
+          {/* Modal province */}
+          <Modal
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            onBackdropPress={() => setModalVisibleProvince(false)}
+            isVisible={modalVisibleProvince}>
+            <View
+              style={{
+                height: '60%',
+                width: '80%',
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {dataProvince.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setCurrentProvince(item.name);
+                        setCurrentProvinceId(item.id);
+                        services
+                          .getListDistrict(null, item.id)
+                          .then(function (response) {
+                            if (response) {
+                              if (response.data.code === 200) {
+                                setDataDistrict(response?.data?.data);
+                                setCurrentDistrict(
+                                  response?.data?.data[0].name,
+                                );
+                                setCurrentDistrictId(
+                                  response?.data?.data[0].id,
+                                );
+                                services
+                                  .getListWard(
+                                    null,
+                                    item.id,
+                                    response?.data?.data[0].id,
+                                  )
+                                  .then(function (response) {
+                                    if (response) {
+                                      setDataWard(response?.data?.data);
+                                      setCurrentWard(
+                                        response?.data?.data[0].name,
+                                      );
+                                      setCurrentWardId(
+                                        response?.data?.data[0].id,
+                                      );
+                                    } else {
+                                      return;
+                                    }
+                                  });
+                              }
+                            } else {
+                              return;
+                            }
+                          });
+                        setModalVisibleProvince(false);
+                      }}
+                      style={{
+                        height: 45,
+                        width: Dimensions.get('window').width * 0.6,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: 'grey',
+                      }}
+                      key={index}>
+                      <Text style={{fontSize: 15}}>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          </Modal>
+          {/* Modal district */}
+          <Modal
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            onBackdropPress={() => setModalVisibleDistrict(false)}
+            isVisible={modalVisibleDistrict}>
+            <View
+              style={{
+                height: '60%',
+                width: '80%',
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {dataDistrict.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setCurrentDistrict(item.name);
+                        setCurrentDistrictId(item.id);
+                        services
+                          .getListWard(null, currentProvinceId, item.id)
+                          .then(function (response) {
+                            if (response) {
+                              setDataWard(response?.data?.data);
+                              setCurrentWard(response?.data?.data[0].name);
+                              setCurrentWardId(response?.data?.data[0].id);
+                            } else {
+                              return;
+                            }
+                          });
+                        setModalVisibleDistrict(false);
+                      }}
+                      style={{
+                        height: 45,
+                        width: Dimensions.get('window').width * 0.6,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: 'grey',
+                      }}
+                      key={index}>
+                      <Text style={{fontSize: 15}}>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          </Modal>
+          {/* Modal Ward */}
+          <Modal
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            onBackdropPress={() => setModalVisibleWard(false)}
+            isVisible={modalVisibleWard}>
+            <View
+              style={{
+                height: '60%',
+                width: '80%',
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {dataWard.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setCurrentWard(item.name);
+                        setCurrentWardId(item.id);
+                        setModalVisibleWard(false);
+                      }}
+                      style={{
+                        height: 45,
+                        width: Dimensions.get('window').width * 0.6,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: 'grey',
+                      }}
+                      key={index}>
+                      <Text style={{fontSize: 15}}>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
             </View>
           </Modal>
           <DateTimePickerModal
@@ -490,47 +749,108 @@ const LoginScreen = (props) => {
                   defaultValue={averagePrice}
                 />
               </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginTop: 20,
-                }}>
-                <Text>Giờ mở cửa: </Text>
-                <TouchableOpacity
-                  onPress={() => showDatePickerOpen()}
-                  style={{
-                    height: 40,
-                    width: 90,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: Color.white,
-                    borderRadius: 8,
-                    elevation: 3,
-                  }}>
-                  <Text>{dateOpen}</Text>
-                </TouchableOpacity>
+              <View style={{marginTop: 20}}>
+                <Text style={{fontSize: 12}}>Tỉnh/Thành phố</Text>
               </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisibleProvince(true);
+                }}
+                style={{
+                  width: '100%',
+                  marginTop: 10,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  backgroundColor: Color.white,
+                }}>
+                <Text>{currentProvince}</Text>
+              </TouchableOpacity>
+              <View style={{marginTop: 20}}>
+                <Text style={{fontSize: 12}}>Quận/Huyện</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisibleDistrict(true);
+                }}
+                style={{
+                  width: '100%',
+                  marginTop: 10,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  backgroundColor: Color.white,
+                }}>
+                <Text>{currentDistrict}</Text>
+              </TouchableOpacity>
+              <View style={{marginTop: 20}}>
+                <Text style={{fontSize: 12}}>Phường/Xã</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisibleWard(true);
+                }}
+                style={{
+                  width: '100%',
+                  marginTop: 10,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  backgroundColor: Color.white,
+                }}>
+                <Text>{currentWard}</Text>
+              </TouchableOpacity>
               <View
                 style={{
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  marginTop: 20,
+                  width: '100%',
+                  justifyContent: 'space-between',
                 }}>
-                <Text>Giờ đóng cửa: </Text>
-                <TouchableOpacity
-                  onPress={() => showDatePickerClose()}
+                <View
                   style={{
-                    height: 40,
-                    width: 90,
+                    flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: Color.white,
-                    borderRadius: 8,
-                    elevation: 3,
+                    marginTop: 20,
                   }}>
-                  <Text>{dateClose}</Text>
-                </TouchableOpacity>
+                  <Text>Giờ mở cửa: </Text>
+                  <TouchableOpacity
+                    onPress={() => showDatePickerOpen()}
+                    style={{
+                      height: 40,
+                      width: 90,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: Color.white,
+                      borderRadius: 8,
+                      elevation: 3,
+                    }}>
+                    <Text>{dateOpen}</Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 20,
+                  }}>
+                  <Text>Giờ đóng cửa: </Text>
+                  <TouchableOpacity
+                    onPress={() => showDatePickerClose()}
+                    style={{
+                      height: 40,
+                      width: 90,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: Color.white,
+                      borderRadius: 8,
+                      elevation: 3,
+                    }}>
+                    <Text>{dateClose}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
               <View style={{marginTop: 20}}>
                 <Text style={{fontSize: 12}}>Hotline</Text>

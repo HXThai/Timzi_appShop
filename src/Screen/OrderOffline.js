@@ -148,7 +148,7 @@ const Home = (props) => {
                 isVisible={modalVisible}>
                 <View
                   style={{
-                    height: '60%',
+                    height: '40%',
                     width: '100%',
                     backgroundColor: '#fff',
                     borderRadius: 10,
@@ -159,7 +159,7 @@ const Home = (props) => {
                   <ScrollView showsVerticalScrollIndicator={false}>
                     {dataListStore?.data?.map((item, index) => {
                       return (
-                        <View style={{padding: 10}} key={index}>
+                        <View style={{}} key={index}>
                           <TouchableOpacity
                             onPress={() => {
                               setStoreName(item.name);
@@ -171,7 +171,7 @@ const Home = (props) => {
                               setModalVisible(false);
                             }}
                             style={{
-                              height: 45,
+                              // height: 45,
                               alignItems: 'center',
                               justifyContent: 'center',
                               borderBottomWidth: 0.5,
@@ -179,7 +179,13 @@ const Home = (props) => {
                               width: Dimensions.get('window').width * 0.8,
                             }}
                             key={index}>
-                            <Text style={{fontWeight: '700', fontSize: 15}}>
+                            <Text
+                              style={{
+                                fontWeight: '700',
+                                fontSize: 15,
+                                marginBottom: 15,
+                                marginTop: 15,
+                              }}>
                               {item.name}
                             </Text>
                           </TouchableOpacity>
