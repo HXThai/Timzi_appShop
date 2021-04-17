@@ -76,10 +76,10 @@ const Home = (props) => {
         setRoleId(data);
         data === 6
           ? setDataCategories([
-              {icon: faStore, name: 'Quán của bạn (Tokkio - BBQ Nhật Bản)'},
+              {icon: faStore, name: 'Quán của bạn'},
               {icon: faTag, name: 'Chương trình khuyến mãi'},
               {icon: faUser, name: 'Tài khoản nhân viên'},
-              {icon: faUsers, name: 'Phân cấp quyền nhân viên'},
+              // {icon: faUsers, name: 'Phân cấp quyền nhân viên'},
               {icon: faClipboardList, name: 'Đánh giá của người dùng'},
               {icon: faUser, name: 'Tài khoản shipper ruột'},
               {icon: faKey, name: 'Đổi mật khẩu'},
@@ -87,10 +87,10 @@ const Home = (props) => {
               {icon: faSignOutAlt, name: 'Đăng xuất'},
             ])
           : setDataCategories([
-              {icon: faStore, name: 'Quán của bạn (Tokkio - BBQ Nhật Bản)'},
+              {icon: faStore, name: 'Quán của bạn'},
               {icon: faTag, name: 'Chương trình khuyến mãi'},
               // {icon: faUser, name: 'Tài khoản nhân viên'},
-              {icon: faUsers, name: 'Phân cấp quyền nhân viên'},
+              {icon: faUsers, name: 'Chủ cửa hàng'},
               {icon: faClipboardList, name: 'Đánh giá của người dùng'},
               // {icon: faUser, name: 'Tài khoản shipper ruột'},
               {icon: faKey, name: 'Đổi mật khẩu'},
@@ -157,16 +157,14 @@ const Home = (props) => {
         store_id: storeId,
       });
     } else if (index === 3) {
-      props.navigation.navigate('DecentralizationStaffScreen');
-    } else if (index === 4) {
       props.navigation.navigate('RateOfUserScreen');
-    } else if (index === 5) {
+    } else if (index === 4) {
       props.navigation.navigate('AccountShipperScreen', {
         store_id: storeId,
       });
-    } else if (index === 6) {
+    } else if (index === 5) {
       props.navigation.navigate('ChangePasswordScreen');
-    } else if (index === 7) {
+    } else if (index === 6) {
       // props.navigation.navigate('ChangePasswordScreen');
       Linking.openURL(`tel:${phone}`);
     } else {
@@ -231,7 +229,7 @@ const Home = (props) => {
                     </Text>
                     <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
-                      email: {dataUser?.email}
+                      Email: {dataUser?.email}
                     </Text>
                     <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>

@@ -19,7 +19,7 @@ export default homeService = {
   },
 
   getListComboStore: async (params, id) => {
-    let url = `${API_BASE_URL.GET_LIST_COMBO_STORE}/${params.store_id}`;
+    let url = `${API_BASE_URL.GET_LIST_COMBO_STORE}/${id}`;
     let response = callApiService.get(url, params);
     return response;
   },

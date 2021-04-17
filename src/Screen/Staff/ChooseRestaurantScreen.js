@@ -238,7 +238,7 @@ const LoginScreen = (props) => {
                         </View>
                         <TouchableOpacity
                           onPress={() => {
-                            handleDeleteStore(dataRestaurant.id);
+                            handleDeleteStore(dataRestaurant?.id);
                           }}>
                           <MaterialIcons
                             name={'clear'}
@@ -342,7 +342,7 @@ const LoginScreen = (props) => {
                   borderRadius: 50,
                   backgroundColor: Color.buttonColor,
                   marginTop: 10,
-                  marginBottom: 15
+                  marginBottom: 15,
                 }}>
                 <Text style={{fontWeight: '700', fontSize: 15, color: 'black'}}>
                   Tìm cửa hàng của bạn

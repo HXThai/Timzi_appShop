@@ -22,24 +22,17 @@ import {connect} from 'react-redux';
 const SplashScreen = (props) => {
   useEffect(() => {
     setTimeout(() => {
-      // storage.setItem('deviceId', getUniqueId());
-      // console.log(getUniqueId().toString());
       storage.getItem('dataLogin').then((data) => {
         if (data) {
-          // props.navigation.navigate('TabNav');
-          // console.log(data);
           loginService
             .login({
               phone: data.phone,
               password: data.password,
-              device_id: data.deviceId,
+              device_id: data.device_id,
             })
             .then(function (response) {
-              // props.onGetList(response?.data);
               if (response) {
-                // console.log(response?.data.data.user);
                 if (response?.data?.code == '200') {
-                  // save session login
                   storage.setItem('userLogin', response?.data?.data?.user);
                   storage.setItem('Authorization', response?.data.data.token);
                   props.getUserInformation(null);
@@ -47,27 +40,12 @@ const SplashScreen = (props) => {
                   if (response?.data?.data?.user?.role_id === 3) {
                     props.navigation.navigate('Staff');
                   } else {
-                    // storage.setItem('dataStore', props.data.responseListStore?.data[0]);
-                    // console.log(props.dataLogin.responseUserInformation);
-                    // const dataUser = props.dataLogin.responseUserInformation;
-                    // console.log(props.dataLogin.responseUserInformation);
                     props.navigation.navigate('TabNav');
                     props.navigation.reset({
                       index: 0,
                       routes: [{name: 'TabNav'}],
                     });
                   }
-
-                  // props.navigation.reset({
-                  //   index: 0,
-                  //   routes: [
-                  //     {
-                  //       name: 'Home',
-                  //       params: {someParam: 'Param1'},
-                  //     },
-                  //   ],
-                  // });
-                  // props.navigation.reset();
                 } else {
                   props.navigation.navigate('Login');
                 }

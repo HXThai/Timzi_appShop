@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -27,9 +28,11 @@ import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import services from '../../Redux/Service/staffService';
 
 const LoginScreen = (props) => {
   const [tab, setTab] = useState(0);
+  const [storeId, setStoreId] = useState(null);
 
   const [dataTab, setDataTab] = useState([
     {id: 0, name: 'Đã kết nối'},
@@ -64,6 +67,134 @@ const LoginScreen = (props) => {
     },
   ]);
 
+  useEffect(() => {
+    storage.getItem('dataStore').then((data) => {
+      if (data) {
+        setStoreId(data.id);
+        services.listStoreOwner(null, data.id).then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataStaff(response.data.data);
+            }
+          } else {
+            return;
+          }
+        });
+      }
+    });
+  }, []);
+
+  const renderProduct = ({item}) => {
+    return (
+      <View
+        style={{
+          padding: 10,
+          flexDirection: 'row',
+          backgroundColor: Color.white,
+          borderRadius: 8,
+          marginTop: 15,
+        }}>
+        <Image source={{uri: item.avatar}} style={{width: 48, height: 48}} />
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            marginLeft: 10,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: Dimensions.get('window').width - 100,
+            }}>
+            <Text style={{fontSize: 15, fontWeight: '400'}}>{item.name}</Text>
+            <Text style={{fontSize: 15, fontWeight: '400'}}>{item.phone}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: '400',
+                color: Color.main,
+              }}>
+              {item.code}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('ActionDecentralizationStaffScreen');
+                // console.log(item.id, storeId);
+                Alert.alert(
+                  'Thông báo',
+                  'Bạn chắc chắn muốn xác nhận nhận viên này là chủ cửa hàng?',
+                  [
+                    {text: 'Hủy', onPress: () => {}},
+                    {
+                      text: 'Đồng ý',
+                      onPress: async () => {
+                        var body = {store_id: storeId, owner_id: item.id};
+                        // console.log(body);
+                        services
+                          .confirmStoreOwner(body)
+                          .then(function (response) {
+                            if (response) {
+                              if (response.data.code === 200) {
+                                Alert.alert(
+                                  'Thông báo',
+                                  'Xác nhận chủ cửa hàng thành công!',
+                                  [
+                                    {
+                                      text: 'Đồng ý',
+                                      onPress: async () => {},
+                                    },
+                                  ],
+                                  {cancelable: false},
+                                );
+                              } else {
+                                Alert.alert(
+                                  'Thông báo',
+                                  response.data.message,
+                                  [
+                                    {
+                                      text: 'Đồng ý',
+                                      onPress: async () => {},
+                                    },
+                                  ],
+                                  {cancelable: false},
+                                );
+                              }
+                            } else {
+                              return;
+                            }
+                          });
+                      },
+                    },
+                  ],
+                  {cancelable: false},
+                );
+              }}
+              style={{
+                width: 80,
+                height: 25,
+                borderRadius: 4,
+                backgroundColor: Color.buttonColor,
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'flex-end',
+              }}>
+              <Text style={{fontSize: 12}}>Xác nhận</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -77,80 +208,22 @@ const LoginScreen = (props) => {
               justifyContent: 'space-between',
               height: '100%',
             }}>
-            <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-              {dataStaff.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      padding: 10,
-                      flexDirection: 'row',
-                      backgroundColor: Color.white,
-                      borderRadius: 8,
-                      marginTop: 15,
-                    }}>
-                    <Image
-                      source={item.image}
-                      style={{width: 48, height: 48}}
-                    />
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        marginLeft: 10,
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          width: Dimensions.get('window').width - 100,
-                        }}>
-                        <Text style={{fontSize: 15, fontWeight: '400'}}>
-                          {item.name}
-                        </Text>
-                        <Text style={{fontSize: 15, fontWeight: '400'}}>
-                          {item.phone}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            fontSize: 12,
-                            fontWeight: '400',
-                            color: Color.buttonColor,
-                          }}>
-                          Vai trò: {item.role}
-                        </Text>
-                        <View style={{flexDirection: 'row'}}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              props.navigation.navigate(
-                                'ActionDecentralizationStaffScreen',
-                              );
-                            }}
-                            style={{
-                              width: 80,
-                              height: 25,
-                              borderRadius: 4,
-                              backgroundColor: Color.buttonColor,
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}>
-                            <Text style={{fontSize: 12}}>Phân quyền</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                );
-              })}
-            </ScrollView>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+              style={{
+                marginBottom: 230,
+              }}
+              data={dataStaff}
+              renderItem={renderProduct}
+              keyExtractor={(item, index) => index.toString()}
+              // onEndReached={handleLoadMore}
+              // onEndReachedThreshold={0}
+              // ListFooterComponent={renderFooter}
+            />
           </View>
         </ImageBackground>
       </View>

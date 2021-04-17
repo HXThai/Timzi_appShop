@@ -84,7 +84,7 @@ const LoginScreen = (props) => {
             }}>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{marginTop: 20}}>
+              style={{marginTop: 5}}>
               {dataPromotion.map((item, index) => {
                 return (
                   <TouchableOpacity

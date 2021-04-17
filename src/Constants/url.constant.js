@@ -16,6 +16,9 @@ const API_BASE_URL = {
   GET_LIST_STORE_PROMOTION: ROOT_DOMAIN + '/program-store/list-program-store',
   PROMOTION_STORE_DETAIL: ROOT_DOMAIN + '/program-store/program-store-detail',
   ADD_PROMOTION_STORE: ROOT_DOMAIN + '/program-store/create-program-store',
+  FOOD_DETAIL: ROOT_DOMAIN + '/food-detail',
+  LIST_CATEGORY_TOPPING: ROOT_DOMAIN + '/food/list-category-topping-food',
+  UPDATE_TOPPING_FOOD: ROOT_DOMAIN + '/food/update-topping-food',
 
   GET_LIST_COMBO_STORE: ROOT_DOMAIN + '/combo-food/list-combo-food',
   ADD_COMBO_STORE: ROOT_DOMAIN + '/combo-food/create-combo-food',
@@ -27,6 +30,8 @@ const API_BASE_URL = {
   EDIT_TABLE: ROOT_DOMAIN + '/table-store/update-table-store',
 
   GET_LIST_PROVINCE: ROOT_DOMAIN + '/list-province',
+  GET_LIST_DISTRICT: ROOT_DOMAIN + '/list-district',
+  GET_LIST_WARD: ROOT_DOMAIN + '/list-ward',
   SEARCH_STORE: ROOT_DOMAIN + '/store/search-store-with-staff',
   CHOOSE_STORE: ROOT_DOMAIN + '/store/choose-store',
   STORE_STAFF_CHOOSE: ROOT_DOMAIN + '/store/store-staff',
@@ -57,6 +62,10 @@ const API_BASE_URL = {
 
   UPDATE_SIZE: ROOT_DOMAIN + '/food/update-size-food',
   UPDATE_CATEGORY_TOPPING: ROOT_DOMAIN + '/food/update-category-topping-food',
+  UPDATE_TOPPING_FOOD: ROOT_DOMAIN + '/food/update-topping-food',
+
+  LIST_STORE_OWNER: ROOT_DOMAIN + '/store/list-store-owner',
+  CONFIRM_STORE_OWNER: ROOT_DOMAIN + '/store/confirm-store-owner',
 };
 
 export {API_BASE_URL};

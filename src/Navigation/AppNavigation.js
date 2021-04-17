@@ -1203,6 +1203,56 @@ function PersonalStack(props) {
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
+                props.navigation.navigate('AddRestaurantScreen');
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: Color.buttonColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={{fontSize: 22, color: '#fff', fontWeight: '500'}}>
+                  +
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="AddRestaurantScreen"
+        component={AddRestaurantScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Thêm quán',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('YourRestaurantScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
                 // props.navigation.navigate('LoginScreen');
                 // console.log(props);
               }}>
@@ -1484,7 +1534,7 @@ function PersonalStack(props) {
         component={DecentralizationStaffScreen}
         options={{
           // headerShown: false,
-          headerTitle: 'Phân cấp quyền nhân viên',
+          headerTitle: 'Chủ cửa hàng',
           headerTitleStyle: {alignSelf: 'center', color: '#fff'},
           headerStyle: {
             backgroundColor: Color.main,
