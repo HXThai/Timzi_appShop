@@ -746,7 +746,7 @@ const Home = (props) => {
                   }}
                   style={{
                     marginTop: 10,
-                    marginBottom: 230,
+                    marginBottom: 240,
                   }}
                   data={dataOrder}
                   renderItem={renderProduct}
