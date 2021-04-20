@@ -85,6 +85,27 @@ const LoginScreen = (props) => {
                 }}>
                 {item.name}
               </Text>
+              {item.status === 0 ? (
+                <Text
+                  style={{
+                    color: Color.main,
+                    fontStyle: 'italic',
+                    marginLeft: 10,
+                    fontSize: 11,
+                  }}>
+                  (Đã xác nhận)
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: Color.buttonColor,
+                    fontStyle: 'italic',
+                    marginLeft: 10,
+                    fontSize: 11,
+                  }}>
+                  (Chờ xác nhận)
+                </Text>
+              )}
             </View>
             <TouchableOpacity>
               <MaterialIcons name={'clear'} size={23} color={Color.main} />
