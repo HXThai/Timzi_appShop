@@ -44,6 +44,7 @@ const API_BASE_URL = {
   DELETE_SHIPPER: ROOT_DOMAIN + '/store-shipper/cancel-shipper-with-store',
 
   EDIT_STORE: ROOT_DOMAIN + '/store/update-store',
+  CREATE_STORE: ROOT_DOMAIN + '/store/create-store',
 
   GET_LIST_STAFF_WAIT_CONNECT: ROOT_DOMAIN + '/store/list-staff-in-store',
   DELETE_STAFF: ROOT_DOMAIN + '/store/delete-staff',
