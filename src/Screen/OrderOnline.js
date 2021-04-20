@@ -53,7 +53,7 @@ const Home = (props) => {
   // console.log(props?.route?.params?.tab);
 
   const onClickDetail = (id) => {
-    console.log(id);
+    // console.log(id);
     if (tab === 0) {
       props.navigation.navigate('NewOrderOnlineDetailScreen', {id: id});
     } else if (tab === 1) {
@@ -751,7 +751,7 @@ const Home = (props) => {
                   }}
                   style={{
                     marginTop: 10,
-                    marginBottom: 230,
+                    marginBottom: 340,
                   }}
                   data={dataOrder}
                   renderItem={renderProduct}

@@ -8,6 +8,7 @@ import {
   Alert,
   Dimensions,
   TouchableOpacity,
+  CheckBox,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -32,17 +33,9 @@ import GetLocation from 'react-native-get-location';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import services from '../../Redux/Service/productService';
+import reactotron from 'reactotron-react-native';
 
 const LoginScreen = (props) => {
-  const [dataRestaurant, setDataRestaurant] = useState({
-    name: 'Hoàng Xuân Thái',
-    address: 'Kim Chung - Hoài Đức - Hà Nội',
-    field: 'Kinh doanh nhà hàng',
-    email: 'tranvantet@gmail.com',
-    hotline: '0986868686',
-    star: 4.5,
-    status: 'Yêu thích',
-  });
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [averagePrice, setAveragePrice] = useState('');
@@ -64,10 +57,16 @@ const LoginScreen = (props) => {
   const [currentProvinceId, setCurrentProvinceId] = useState('');
   const [currentDistrictId, setCurrentDistrictId] = useState('');
   const [currentWardId, setCurrentWardId] = useState('');
+  const [currentCategoryBusiness, setCurrentCategoryBusiness] = useState('');
+  const [dataCategory, setDataCategory] = useState([]);
 
   const [modalVisibleProvince, setModalVisibleProvince] = useState(false);
   const [modalVisibleDistrict, setModalVisibleDistrict] = useState(false);
   const [modalVisibleWard, setModalVisibleWard] = useState(false);
+  const [
+    modalVisibleCategoryBusiness,
+    setModalVisibleCategoryBusiness,
+  ] = useState(false);
 
   useEffect(() => {
     GetLocation.getCurrentPosition({
@@ -82,9 +81,7 @@ const LoginScreen = (props) => {
         const {code, message} = error;
         console.warn(code, message);
       });
-  }, []);
 
-  useEffect(() => {
     services.getListProvince(null).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
@@ -126,7 +123,26 @@ const LoginScreen = (props) => {
         return;
       }
     });
-  }, [props?.route?.params?.dataStore?.id]);
+
+    services
+      .getListCategory(null, dataLocation?.latitude, dataLocation?.longitude)
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            // setDataCategory(response?.data?.data);
+            var data = [];
+            response?.data?.data?.forEach((element, index) => {
+              // reactotron.log(index);
+              element.isCheck = 0;
+              data.push(element);
+            });
+            setDataCategory(data);
+          }
+        } else {
+          return;
+        }
+      });
+  }, []);
 
   const [isDatePickerOpenVisible, setDatePickerOpenVisibility] = useState(
     false,
@@ -308,12 +324,15 @@ const LoginScreen = (props) => {
     body.append('district_id', currentDistrictId);
     body.append('ward_id', currentWardId);
     body.append('_method', 'put');
-    categoryId.forEach((element) => {
-      body.append('category_id[]', element.id);
+    dataCategory.forEach((element) => {
+      if (element.isCheck === 1) {
+        body.append('category_id[]', element.id);
+      }
     });
     categoryBusiness.forEach((element) => {
-      body.append('category_business[]', element.category_name);
+      body.append('category_business[]', element.name);
     });
+    // reactotron.log(body);
     // services
     //   .editStore(body, props?.route?.params?.dataStore?.id)
     //   .then(function (response) {
@@ -610,6 +629,57 @@ const LoginScreen = (props) => {
               </ScrollView>
             </View>
           </Modal>
+          {/* Modal Category business */}
+          <Modal
+            onBackdropPress={() => setModalVisibleCategoryBusiness(false)}
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            isVisible={modalVisibleCategoryBusiness}>
+            <View
+              style={{
+                height: Dimensions.get('window').height * 0.22,
+                width: '100%',
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+              }}>
+              <View>
+                <Text>Tên danh mục kinh doanh</Text>
+                <TextInput
+                  style={{
+                    height: 40,
+                    borderBottomWidth: 0.8,
+                    borderBottomColor: '#333333',
+                    width: Dimensions.get('window').width * 0.7,
+                  }}
+                  placeholder="Tên danh mục kinh doanh"
+                  placeholderTextColor="#9C9C9C"
+                  onChangeText={(text) => setCurrentCategoryBusiness(text)}
+                  defaultValue={currentCategoryBusiness}
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    var data = categoryBusiness;
+                    data.push({name: currentCategoryBusiness});
+                    const newData = [...data];
+                    setCategoryBusiness(newData);
+                    setModalVisibleCategoryBusiness(false);
+                  }}
+                  style={{
+                    width: Dimensions.get('window').width * 0.7,
+                    marginTop: 20,
+                    height: 40,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: Color.buttonColor,
+                    borderRadius: 8,
+                  }}>
+                  <Text>Thêm danh mục kinh doanh</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
           <DateTimePickerModal
             isVisible={isDatePickerOpenVisible}
             mode="time"
@@ -652,7 +722,7 @@ const LoginScreen = (props) => {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    <Text style={{fontSize: 18}}>Đổi ảnh</Text>
+                    <Text style={{fontSize: 18}}>Thêm ảnh</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -672,7 +742,7 @@ const LoginScreen = (props) => {
                     borderBottomColor: '#333333',
                   }}
                   placeholder="Tên quán"
-                  placeholderTextColor="#333333"
+                  placeholderTextColor="grey"
                   onChangeText={(text) => setName(text)}
                   defaultValue={name}
                 />
@@ -693,7 +763,7 @@ const LoginScreen = (props) => {
                     borderBottomColor: '#333333',
                   }}
                   placeholder="Địa chỉ"
-                  placeholderTextColor="#333333"
+                  placeholderTextColor="grey"
                   onChangeText={(text) => setAddress(text)}
                   defaultValue={address}
                 />
@@ -714,11 +784,108 @@ const LoginScreen = (props) => {
                     borderBottomColor: '#333333',
                   }}
                   placeholder="Giá trung bình"
-                  placeholderTextColor="#333333"
+                  placeholderTextColor="grey"
                   onChangeText={(text) => setAveragePrice(text)}
                   defaultValue={averagePrice}
                 />
               </View>
+              <View style={{marginTop: 20}}>
+                <Text style={{fontSize: 12}}>Hotline</Text>
+              </View>
+              <View
+                style={{
+                  width: '100%',
+                  // marginTop: 20,
+                  justifyContent: 'center',
+                }}>
+                <TextInput
+                  style={{
+                    height: 40,
+                    borderBottomWidth: 0.8,
+                    borderBottomColor: '#333333',
+                  }}
+                  placeholder="Hotline"
+                  placeholderTextColor="grey"
+                  onChangeText={(text) => setHotline(text)}
+                  defaultValue={hotline}
+                />
+              </View>
+              <View style={{marginTop: 20}}>
+                <Text style={{fontSize: 12}}>Chọn danh mục</Text>
+              </View>
+              {dataCategory?.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      var data = dataCategory;
+                      if (data[index].isCheck === 0) {
+                        data[index].isCheck = 1;
+                      } else {
+                        data[index].isCheck = 0;
+                      }
+                      const newData = [...data];
+                      setDataCategory(newData);
+                    }}
+                    style={{
+                      marginTop: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      // justifyContent: 'center',
+                    }}>
+                    <MaterialIcons
+                      name={
+                        item.isCheck === 0
+                          ? 'radio-button-unchecked'
+                          : 'radio-button-checked'
+                      }
+                      size={26}
+                      color={Color.main}
+                      style={{marginRight: 10}}
+                    />
+                    <Text>{item.name}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+              <View style={{marginTop: 20}}>
+                <Text style={{fontSize: 12}}>Danh mục kinh doanh</Text>
+              </View>
+              <View
+                style={{
+                  padding: 5,
+                  borderRadius: 8,
+                  backgroundColor: Color.white,
+                  marginTop: 10,
+                }}>
+                {categoryBusiness.map((item, index) => {
+                  return (
+                    <View
+                      style={{
+                        // margin: 10,
+                        // backgroundColor: 'red',
+                        padding: 10,
+                        borderBottomWidth: 0.5,
+                        borderColor: 'grey',
+                      }}>
+                      <Text style={{}}>{item.name}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisibleCategoryBusiness(true);
+                }}
+                style={{
+                  height: 35,
+                  width: 35,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 6,
+                  backgroundColor: Color.main,
+                  marginTop: 10,
+                }}>
+                <MaterialIcons name={'add'} size={26} color={Color.white} />
+              </TouchableOpacity>
               <View style={{marginTop: 20}}>
                 <Text style={{fontSize: 12}}>Tỉnh/Thành phố</Text>
               </View>
@@ -822,27 +989,6 @@ const LoginScreen = (props) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{marginTop: 20}}>
-                <Text style={{fontSize: 12}}>Hotline</Text>
-              </View>
-              <View
-                style={{
-                  width: '100%',
-                  // marginTop: 20,
-                  justifyContent: 'center',
-                }}>
-                <TextInput
-                  style={{
-                    height: 40,
-                    borderBottomWidth: 0.8,
-                    borderBottomColor: '#333333',
-                  }}
-                  placeholder="Hotline"
-                  placeholderTextColor="#333333"
-                  onChangeText={(text) => setHotline(text)}
-                  defaultValue={hotline}
-                />
-              </View>
             </ScrollView>
             <View
               style={{
@@ -859,9 +1005,10 @@ const LoginScreen = (props) => {
                   borderRadius: 50,
                   backgroundColor: Color.main,
                   marginTop: 10,
+                  marginBottom: 10,
                 }}>
                 <Text style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
-                  Lưu
+                  Thêm
                 </Text>
               </TouchableOpacity>
             </View>

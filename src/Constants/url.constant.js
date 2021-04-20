@@ -66,6 +66,7 @@ const API_BASE_URL = {
 
   LIST_STORE_OWNER: ROOT_DOMAIN + '/store/list-store-owner',
   CONFIRM_STORE_OWNER: ROOT_DOMAIN + '/store/confirm-store-owner',
+  LIST_CATEGORY: ROOT_DOMAIN + '/list-category',
 };
 
 export {API_BASE_URL};

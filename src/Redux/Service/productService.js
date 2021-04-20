@@ -86,4 +86,10 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+
+  getListCategory: async (params, latitude, longtidue) => {
+    let url = `${API_BASE_URL.LIST_CATEGORY}?latitude=${latitude}&longtidue=${longtidue}`;
+    let response = callApiService.get(url);
+    return response;
+  },
 };
