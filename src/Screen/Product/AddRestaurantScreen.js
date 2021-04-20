@@ -323,7 +323,7 @@ const LoginScreen = (props) => {
     body.append('province_id', currentProvinceId);
     body.append('district_id', currentDistrictId);
     body.append('ward_id', currentWardId);
-    body.append('_method', 'put');
+    // body.append('_method', 'put');
     dataCategory.forEach((element) => {
       if (element.isCheck === 1) {
         body.append('category_id[]', element.id);
@@ -333,64 +333,56 @@ const LoginScreen = (props) => {
       body.append('category_business[]', element.name);
     });
     // reactotron.log(body);
-    // services
-    //   .editStore(body, props?.route?.params?.dataStore?.id)
-    //   .then(function (response) {
-    //     if (response) {
-    //       // console.log('thai', response);
-    //       if (response.data.code === 200) {
-    //         Alert.alert(
-    //           'Thông báo!',
-    //           'Sửa cửa hàng thành công!',
-    //           [
-    //             {
-    //               text: 'Đồng ý',
-    //               onPress: async () => {
-    //                 // props.navigation.reset({
-    //                 //   index: 0,
-    //                 //   routes: [
-    //                 //     {
-    //                 //       name: 'InformationRestaurantScreen',
-    //                 //       params: {
-    //                 //         store_params: props?.route?.params?.dataStore?.id,
-    //                 //       },
-    //                 //     },
-    //                 //   ],
-    //                 // });
-    //                 // props.navigation.navigate('InformationRestaurantScreen', {
-    //                 //   store_params: props?.route?.params?.dataStore?.id,
-    //                 // });
-    //               },
-    //             },
-    //           ],
-    //           {cancelable: false},
-    //         );
-    //       } else {
-    //         Alert.alert(
-    //           'Thông báo!',
-    //           response.data.message,
-    //           [
-    //             {
-    //               text: 'Đồng ý',
-    //             },
-    //           ],
-    //           {cancelable: false},
-    //         );
-    //       }
-    //     } else {
-    //       Alert.alert(
-    //         'Thông báo!',
-    //         'Lỗi hệ thống!',
-    //         [
-    //           {
-    //             text: 'Đồng ý',
-    //           },
-    //         ],
-    //         {cancelable: false},
-    //       );
-    //       return;
-    //     }
-    //   });
+    services.createStore(body).then(function (response) {
+      if (response) {
+        // console.log('thai', response);
+        if (response.data.code === 200) {
+          Alert.alert(
+            'Thông báo!',
+            'Thêm cửa hàng thành công!',
+            [
+              {
+                text: 'Đồng ý',
+                onPress: async () => {
+                  props.navigation.reset({
+                    routes: [
+                      {
+                        name: 'YourRestaurantScreen',
+                      },
+                    ],
+                  });
+                  props.navigation.navigate('YourRestaurantScreen');
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        } else {
+          Alert.alert(
+            'Thông báo!',
+            response.data.message,
+            [
+              {
+                text: 'Đồng ý',
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+      } else {
+        Alert.alert(
+          'Thông báo!',
+          'Lỗi hệ thống!',
+          [
+            {
+              text: 'Đồng ý',
+            },
+          ],
+          {cancelable: false},
+        );
+        return;
+      }
+    });
   };
 
   return (

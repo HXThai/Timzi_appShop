@@ -54,6 +54,11 @@ export default homeService = {
     let response = callApiService.postFD(url, params);
     return response;
   },
+  createStore: async (params) => {
+    let url = `${API_BASE_URL.CREATE_STORE}`;
+    let response = callApiService.postFD(url, params);
+    return response;
+  },
 
   updateSize: async (params, id) => {
     let url = `${API_BASE_URL.UPDATE_SIZE}/${id}`;
