@@ -567,7 +567,7 @@ const LoginScreen = (props) => {
               isVisible={modalVisibleCategoryTopping}>
               <View
                 style={{
-                  height: Dimensions.get('window').height * 0.25,
+                  height: Dimensions.get('window').height * 0.3,
                   width: '100%',
                   backgroundColor: '#fff',
                   borderRadius: 10,
@@ -914,7 +914,7 @@ const LoginScreen = (props) => {
               isVisible={modalVisibleShowTopping}>
               <View
                 style={{
-                  height: Dimensions.get('window').height * 0.25,
+                  height: Dimensions.get('window').height * 0.3,
                   width: '100%',
                   backgroundColor: '#fff',
                   borderRadius: 10,
