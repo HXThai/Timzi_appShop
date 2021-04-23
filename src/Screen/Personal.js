@@ -137,7 +137,8 @@ const Home = (props) => {
           {
             text: 'Đồng ý',
             onPress: async () => {
-              await AsyncStorage.clear();
+              // await AsyncStorage.clear();
+              await AsyncStorage.removeItem('dataLogin');
               props.navigation.navigate('Login');
             },
           },

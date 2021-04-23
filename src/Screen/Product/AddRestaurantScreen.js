@@ -9,12 +9,17 @@ import {
   Dimensions,
   TouchableOpacity,
   CheckBox,
+  Platform,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {
+  launchCamera,
+  launchImageLibrary,
+  ImageLibraryOptions,
+} from 'react-native-image-picker';
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -74,7 +79,7 @@ const LoginScreen = (props) => {
       timeout: 15000,
     })
       .then((location) => {
-        // console.log(location);
+        reactotron.log(location);
         setDataLocation(location);
       })
       .catch((error) => {
@@ -261,22 +266,23 @@ const LoginScreen = (props) => {
         setFilePath(response);
         setImage(response.uri);
         setImageName(response.fileName);
+        setModalVisible(false);
       });
     }
   };
 
-  const chooseFile = (type) => {
+  const chooseFile = async (type) => {
     let options = {
       mediaType: type,
       maxWidth: 300,
       maxHeight: 550,
-      quality: 1,
+      // quality: 1,
     };
     launchImageLibrary(options, (response) => {
       console.log('Response = ', response);
-
       if (response.didCancel) {
         // alert('Thông báo!', 'Bạn đã rời khỏi chọn ảnh!');
+        console.log('out');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
         alert('Camera not available on device');
@@ -298,69 +304,77 @@ const LoginScreen = (props) => {
       setFilePath(response);
       setImage(response.uri);
       setImageName(response.fileName);
+      setModalVisible(false);
     });
   };
 
   const handleEdit = () => {
-    // console.log(dataLocation.longitude);
-    // console.log(props?.route?.params?.dataStore);
-    var body = new FormData();
-    // // body.append('store_id', store_id.toString());
-    body.append('name', name);
-    // body.append('image', data);
-    body.append('image', {
-      name: `${imageName}`,
-      type: 'image/jpeg',
-      uri: image,
-    });
-    body.append('address', address);
-    body.append('latitude', dataLocation.latitude);
-    body.append('longtidue', dataLocation.longitude);
-    body.append('average_price', averagePrice);
-    body.append('open_hours', dateOpen);
-    body.append('close_hours', dateClose);
-    body.append('hotline', hotline);
-    body.append('province_id', currentProvinceId);
-    body.append('district_id', currentDistrictId);
-    body.append('ward_id', currentWardId);
-    // body.append('_method', 'put');
-    dataCategory.forEach((element) => {
-      if (element.isCheck === 1) {
-        body.append('category_id[]', element.id);
-      }
-    });
-    categoryBusiness.forEach((element) => {
-      body.append('category_business[]', element.name);
-    });
-    // reactotron.log(body);
-    services.createStore(body).then(function (response) {
-      if (response) {
-        // console.log('thai', response);
-        if (response.data.code === 200) {
-          Alert.alert(
-            'Thông báo!',
-            'Thêm cửa hàng thành công!',
-            [
-              {
-                text: 'Đồng ý',
-                onPress: async () => {
-                  props.navigation.reset({
-                    routes: [
-                      {
-                        name: 'YourRestaurantScreen',
-                      },
-                    ],
-                  });
-                  props.navigation.navigate('YourRestaurantScreen');
+    try {
+      var body = new FormData();
+      body.append('name', name);
+      body.append('image', {
+        name: `${imageName}`,
+        type: 'image/jpeg',
+        uri: image,
+      });
+      body.append('address', address);
+      body.append('latitude', dataLocation.latitude);
+      body.append('longtidue', dataLocation.longitude);
+      body.append('average_price', averagePrice);
+      body.append('open_hours', dateOpen);
+      body.append('close_hours', dateClose);
+      body.append('hotline', hotline);
+      body.append('province_id', currentProvinceId);
+      body.append('district_id', currentDistrictId);
+      body.append('ward_id', currentWardId);
+      // body.append('_method', 'put');
+      dataCategory.forEach((element) => {
+        if (element.isCheck === 1) {
+          body.append('category_id[]', element.id);
+        }
+      });
+      categoryBusiness.forEach((element) => {
+        body.append('category_business[]', element.name);
+      });
+      services.createStore(body).then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            Alert.alert(
+              'Thông báo!',
+              'Thêm cửa hàng thành công!',
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {
+                    props.navigation.reset({
+                      routes: [
+                        {
+                          name: 'YourRestaurantScreen',
+                        },
+                      ],
+                    });
+                    props.navigation.navigate('YourRestaurantScreen');
+                  },
                 },
-              },
-            ],
-            {cancelable: false},
-          );
+              ],
+              {cancelable: false},
+            );
+          } else {
+            Alert.alert(
+              'Thông báo!',
+              response.data.message,
+              [
+                {
+                  text: 'Đồng ý',
+                },
+              ],
+              {cancelable: false},
+            );
+          }
         } else {
           Alert.alert(
             'Thông báo!',
-            response.data.message,
+            'Lỗi hệ thống!',
             [
               {
                 text: 'Đồng ý',
@@ -368,21 +382,21 @@ const LoginScreen = (props) => {
             ],
             {cancelable: false},
           );
+          return;
         }
-      } else {
-        Alert.alert(
-          'Thông báo!',
-          'Lỗi hệ thống!',
-          [
-            {
-              text: 'Đồng ý',
-            },
-          ],
-          {cancelable: false},
-        );
-        return;
-      }
-    });
+      });
+    } catch (ex) {
+      Alert.alert(
+        'Thông báo!',
+        ex.toString(),
+        [
+          {
+            text: 'Đồng ý',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
   };
 
   return (
@@ -431,7 +445,7 @@ const LoginScreen = (props) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    setModalVisible(false);
+                    // setModalVisible(false);
                     chooseFile('photo');
                   }}
                   style={{
@@ -988,7 +1002,9 @@ const LoginScreen = (props) => {
                 marginTop: 5,
               }}>
               <TouchableOpacity
-                onPress={() => handleEdit()}
+                onPress={() => {
+                  handleEdit();
+                }}
                 style={{
                   height: 50,
                   width: '100%',

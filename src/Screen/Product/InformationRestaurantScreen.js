@@ -45,7 +45,7 @@ const LoginScreen = (props) => {
     (async () => {
       const res = await productService.storeDetail(store_params);
       setdata(res?.data?.data?.store);
-      // console.log(res?.data?.data?.store);
+      console.log(res?.data?.data?.store);
     })();
   }, []);
 

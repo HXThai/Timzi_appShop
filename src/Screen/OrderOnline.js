@@ -27,6 +27,7 @@ import * as actionsLogin from '../Redux/Action/loginAction';
 import Modal from 'react-native-modal';
 import loginService from '../Redux/Service/LoginService';
 import services from '../Redux/Service/orderOnlineService';
+import reactotron from 'reactotron-react-native';
 
 const Home = (props) => {
   const [tab, setTab] = useState(props?.route?.params?.tab ? 2 : 0);
@@ -102,27 +103,50 @@ const Home = (props) => {
             }
           });
       } else {
-        setStoreName(props.data.responseListStore?.data[0]?.name);
-        setStoreId(props.data.responseListStore?.data[0]?.id);
-        storage.setItem('dataStore', props.data.responseListStore?.data[0]);
-        services
-          .getListOrderOnline(
-            null,
-            props.data.responseListStore?.data[0]?.id,
-            1,
-          )
-          .then(function (response) {
-            if (response) {
-              if (response.data.code === 200) {
-                setDataOrder(response?.data?.data);
-              }
-            } else {
-              return;
-            }
-          });
+        // setStoreName(props.data.responseListStore?.data[0]?.name);
+        // setStoreId(props.data.responseListStore?.data[0]?.id);
+        // storage.setItem('dataStore', props.data.responseListStore?.data[0]);
+        // services
+        //   .getListOrderOnline(
+        //     null,
+        //     props.data.responseListStore?.data[0]?.id,
+        //     1,
+        //   )
+        //   .then(function (response) {
+        //     if (response) {
+        //       if (response.data.code === 200) {
+        //         setDataOrder(response?.data?.data);
+        //       }
+        //     } else {
+        //       return;
+        //     }
+        //   });
+        props.data.responseListStore?.data.forEach((element, index) => {
+          // console.log(element.status);
+          if (element.status === 1) {
+            setStoreName(element.name);
+            setStoreId(element.id);
+            storage.setItem('dataStore', element);
+            services
+              .getListOrderOnline(null, element.id, 1)
+              .then(function (response) {
+                if (response) {
+                  if (response?.data?.code === 200) {
+                    setDataOrder(response?.data?.data);
+                  }
+                } else {
+                  return;
+                }
+              });
+          }
+        });
       }
     });
     setDataListStore(props.data.responseListStore);
+
+    storage.getItem('userIdPushNoti').then((data) => {
+      reactotron.log(data);
+    });
   }, [props.data.responseListStore]);
 
   const [roleId, setRoleId] = useState('');
@@ -181,27 +205,25 @@ const Home = (props) => {
                   }
                 });
             } else {
-              setStoreName(props.data.responseListStore?.data[0]?.name);
-              setStoreId(props.data.responseListStore?.data[0]?.id);
-              storage.setItem(
-                'dataStore',
-                props.data.responseListStore?.data[0],
-              );
-              services
-                .getListOrderOnline(
-                  null,
-                  props.data.responseListStore?.data[0]?.id,
-                  1,
-                )
-                .then(function (response) {
-                  if (response) {
-                    if (response?.data?.code === 200) {
-                      setDataOrder(response?.data?.data);
-                    }
-                  } else {
-                    return;
-                  }
-                });
+              props.data.responseListStore?.data.forEach((element, index) => {
+                // console.log(element.status);
+                if (element.status === 1) {
+                  setStoreName(element.name);
+                  setStoreId(element.id);
+                  storage.setItem('dataStore', element);
+                  services
+                    .getListOrderOnline(null, element.id, 1)
+                    .then(function (response) {
+                      if (response) {
+                        if (response?.data?.code === 200) {
+                          setDataOrder(response?.data?.data);
+                        }
+                      } else {
+                        return;
+                      }
+                    });
+                }
+              });
             }
           });
           // setDataListStore(props.data.responseListStore);
@@ -574,7 +596,7 @@ const Home = (props) => {
                   }}>
                   <ScrollView showsVerticalScrollIndicator={false}>
                     {dataListStore?.data?.map((item, index) => {
-                      return (
+                      return item.status === 1 ? (
                         <View style={{}} key={index}>
                           <TouchableOpacity
                             onPress={() => {
@@ -606,7 +628,7 @@ const Home = (props) => {
                             </Text>
                           </TouchableOpacity>
                         </View>
-                      );
+                      ) : null;
                     })}
                   </ScrollView>
                   <TouchableOpacity

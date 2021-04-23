@@ -16,19 +16,22 @@ import storage from './asyncStorage/Storage';
 import loginService from '../Redux/Service/LoginService';
 import * as actionsLogin from '../Redux/Action/loginAction';
 import {connect} from 'react-redux';
+import OneSignal from 'react-native-onesignal';
 
 // let uniqueId = DeviceInfo.getUniqueId();
 // console.log(getUniqueId());
 const SplashScreen = (props) => {
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
+      const userId = await OneSignal.getDeviceState();
+      // console.log('userSP', userId.userId);
       storage.getItem('dataLogin').then((data) => {
         if (data) {
           loginService
             .login({
               phone: data.phone,
               password: data.password,
-              device_id: data.device_id,
+              device_id: userId.userId,
             })
             .then(function (response) {
               if (response) {

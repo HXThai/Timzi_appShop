@@ -394,7 +394,7 @@ const LoginScreen = (props) => {
                   <TouchableOpacity
                     onPress={() => {
                       setModalVisible(false);
-                      chooseFile('photo');
+                      // chooseFile('photo');
                     }}
                     style={{
                       flexDirection: 'row',

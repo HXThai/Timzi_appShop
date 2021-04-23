@@ -150,7 +150,9 @@ const LoginScreen = (props) => {
                                   [
                                     {
                                       text: 'Đồng ý',
-                                      onPress: async () => {},
+                                      onPress: async () => {
+                                        props.navigation.goBack();
+                                      },
                                     },
                                   ],
                                   {cancelable: false},

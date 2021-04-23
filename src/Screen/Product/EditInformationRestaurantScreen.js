@@ -105,12 +105,12 @@ const LoginScreen = (props) => {
               setCurrentProvinceId(element.id);
               services
                 .getListDistrict(null, element.id)
-                .then(function (response) {
-                  if (response) {
-                    // console.log('thai mai', response);
-                    if (response.data.code === 200) {
-                      setDataDistrict(response?.data?.data);
-                      response?.data?.data?.forEach((elementD) => {
+                .then(function (responseD) {
+                  if (responseD) {
+                    console.log('thai mai', responseD.data?.data);
+                    if (responseD.data.code === 200) {
+                      setDataDistrict(responseD?.data?.data);
+                      responseD?.data?.data?.forEach((elementD) => {
                         if (
                           elementD.id ===
                           props?.route?.params?.dataStore?.district_id
@@ -119,12 +119,12 @@ const LoginScreen = (props) => {
                           setCurrentDistrictId(elementD.id);
                           services
                             .getListWard(null, element.id, elementD.id)
-                            .then(function (response) {
-                              if (response) {
+                            .then(function (responseW) {
+                              if (responseW) {
                                 // console.log('thai mai', response);
-                                if (response.data.code === 200) {
-                                  setDataWard(response?.data?.data);
-                                  response?.data?.data?.forEach((elementW) => {
+                                if (responseW.data.code === 200) {
+                                  setDataWard(responseW?.data?.data);
+                                  responseW?.data?.data?.forEach((elementW) => {
                                     if (
                                       elementW.id ===
                                       props?.route?.params?.dataStore?.ward_id

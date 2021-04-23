@@ -35,13 +35,13 @@ import {
   DeviceInfo,
   getManufacturer,
 } from 'react-native-device-info';
+import OneSignal from 'react-native-onesignal';
 
 const LoginScreen = (props) => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('0329714646');
+  const [password, setPassword] = useState('123456');
   const [displayPassword, setDisplayPassword] = useState(false);
   const [dataLogin, setDataLogin] = useState([]);
-  const deviceId = '';
   // console.log('dv', deviceId);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -56,11 +56,13 @@ const LoginScreen = (props) => {
   const onClickLoginButton = async (phone, password) => {
     // props.navigation.navigate('TabNav');
     // storage.setItem('deviceId', getUniqueId().toString());
+    const userId = await OneSignal.getDeviceState();
+    // console.log('thaimeo', userId.userId);
     loginService
       .login({
         phone: phone,
         password: password,
-        device_id: getUniqueId().toString(),
+        device_id: userId.userId,
       })
       .then(function (response) {
         if (response) {
@@ -71,7 +73,7 @@ const LoginScreen = (props) => {
             storage.setItem('dataLogin', {
               phone: phone,
               password: password,
-              device_id: getUniqueId().toString(),
+              device_id: userId.userId,
             });
             storage.setItem('userLogin', response?.data?.data?.user);
             storage.setItem('Authorization', response?.data.data.token);

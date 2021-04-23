@@ -106,8 +106,25 @@ const Home = (props) => {
         setStoreName(data.name);
         setStoreId(data.id);
       } else {
-        setStoreName(props.data.responseListStore?.data[0]?.name);
-        setStoreId(props.data.responseListStore?.data[0]?.id);
+        props.data.responseListStore?.data.forEach((element, index) => {
+          // console.log(element.status);
+          if (element.status === 1) {
+            setStoreName(element.name);
+            setStoreId(element.id);
+            storage.setItem('dataStore', element);
+            services
+              .getListOrderOnline(null, element.id, 1)
+              .then(function (response) {
+                if (response) {
+                  if (response?.data?.code === 200) {
+                    setDataOrder(response?.data?.data);
+                  }
+                } else {
+                  return;
+                }
+              });
+          }
+        });
       }
     });
     setDataListStore(props.data.responseListStore);
@@ -161,7 +178,7 @@ const Home = (props) => {
                   }}>
                   <ScrollView showsVerticalScrollIndicator={false}>
                     {dataListStore?.data?.map((item, index) => {
-                      return (
+                      return item.status === 1 ? (
                         <View style={{}} key={index}>
                           <TouchableOpacity
                             onPress={() => {
@@ -193,7 +210,7 @@ const Home = (props) => {
                             </Text>
                           </TouchableOpacity>
                         </View>
-                      );
+                      ) : null;
                     })}
                   </ScrollView>
                   <TouchableOpacity

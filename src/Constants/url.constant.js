@@ -68,6 +68,9 @@ const API_BASE_URL = {
   LIST_STORE_OWNER: ROOT_DOMAIN + '/store/list-store-owner',
   CONFIRM_STORE_OWNER: ROOT_DOMAIN + '/store/confirm-store-owner',
   LIST_CATEGORY: ROOT_DOMAIN + '/list-category',
+
+  GET_LIST_ORDER_OFFLINE:
+    ROOT_DOMAIN + '/book-table/list-book-table-store-with-owner',
 };
 
 export {API_BASE_URL};

@@ -85,7 +85,7 @@ const LoginScreen = (props) => {
                 }}>
                 {item.name}
               </Text>
-              {item.status === 0 ? (
+              {item.status === 1 ? (
                 <Text
                   style={{
                     color: Color.main,

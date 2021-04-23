@@ -60,22 +60,37 @@ const Home = (props) => {
           }
         });
       } else {
-        setStoreName(props.data.responseListStore?.data[0]?.name);
-        setStoreId(props.data.responseListStore?.data[0]?.id);
-        services
-          .storeDetail(props.data.responseListStore?.data[0]?.id)
-          .then(function (response) {
-            // props.onGetList(response?.data);
-            // console.log(response);
-            if (response) {
-              // console.log('thai', response?.data?.status);
-              if (response?.data?.code === 200) {
-                setData(response?.data?.data);
+        props.data.responseListStore?.data.forEach((element, index) => {
+          // console.log(element.status);
+          if (element.status === 1) {
+            setStoreName(element.name);
+            setStoreId(element.id);
+            storage.setItem('dataStore', element);
+            services
+              .getListOrderOnline(null, element.id, 1)
+              .then(function (response) {
+                if (response) {
+                  if (response?.data?.code === 200) {
+                    setDataOrder(response?.data?.data);
+                  }
+                } else {
+                  return;
+                }
+              });
+            services.storeDetail(element.id).then(function (response) {
+              // props.onGetList(response?.data);
+              // console.log(response);
+              if (response) {
+                // console.log('thai', response?.data?.status);
+                if (response?.data?.code === 200) {
+                  setData(response?.data?.data);
+                }
+              } else {
+                return;
               }
-            } else {
-              return;
-            }
-          });
+            });
+          }
+        });
       }
     });
     setDataListStore(props.data.responseListStore);
@@ -123,21 +138,16 @@ const Home = (props) => {
                   }}>
                   <ScrollView showsVerticalScrollIndicator={false}>
                     {dataListStore?.data?.map((item, index) => {
-                      return (
+                      return item.status === 1 ? (
                         <View style={{}} key={index}>
                           <TouchableOpacity
                             onPress={() => {
-                              // console.log(item);
                               setStoreName(item.name);
                               storage.setItem('dataStore', item);
                               props.navigation.reset({
                                 index: 0,
                                 routes: [{name: 'TabNav'}],
                               });
-                              // props.navigation.reset({
-                              //   index: 0,
-                              //   routes: [{name: 'EarnCoin'}],
-                              // });
                               setModalVisible(false);
                             }}
                             style={{
@@ -160,7 +170,7 @@ const Home = (props) => {
                             </Text>
                           </TouchableOpacity>
                         </View>
-                      );
+                      ) : null;
                     })}
                   </ScrollView>
                   <TouchableOpacity

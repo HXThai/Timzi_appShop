@@ -2,28 +2,31 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigation from './src/Navigation/AppNavigation';
-import {StatusBar} from 'react-native';
+import {StatusBar, Alert} from 'react-native';
 import {Provider} from 'react-redux';
 import store from './src/Redux/index';
+import reactotron from 'reactotron-react-native';
+import storage from './src/Screen/asyncStorage/Storage';
 if (__DEV__) {
   import('./ReactotronConfig').then(() => {});
 }
+import OneSignal from 'react-native-onesignal';
 
 export default class App extends React.Component {
   async componentDidMount() {
-    console.log('thai meo fake');
+    // console.log('thai meo fake');
     /* O N E S I G N A L   S E T U P */
     OneSignal.setAppId('3c83d522-638f-46fa-9735-392482461178');
     OneSignal.setLogLevel(6, 0);
     OneSignal.setRequiresUserPrivacyConsent(false);
     OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-      this.OSLog('Prompt response:', response);
+      console.log('Prompt response:', response);
     });
 
     /* O N E S I G N A L  H A N D L E R S */
     OneSignal.setNotificationWillShowInForegroundHandler(
       (notifReceivedEvent) => {
-        this.OSLog(
+        console.log(
           'OneSignal: notification will show in foreground:',
           notifReceivedEvent,
         );
@@ -50,24 +53,27 @@ export default class App extends React.Component {
       },
     );
     OneSignal.setNotificationOpenedHandler((notification) => {
-      this.OSLog('OneSignal: notification opened:', notification);
+      console.log('OneSignal: notification opened:', notification);
     });
     OneSignal.setInAppMessageClickHandler((event) => {
-      this.OSLog('OneSignal IAM clicked:', event);
+      console.log('OneSignal IAM clicked:', event);
     });
     OneSignal.addEmailSubscriptionObserver((event) => {
-      this.OSLog('OneSignal: email subscription changed: ', event);
+      console.log('OneSignal: email subscription changed: ', event);
     });
     OneSignal.addSubscriptionObserver((event) => {
-      this.OSLog('OneSignal: subscription changed:', event);
+      console.log('OneSignal: subscription changed:', event);
       this.setState({isSubscribed: event.to.isSubscribed});
     });
     OneSignal.addPermissionObserver((event) => {
-      this.OSLog('OneSignal: permission changed:', event);
+      console.log('OneSignal: permission changed:', event);
     });
 
     const deviceState = await OneSignal.getDeviceState();
+    // console.log('userrrrr', deviceState.userId);
 
+    // reactotron.log('thai', await OneSignal.getDeviceState());
+    storage.setItem('userIdPushNoti', deviceState.userId);
     this.setState({
       isSubscribed: deviceState.isSubscribed,
     });
