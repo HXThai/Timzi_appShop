@@ -36,7 +36,7 @@ const LoginScreen = (props) => {
       .then(function (response) {
         // props.onGetList(response?.data);
         if (response) {
-          console.log(response);
+          // console.log(response);
           if (response?.data?.code === 200) {
             props.navigation.navigate('ConfirmOTPRegisterScreen');
           }
@@ -102,7 +102,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-                    
+
                     width: '87%',
                     height: 40,
                   }}

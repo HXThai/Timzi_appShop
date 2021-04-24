@@ -142,7 +142,7 @@ const Home = (props) => {
     storage.getItem('role_id').then((data) => {
       // console.log(data);
       if (data) {
-        console.log('role', data);
+        // console.log('role', data);
         setRoleId(data);
       } else {
       }

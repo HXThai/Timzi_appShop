@@ -7,13 +7,13 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
-  orderOnlineDetail: async (params, id) => {
-    let url = `${API_BASE_URL.ORDER_ONLINE_DETAIL}/${id}`;
+  orderOfflineDetail: async (params, id) => {
+    let url = `${API_BASE_URL.ORDER_OFFLINE_DETAIL}/${id}`;
     let response = callApiService.get(url);
     return response;
   },
-  confirmOrderOnline: async (params, id) => {
-    let url = `${API_BASE_URL.CONFIRM_ORDER_ONLINE}/${id}`;
+  confirmOrderOffline: async (params, id) => {
+    let url = `${API_BASE_URL.CONFIRM_ORDER_OFFLINE}/${id}`;
     let response = callApiService.put(url);
     return response;
   },
@@ -22,8 +22,8 @@ export default homeService = {
     let response = callApiService.put(url);
     return response;
   },
-  cancelOrderOnline: async (params, id) => {
-    let url = `${API_BASE_URL.CANCEL_ORDER_ONLINE}/${id}`;
+  cancelOrderOffline: async (params, id) => {
+    let url = `${API_BASE_URL.CANCEL_ORDER_OFFLINE}/${id}`;
     let response = callApiService.put(url);
     return response;
   },

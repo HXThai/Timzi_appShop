@@ -32,7 +32,7 @@ import services from '../../Redux/Service/shipperService';
 
 const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
-  console.log(store_id);
+  // console.log(store_id);
 
   const [tab, setTab] = useState(0);
 
@@ -48,7 +48,7 @@ const LoginScreen = (props) => {
     services.getListShipperStore(null, store_id, 0).then(function (response) {
       // console.log(response);
       if (response) {
-        console.log('thai mai', response);
+        // console.log('thai mai', response);
         if (response.data.code === 200) {
           // setDataRestaurant(response?.data?.data);
           // setProvince(response?.data?.data[0].name);

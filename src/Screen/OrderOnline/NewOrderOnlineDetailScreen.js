@@ -36,15 +36,11 @@ const LoginScreen = (props) => {
   const [dataMenu, setDataMenu] = useState([]);
 
   useEffect(() => {
-    // console.log('thai meo', props?.route?.params?.id);
     setModalVisibleLoading(true);
     services
       .orderOnlineDetail(null, props?.route?.params?.id)
       .then(function (response) {
-        // console.log(response);
-        // props.onGetList(response?.data);
         if (response) {
-          // console.log('thai mai', response);
           if (response.data.code === 200) {
             setDataOrder(response.data.data);
             setDataMenu(response.data.data.order_food_detail);

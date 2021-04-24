@@ -54,7 +54,7 @@ const LoginScreen = (props) => {
     services.getListComboStore(null, id).then(function (response) {
       // props.onGetList(response?.data);
       if (response) {
-        console.log('thai mai', response);
+        // console.log('thai mai', response);
         if (response.data.code === 200) {
           setDataPromotion(response?.data?.data);
         }

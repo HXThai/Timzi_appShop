@@ -71,6 +71,10 @@ const API_BASE_URL = {
 
   GET_LIST_ORDER_OFFLINE:
     ROOT_DOMAIN + '/book-table/list-book-table-store-with-owner',
+  ORDER_OFFLINE_DETAIL:
+    ROOT_DOMAIN + '/book-table/book-table-store-detail-with-owner',
+  CONFIRM_ORDER_OFFLINE: ROOT_DOMAIN + '/book-table/confirm-book-table-store',
+  CANCEL_ORDER_OFFLINE: ROOT_DOMAIN + '/book-table/cancel-book-table-store',
 };
 
 export {API_BASE_URL};

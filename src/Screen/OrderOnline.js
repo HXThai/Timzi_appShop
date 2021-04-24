@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
   Text,
@@ -12,6 +12,7 @@ import {
   FlatList,
   ActivityIndicator,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -28,6 +29,10 @@ import Modal from 'react-native-modal';
 import loginService from '../Redux/Service/LoginService';
 import services from '../Redux/Service/orderOnlineService';
 import reactotron from 'reactotron-react-native';
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 const Home = (props) => {
   const [tab, setTab] = useState(props?.route?.params?.tab ? 2 : 0);
@@ -51,16 +56,37 @@ const Home = (props) => {
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    services
+      .getListOrderOnline(null, storeId, tab + 1)
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            setDataOrder(response?.data?.data);
+            setModalVisibleLoading(false);
+          }
+        } else {
+          return;
+        }
+      });
+    wait(2000).then(() => {
+      setRefreshing(false);
+    });
+  });
   // console.log(props?.route?.params?.tab);
 
   const onClickDetail = (id) => {
-    // console.log(id);
+    // console.log(tab);
     if (tab === 0) {
       props.navigation.navigate('NewOrderOnlineDetailScreen', {id: id});
     } else if (tab === 1) {
       props.navigation.navigate('OrderOnlineRecievedDetailScreen', {id: id});
     } else if (tab === 2) {
-      props.navigation.navigate('OrderOnlineHasTakenDetailScreen', {id: id});
+      props.navigation.navigate('OrderOnlineRecievedDetailScreen', {id: id});
+      // props.navigation.navigate('OrderOnlineHasTakenDetailScreen', {id: id});
     } else if (tab === 3) {
       // props.navigation.navigate('OrderOnlineCancelledDetailScreen');
     } else if (tab === 4) {
@@ -68,14 +94,8 @@ const Home = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   BackHandler.addEventListener('hardwareBackPress', () => true);
-  //   return () =>
-  //     BackHandler.removeEventListener('hardwareBackPress', () => true);
-  // }, []);
-
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (props?.route?.params?.tab) {
         setTab(2);
       }
@@ -103,26 +123,7 @@ const Home = (props) => {
             }
           });
       } else {
-        // setStoreName(props.data.responseListStore?.data[0]?.name);
-        // setStoreId(props.data.responseListStore?.data[0]?.id);
-        // storage.setItem('dataStore', props.data.responseListStore?.data[0]);
-        // services
-        //   .getListOrderOnline(
-        //     null,
-        //     props.data.responseListStore?.data[0]?.id,
-        //     1,
-        //   )
-        //   .then(function (response) {
-        //     if (response) {
-        //       if (response.data.code === 200) {
-        //         setDataOrder(response?.data?.data);
-        //       }
-        //     } else {
-        //       return;
-        //     }
-        //   });
         props.data.responseListStore?.data.forEach((element, index) => {
-          // console.log(element.status);
           if (element.status === 1) {
             setStoreName(element.name);
             setStoreId(element.id);
@@ -143,7 +144,6 @@ const Home = (props) => {
       }
     });
     setDataListStore(props.data.responseListStore);
-
     storage.getItem('userIdPushNoti').then((data) => {
       reactotron.log(data);
     });
@@ -206,7 +206,6 @@ const Home = (props) => {
                 });
             } else {
               props.data.responseListStore?.data.forEach((element, index) => {
-                // console.log(element.status);
                 if (element.status === 1) {
                   setStoreName(element.name);
                   setStoreId(element.id);
@@ -226,7 +225,6 @@ const Home = (props) => {
               });
             }
           });
-          // setDataListStore(props.data.responseListStore);
         }
       } else {
       }
@@ -234,18 +232,15 @@ const Home = (props) => {
   }, [props.dataLogin.responseUserInformation]);
 
   const handleChangeTab = (index) => {
-    // console.log(storeId);
     setDataOrder([]);
     setTab(index);
     setModalVisibleLoading(true);
     services
       .getListOrderOnline(null, storeId, index + 1)
       .then(function (response) {
-        // console.log(response);
-        // props.onGetList(response?.data);
         if (response) {
-          // console.log('thai mai', response);
           if (response.data.code === 200) {
+            setTab(index);
             setDataOrder(response?.data?.data);
             setModalVisibleLoading(false);
           }
@@ -380,8 +375,6 @@ const Home = (props) => {
                   <TouchableOpacity
                     style={{marginRight: 10}}
                     onPress={() => {
-                      // setTab(1);
-                      // console.log(item.id);
                       Alert.alert(
                         'Xác nhận đơn hàng',
                         'Bạn chắc chắn muốn xác nhận đơn hàng?',
@@ -393,10 +386,7 @@ const Home = (props) => {
                               services
                                 .confirmOrderOnline(null, item?.id)
                                 .then(function (response) {
-                                  // console.log(response);
-                                  // props.onGetList(response?.data);
                                   if (response) {
-                                    // console.log('thai mai', response);
                                     if (response.data.code === 200) {
                                       handleChangeTab(1);
                                     }
@@ -443,10 +433,7 @@ const Home = (props) => {
                               services
                                 .cancelOrderOnline(null, item?.id)
                                 .then(function (response) {
-                                  // console.log(response);
-                                  // props.onGetList(response?.data);
                                   if (response) {
-                                    // console.log('thai mai', response);
                                     if (response.data.code === 200) {
                                       handleChangeTab(4);
                                     }
@@ -493,10 +480,7 @@ const Home = (props) => {
                             services
                               .confirmOrderOnlineReceived(null, item?.id)
                               .then(function (response) {
-                                // console.log(response);
-                                // props.onGetList(response?.data);
                                 if (response) {
-                                  // console.log('thai mai', response);
                                   if (response.data.code === 200) {
                                     handleChangeTab(2);
                                   }
@@ -562,6 +546,7 @@ const Home = (props) => {
       <View style={styles.contend}>
         <ImageBackground
           source={Images.backgroundHome}
+          // tintColor={'red'}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
           {modalVisibleLoading === true ? (
@@ -580,212 +565,222 @@ const Home = (props) => {
             </View>
           ) : null}
           <SafeAreaView style={{flex: 1}}>
-            <View style={{padding: 10}}>
-              <Modal
-                style={{alignItems: 'center', justifyContent: 'center'}}
-                isVisible={modalVisible}>
-                <View
-                  style={{
-                    height: '40%',
-                    width: '100%',
-                    backgroundColor: '#fff',
-                    borderRadius: 10,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <ScrollView showsVerticalScrollIndicator={false}>
-                    {dataListStore?.data?.map((item, index) => {
-                      return item.status === 1 ? (
-                        <View style={{}} key={index}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              setStoreName(item.name);
-                              storage.setItem('dataStore', item);
-                              props.navigation.reset({
-                                index: 0,
-                                routes: [{name: 'TabNav'}],
-                              });
-                              setModalVisible(false);
-                            }}
-                            style={{
-                              // height: 45,
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              borderBottomWidth: 0.5,
-                              borderColor: Color.main,
-                              width: Dimensions.get('window').width * 0.8,
-                            }}
-                            key={index}>
-                            <Text
+            <ScrollView
+              contentContainerStyle={{
+                flex: 1,
+                // backgroundColor: 'pink',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }>
+              <View style={{padding: 10}}>
+                <Modal
+                  style={{alignItems: 'center', justifyContent: 'center'}}
+                  isVisible={modalVisible}>
+                  <View
+                    style={{
+                      height: '40%',
+                      width: '100%',
+                      backgroundColor: '#fff',
+                      borderRadius: 10,
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                      {dataListStore?.data?.map((item, index) => {
+                        return item.status === 1 ? (
+                          <View style={{}} key={index}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setStoreName(item.name);
+                                storage.setItem('dataStore', item);
+                                props.navigation.reset({
+                                  index: 0,
+                                  routes: [{name: 'TabNav'}],
+                                });
+                                setModalVisible(false);
+                              }}
                               style={{
-                                fontWeight: '700',
-                                fontSize: 15,
-                                marginBottom: 15,
-                                marginTop: 15,
-                              }}>
-                              {item.name}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      ) : null;
-                    })}
-                  </ScrollView>
-                  <TouchableOpacity
-                    style={{marginTop: 10}}
-                    onPress={() => setModalVisible(false)}>
-                    <View
-                      style={{
-                        width: 90,
-                        height: 35,
-                        backgroundColor: Color.main,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: 25,
-                        marginBottom: 10,
-                      }}>
-                      <Text style={[styles.text, {color: '#fff'}]}>Đóng</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </Modal>
-              <View>
-                {roleId === 2 ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setModalVisible(true);
-                    }}
-                    style={{
-                      height: 45,
-                      width: '100%',
-                      backgroundColor: Color.main,
-                      alignItems: 'center',
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      borderColor: Color.main,
-                      marginBottom: 10,
-                      justifyContent: 'center',
-                      flexDirection: 'row',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        fontWeight: '700',
-                        color: Color.white,
-                      }}>
-                      {storeName}
-                    </Text>
-                    <MaterialIcons
-                      name={'keyboard-arrow-down'}
-                      size={25}
-                      color={Color.white}
-                    />
-                  </TouchableOpacity>
-                ) : null}
-                <View
-                  style={{
-                    // marginTop: 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    // width: '100%',
-                  }}>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      width: '100%',
-                      height: '100%',
-                      position: 'absolute',
-                      alignItems: 'center',
-                    }}>
-                    <View
-                      style={{
-                        height: 70,
-                        width: '100%',
-                        marginTop: 25,
-                      }}>
-                      <TextInput
+                                // height: 45,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderBottomWidth: 0.5,
+                                borderColor: Color.main,
+                                width: Dimensions.get('window').width * 0.8,
+                              }}
+                              key={index}>
+                              <Text
+                                style={{
+                                  fontWeight: '700',
+                                  fontSize: 15,
+                                  marginBottom: 15,
+                                  marginTop: 15,
+                                }}>
+                                {item.name}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        ) : null;
+                      })}
+                    </ScrollView>
+                    <TouchableOpacity
+                      style={{marginTop: 10}}
+                      onPress={() => setModalVisible(false)}>
+                      <View
                         style={{
-                          height: 45,
-                          color: '#000000',
-
-                          borderColor: Color.main,
-                          borderWidth: 1,
-                          borderRadius: 20,
-                          paddingLeft: 20,
-                        }}
-                        placeholder="Tìm đơn?"
-                        placeholderTextColor="gray"
-                      />
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      // width: '100%',
-                      justifyContent: 'flex-end',
-                      alignSelf: 'flex-end',
-                      height: 45,
-                      alignItems: 'center',
-                      marginRight: 10,
-                    }}>
-                    <TouchableOpacity onPress={() => {}}>
-                      <MaterialIcons
-                        name={'search'}
-                        size={26}
-                        color={Color.main}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: 20,
-                    justifyContent: 'space-between',
-                  }}>
-                  {dataTab.map((item, index) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          handleChangeTab(index);
-                        }}
-                        key={index}
-                        style={{
-                          height: 32,
-                          width: '19%',
+                          width: 90,
+                          height: 35,
+                          backgroundColor: Color.main,
                           alignItems: 'center',
                           justifyContent: 'center',
-                          borderWidth: 1,
-                          borderColor: tab === index ? Color.main : '#fff',
-                          borderRadius: 6,
+                          borderRadius: 25,
+                          marginBottom: 10,
                         }}>
-                        <Text style={{fontSize: 13}}>{item.name}</Text>
+                        <Text style={[styles.text, {color: '#fff'}]}>Đóng</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
+                <View>
+                  {roleId === 2 ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setModalVisible(true);
+                      }}
+                      style={{
+                        height: 45,
+                        width: '100%',
+                        backgroundColor: Color.main,
+                        alignItems: 'center',
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        borderColor: Color.main,
+                        marginBottom: 10,
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          fontWeight: '700',
+                          color: Color.white,
+                        }}>
+                        {storeName}
+                      </Text>
+                      <MaterialIcons
+                        name={'keyboard-arrow-down'}
+                        size={25}
+                        color={Color.white}
+                      />
+                    </TouchableOpacity>
+                  ) : null}
+                  <View
+                    style={{
+                      // marginTop: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      // width: '100%',
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        alignItems: 'center',
+                      }}>
+                      <View
+                        style={{
+                          height: 70,
+                          width: '100%',
+                          marginTop: 25,
+                        }}>
+                        <TextInput
+                          style={{
+                            height: 45,
+                            color: '#000000',
+
+                            borderColor: Color.main,
+                            borderWidth: 1,
+                            borderRadius: 20,
+                            paddingLeft: 20,
+                          }}
+                          placeholder="Tìm đơn?"
+                          placeholderTextColor="gray"
+                        />
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        // width: '100%',
+                        justifyContent: 'flex-end',
+                        alignSelf: 'flex-end',
+                        height: 45,
+                        alignItems: 'center',
+                        marginRight: 10,
+                      }}>
+                      <TouchableOpacity onPress={() => {}}>
+                        <MaterialIcons
+                          name={'search'}
+                          size={26}
+                          color={Color.main}
+                        />
                       </TouchableOpacity>
-                    );
-                  })}
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 20,
+                      justifyContent: 'space-between',
+                    }}>
+                    {dataTab.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            handleChangeTab(index);
+                          }}
+                          key={index}
+                          style={{
+                            height: 32,
+                            width: '19%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderWidth: 1,
+                            borderColor: tab === index ? Color.main : '#fff',
+                            borderRadius: 6,
+                          }}>
+                          <Text style={{fontSize: 13}}>{item.name}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                  <FlatList
+                    // key={}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                    style={{
+                      marginTop: 10,
+                      marginBottom: 40,
+                    }}
+                    data={dataOrder}
+                    renderItem={renderProduct}
+                    keyExtractor={(item, index) => index.toString()}
+                    // extraData={dataOrder}
+                    // onEndReached={handleLoadMore}
+                    // onEndReachedThreshold={0}
+                    // ListFooterComponent={renderFooter}
+                  />
                 </View>
-                <FlatList
-                  // key={}
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                  style={{
-                    marginTop: 10,
-                    marginBottom: 340,
-                  }}
-                  data={dataOrder}
-                  renderItem={renderProduct}
-                  // renderItem={({item}) =><TouchableOpacity></TouchableOpacity> <Text>{item.user_name}</Text>}
-                  keyExtractor={(item, index) => index.toString()}
-                  // extraData={dataOrder}
-                  // onEndReached={handleLoadMore}
-                  // onEndReachedThreshold={0}
-                  // ListFooterComponent={renderFooter}
-                />
               </View>
-            </View>
+            </ScrollView>
           </SafeAreaView>
         </ImageBackground>
       </View>

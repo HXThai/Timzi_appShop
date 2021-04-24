@@ -25,8 +25,11 @@ import Swipeout from 'react-native-swipeout';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import services from '../../Redux/Service/orderOfflineService';
 
 const LoginScreen = (props) => {
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
   const [dataOrder, setDataOrder] = useState([
     {
       minute: 30,
@@ -43,7 +46,7 @@ const LoginScreen = (props) => {
       title: 'Trần Văn Tét',
       foodCore: 'Thời gian đặt',
       option1: 'Số lần đặt',
-      option2: 'Thời gian phục vụ',
+      option2: 'Số điện thoại',
       priceFoodCore: '08:00, 12/12/2021',
       priceOption1: 3,
       priceOption2: '18:00 thứ 7 ngày 12/12/2021',
@@ -74,6 +77,26 @@ const LoginScreen = (props) => {
     numberTable: 1,
   });
 
+  const [dataOrderOffline, setDataOrderOffline] = useState({});
+
+  useEffect(() => {
+    setModalVisibleLoading(true);
+    services
+      .orderOfflineDetail(null, props?.route?.params?.id)
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            setDataOrderOffline(response.data.data);
+            // setDataOrder(response.data.data);
+            // setDataMenu(response.data.data.order_food_detail);
+            // setModalVisibleLoading(false);
+          }
+        } else {
+          return;
+        }
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -89,13 +112,13 @@ const LoginScreen = (props) => {
               height: '100%',
             }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={{marginTop: 10}}>
+              <View style={{marginTop: 5}}>
                 <View
                   style={{
                     height: 100,
                     backgroundColor: '#fff',
                     borderRadius: 8,
-                    marginTop: 10,
+                    // marginTop: 10,
                     flexDirection: 'row',
                     padding: 8,
                   }}>
@@ -117,7 +140,7 @@ const LoginScreen = (props) => {
                       <Text
                         style={{
                           color: Color.buttonColor,
-                          fontSize: 11,
+                          fontSize: 10,
                         }}>
                         Chờ duyệt
                       </Text>
@@ -140,7 +163,7 @@ const LoginScreen = (props) => {
                       />
                       <View style={{position: 'absolute'}}>
                         <Text style={{color: '#fff'}}>
-                          {dataNewOrder.numberTable}
+                          {dataOrderOffline?.table_store?.number_table}
                         </Text>
                       </View>
                     </View>
@@ -173,12 +196,12 @@ const LoginScreen = (props) => {
                             fontSize: 13,
                             marginLeft: 5,
                           }}>
-                          {dataNewOrder.name}
+                          Bàn số {dataOrderOffline?.table_store?.number_table}
                         </Text>
                       </View>
                       <View>
                         <Text style={{fontSize: 12, color: '#828282'}}>
-                          Vị trí: {dataNewOrder.location}
+                          Vị trí: {dataOrderOffline?.table_store?.number_floor}
                         </Text>
                       </View>
                     </View>
@@ -205,12 +228,12 @@ const LoginScreen = (props) => {
                             fontSize: 12,
                             marginLeft: 5,
                           }}>
-                          {dataNewOrder.code}
+                          {dataOrderOffline?.code}
                         </Text>
                       </View>
                       <View>
                         <Text style={{fontSize: 12, color: '#828282'}}>
-                          Dịch vụ: {dataNewOrder.service}
+                          Dịch vụ: {dataOrderOffline?.name}
                         </Text>
                       </View>
                     </View>
@@ -237,7 +260,7 @@ const LoginScreen = (props) => {
                             fontSize: 13,
                             marginLeft: 5,
                           }}>
-                          Số khách: {dataNewOrder.numberCustommer}
+                          Số khách: {dataOrderOffline?.number_people}
                         </Text>
                       </View>
                       <View
@@ -260,10 +283,10 @@ const LoginScreen = (props) => {
                       borderRadius: 8,
                       flexDirection: 'column',
                       justifyContent: 'space-around',
-                      height: 166,
+                      height: 146,
                     }}>
                     <Text style={{fontSize: 12, fontWeight: '700'}}>
-                      Khách hàng: {item.title}
+                      Khách hàng: {dataOrderOffline?.user?.name}
                     </Text>
                     <View
                       style={{
@@ -285,11 +308,11 @@ const LoginScreen = (props) => {
                       </View>
                       <View>
                         <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {item.priceFoodCore}
+                          {dataOrderOffline?.time_booking}
                         </Text>
                       </View>
                     </View>
-                    <View
+                    {/* <View
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -312,7 +335,7 @@ const LoginScreen = (props) => {
                           {item.priceOption1} lần
                         </Text>
                       </View>
-                    </View>
+                    </View> */}
                     <View
                       style={{
                         flexDirection: 'row',
@@ -333,7 +356,7 @@ const LoginScreen = (props) => {
                       </View>
                       <View>
                         <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {item.priceOption2}
+                          {dataOrderOffline?.phone}
                         </Text>
                       </View>
                     </View>
@@ -355,7 +378,7 @@ const LoginScreen = (props) => {
                             color: 'black',
                             // color: Color.main,
                           }}>
-                          {item.discount}
+                          {dataOrderOffline?.note}
                         </Text>
                       </View>
                     </View>
@@ -502,6 +525,7 @@ const LoginScreen = (props) => {
                   borderRadius: 50,
                   backgroundColor: Color.main,
                   marginTop: 10,
+                  marginBottom: 10,
                 }}>
                 <Text style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
                   Xác nhận
