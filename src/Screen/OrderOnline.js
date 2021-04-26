@@ -166,9 +166,6 @@ const Home = (props) => {
           setStoreId(
             props.dataLogin.responseUserInformation?.data?.data?.store?.id,
           );
-          // console.log(
-          //   props.dataLogin.responseUserInformation?.data?.data?.store?.id,
-          // );
           services
             .getListOrderOnline(
               null,
@@ -566,6 +563,7 @@ const Home = (props) => {
           ) : null}
           <SafeAreaView style={{flex: 1}}>
             <ScrollView
+              nestedScrollEnabled={true}
               contentContainerStyle={{
                 flex: 1,
                 // backgroundColor: 'pink',
@@ -761,6 +759,7 @@ const Home = (props) => {
                   </View>
                   <FlatList
                     // key={}
+                    nestedScrollEnabled={true}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
                       justifyContent: 'space-between',

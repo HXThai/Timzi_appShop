@@ -595,7 +595,9 @@ const Home = (props) => {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                     }}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                    <ScrollView
+                      showsVerticalScrollIndicator={false}
+                      nestedScrollEnabled={true}>
                       {dataListStore?.data?.map((item, index) => {
                         return item.status === 1 ? (
                           <View style={{}} key={index}>
@@ -773,6 +775,7 @@ const Home = (props) => {
                   </View>
 
                   <FlatList
+                    nestedScrollEnabled={true}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
                       justifyContent: 'space-between',

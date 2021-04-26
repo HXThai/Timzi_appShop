@@ -40,32 +40,7 @@ const LoginScreen = (props) => {
     {id: 2, name: 'Chờ kết nối'},
   ]);
 
-  const [dataStaff, setDataStaff] = useState([
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      phone: '0986868686',
-      role: 'Nhân viên',
-    },
-  ]);
+  const [dataStaff, setDataStaff] = useState([]);
 
   useEffect(() => {
     storage.getItem('dataStore').then((data) => {

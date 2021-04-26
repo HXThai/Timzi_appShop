@@ -29,16 +29,14 @@ import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
 import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
-// import loginService from '../Redux/Service/LoginService';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
-// import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import GetLocation from 'react-native-get-location';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import services from '../../Redux/Service/productService';
 import reactotron from 'reactotron-react-native';
+import axios from 'axios';
 
 const LoginScreen = (props) => {
   const [name, setName] = useState('');
@@ -72,6 +70,41 @@ const LoginScreen = (props) => {
     modalVisibleCategoryBusiness,
     setModalVisibleCategoryBusiness,
   ] = useState(false);
+  const [isSearchAddress, setIsSearchAddress] = useState(false);
+  const [isCheckChangeAdress, setIsCheckChangeAdress] = useState(false);
+  const [dataLocationSuggest, setDataLocationSuggest] = useState([]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (address != '' && isCheckChangeAdress == false) {
+        services.getLocationSuggest(null, address).then(function (response) {
+          if (response) {
+            setIsSearchAddress(true);
+            setDataLocationSuggest(response.data.predictions);
+            // console.log(response.data.predictions);
+          } else {
+            return;
+          }
+        });
+      }
+    }, 1500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [address]);
+
+  const handleChooseAddress = (item) => {
+    setIsSearchAddress(false);
+    setIsCheckChangeAdress(true);
+    setAddress(item?.description);
+    services.getLocationDetail(null, item.place_id).then(function (response) {
+      if (response) {
+        console.log('thai', response.data.result.geometry.location);
+        setDataLocation(response.data.result.geometry.location);
+      } else {
+        return;
+      }
+    });
+  };
 
   useEffect(() => {
     GetLocation.getCurrentPosition({
@@ -79,8 +112,7 @@ const LoginScreen = (props) => {
       timeout: 15000,
     })
       .then((location) => {
-        reactotron.log(location);
-        setDataLocation(location);
+        // reactotron.log(location);
       })
       .catch((error) => {
         const {code, message} = error;
@@ -130,7 +162,7 @@ const LoginScreen = (props) => {
     });
 
     services
-      .getListCategory(null, dataLocation?.latitude, dataLocation?.longitude)
+      .getListCategory(null, dataLocation?.lat, dataLocation?.lng)
       .then(function (response) {
         if (response) {
           if (response.data.code === 200) {
@@ -318,8 +350,8 @@ const LoginScreen = (props) => {
         uri: image,
       });
       body.append('address', address);
-      body.append('latitude', dataLocation.latitude);
-      body.append('longtidue', dataLocation.longitude);
+      body.append('latitude', dataLocation.lat);
+      body.append('longtidue', dataLocation.lng);
       body.append('average_price', averagePrice);
       body.append('open_hours', dateOpen);
       body.append('close_hours', dateClose);
@@ -770,10 +802,42 @@ const LoginScreen = (props) => {
                   }}
                   placeholder="Địa chỉ"
                   placeholderTextColor="grey"
-                  onChangeText={(text) => setAddress(text)}
+                  onChangeText={(text) => {
+                    setIsCheckChangeAdress(false);
+                    setAddress(text);
+                  }}
                   defaultValue={address}
                 />
               </View>
+              {isSearchAddress && dataLocationSuggest != [] ? (
+                <View
+                  style={{
+                    width: '100%',
+                    height: 300,
+                  }}>
+                  <ScrollView>
+                    {dataLocationSuggest.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            handleChooseAddress(item);
+                          }}
+                          key={index}
+                          style={{
+                            padding: 5,
+                            backgroundColor: '#C0C0C0',
+                            height: 50,
+                            justifyContent: 'center',
+                            borderBottomWidth: 0.5,
+                            borderBottomColor: 'grey',
+                          }}>
+                          <Text>{item?.description}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
+              ) : null}
               <View style={{marginTop: 20}}>
                 <Text style={{fontSize: 12}}>Giá trung bình</Text>
               </View>
@@ -968,7 +1032,7 @@ const LoginScreen = (props) => {
                       justifyContent: 'center',
                       backgroundColor: Color.white,
                       borderRadius: 8,
-                      elevation: 3,
+                      // elevation: 3,
                     }}>
                     <Text>{dateOpen}</Text>
                   </TouchableOpacity>
@@ -989,7 +1053,7 @@ const LoginScreen = (props) => {
                       justifyContent: 'center',
                       backgroundColor: Color.white,
                       borderRadius: 8,
-                      elevation: 3,
+                      // elevation: 3,
                     }}>
                     <Text>{dateClose}</Text>
                   </TouchableOpacity>

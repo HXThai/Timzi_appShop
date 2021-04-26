@@ -97,4 +97,15 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+
+  getLocationSuggest: async (params, suggest) => {
+    let url = `${API_BASE_URL.GET_LOCATION_SUGGEST}?input=${suggest}&api_key=JCVWJnabFfQ7QF7Fts2FBKCBSWvpmB7MGBYEE5lS`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  getLocationDetail: async (params, place_id) => {
+    let url = `${API_BASE_URL.GET_LOCATION_DETAIL}?place_id=${place_id}&api_key=JCVWJnabFfQ7QF7Fts2FBKCBSWvpmB7MGBYEE5lS`;
+    let response = callApiService.get(url);
+    return response;
+  },
 };
