@@ -69,6 +69,14 @@ const LoginScreen = (props) => {
 
   const [modalVisibleShowTopping, setModalVisibleShowTopping] = useState(false);
 
+  const [isStatusFood, setIsStatusFood] = useState(0);
+
+  const [dataIsStatusFood, setDataIsStatusFood] = useState([
+    {title: 'Món mới'},
+    {title: 'Đặc sản'},
+    {title: 'Tạm hết'},
+  ]);
+
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -184,6 +192,7 @@ const LoginScreen = (props) => {
       setFilePath(response);
       setImage(response.uri);
       setImageName(response.fileName);
+      setModalVisible(false);
     });
   };
 
@@ -218,60 +227,102 @@ const LoginScreen = (props) => {
   }, [props?.route?.params?.name]);
 
   const handleAddFood = () => {
-    var body = new FormData();
-    body.append('store_id', store_id.toString());
-    body.append('name', name);
-    // body.append('image', data);
-    body.append('image', {
-      name: `${filePath.fileName}`,
-      type: 'image/jpeg',
-      uri: filePath.uri,
-    });
-    body.append('status', status);
-    body.append('price', price);
-    body.append('category_food_id', category_food_id);
-    // body.append('quantity', number);
-    body.append('price_discount', promotion);
-    services.addFood(body).then(function (response) {
-      // props.onGetList(response?.data);
-      if (response) {
-        // console.log('thai', response);
-        if (response.data.code === 200) {
+    try {
+      var body = new FormData();
+      body.append('store_id', store_id.toString());
+      body.append('name', name);
+      // body.append('image', data);
+      body.append('image', {
+        name: `${filePath.fileName}`,
+        type: 'image/jpeg',
+        uri: filePath.uri,
+      });
+      body.append('status', status);
+      body.append('price', price);
+      body.append('category_food_id', category_food_id);
+      body.append('price_discount', promotion);
+      if (isStatusFood === 0) {
+        body.append('is_new', 1);
+        body.append('is_specialties', 0);
+        body.append('is_out_of_food', 0);
+      } else if (isStatusFood === 1) {
+        body.append('is_new', 0);
+        body.append('is_specialties', 1);
+        body.append('is_out_of_food', 0);
+      } else {
+        body.append('is_new', 0);
+        body.append('is_specialties', 0);
+        body.append('is_out_of_food', 1);
+      }
+      services.addFood(body).then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            Alert.alert(
+              'Thông báo!',
+              'Thêm món ăn thành công!',
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {
+                    props.navigation.reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: 'ListProductScreen',
+                          params: {
+                            category_food_id: category_food_id,
+                            store_id: store_id,
+                          },
+                        },
+                      ],
+                    });
+                    props.navigation.navigate('ListProductScreen', {
+                      category_food_id: category_food_id,
+                      store_id: store_id,
+                    });
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
+          } else {
+            Alert.alert(
+              'Thông báo!',
+              response.data.message,
+              [
+                {
+                  text: 'Đồng ý',
+                },
+              ],
+              {cancelable: false},
+            );
+          }
+        } else {
           Alert.alert(
-            'Thông báo!',
-            'Thêm món ăn thành công!',
+            'Thêm món ăn thất bại!',
+            'Vui lòng kiểm tra lại thông tin!',
             [
               {
                 text: 'Đồng ý',
-                onPress: async () => {
-                  props.navigation.reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: 'ListProductScreen',
-                        params: {
-                          category_food_id: category_food_id,
-                          store_id: store_id,
-                        },
-                      },
-                    ],
-                  });
-                  props.navigation.navigate('ListProductScreen', {
-                    category_food_id: category_food_id,
-                    store_id: store_id,
-                  });
-                },
               },
             ],
             {cancelable: false},
           );
-          // setDataProduct(response?.data?.data?.data);
-          // console.log(response.data.data.data);
+          return;
         }
-      } else {
-        return;
-      }
-    });
+      });
+    } catch (ex) {
+      Alert.alert(
+        'Thông báo!',
+        ex.toString(),
+        [
+          {
+            text: 'Đồng ý',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
   };
 
   const handleEditFood = () => {
@@ -393,8 +444,8 @@ const LoginScreen = (props) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      setModalVisible(false);
-                      // chooseFile('photo');
+                      // setModalVisible(false);
+                      chooseFile('photo');
                     }}
                     style={{
                       flexDirection: 'row',
@@ -1071,6 +1122,33 @@ const LoginScreen = (props) => {
                   defaultValue={promotion}
                 />
               </View>
+              {dataIsStatusFood.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setIsStatusFood(index);
+                    }}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginTop: 5,
+                    }}>
+                    <MaterialIcons
+                      name={
+                        isStatusFood === index
+                          ? 'radio-button-checked'
+                          : 'radio-button-unchecked'
+                      }
+                      size={26}
+                      color={Color.main}
+                      style={{marginRight: 10}}
+                    />
+                    <Text>{item.title}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+
               {statusFood === 'edit' ? (
                 <View style={{marginTop: 10}}>
                   <Text style={{fontSize: 12, marginBottom: 5}}>Size</Text>
@@ -1178,55 +1256,57 @@ const LoginScreen = (props) => {
                 </View>
               )}
             </ScrollView>
-            <ActionButton buttonColor={Color.buttonColor}>
-              <ActionButton.Item
-                buttonColor="#9b59b6"
-                title="Thêm size"
-                onPress={() => setModalVisibleSize(true)}>
-                <MaterialIcons
-                  name={'add'}
-                  size={26}
-                  style={{color: Color.white}}
-                />
-              </ActionButton.Item>
-              <ActionButton.Item
-                buttonColor="#3498db"
-                title="Thêm danh mục topping"
-                onPress={() => {
-                  setModalVisibleCategoryTopping(true);
-                }}>
-                <MaterialIcons
-                  name={'fastfood'}
-                  size={26}
-                  style={{color: Color.white}}
-                />
-              </ActionButton.Item>
-              <ActionButton.Item
-                buttonColor="#1abc9c"
-                title="Thêm chi tiết topping"
-                onPress={() => {
-                  setCurrentCategoryTopping(dataCategoryTopping[0]?.name);
-                  setCurrentCategoryToppingId(dataCategoryTopping[0]?.id);
-                  setModalVisibleToppingDetail(true);
-                  services
-                    .listCategoryTopping(null, id)
-                    .then(function (response) {
-                      if (response) {
-                        if (response.data.code === 200) {
-                          setData(response?.data?.data);
+            {statusFood === 'edit' ? (
+              <ActionButton buttonColor={Color.buttonColor}>
+                <ActionButton.Item
+                  buttonColor="#9b59b6"
+                  title="Thêm size"
+                  onPress={() => setModalVisibleSize(true)}>
+                  <MaterialIcons
+                    name={'add'}
+                    size={26}
+                    style={{color: Color.white}}
+                  />
+                </ActionButton.Item>
+                <ActionButton.Item
+                  buttonColor="#3498db"
+                  title="Thêm danh mục topping"
+                  onPress={() => {
+                    setModalVisibleCategoryTopping(true);
+                  }}>
+                  <MaterialIcons
+                    name={'fastfood'}
+                    size={26}
+                    style={{color: Color.white}}
+                  />
+                </ActionButton.Item>
+                <ActionButton.Item
+                  buttonColor="#1abc9c"
+                  title="Thêm chi tiết topping"
+                  onPress={() => {
+                    setCurrentCategoryTopping(dataCategoryTopping[0]?.name);
+                    setCurrentCategoryToppingId(dataCategoryTopping[0]?.id);
+                    setModalVisibleToppingDetail(true);
+                    services
+                      .listCategoryTopping(null, id)
+                      .then(function (response) {
+                        if (response) {
+                          if (response.data.code === 200) {
+                            setData(response?.data?.data);
+                          }
+                        } else {
+                          return;
                         }
-                      } else {
-                        return;
-                      }
-                    });
-                }}>
-                <MaterialIcons
-                  name={'fastfood'}
-                  size={26}
-                  style={{color: Color.white}}
-                />
-              </ActionButton.Item>
-            </ActionButton>
+                      });
+                  }}>
+                  <MaterialIcons
+                    name={'fastfood'}
+                    size={26}
+                    style={{color: Color.white}}
+                  />
+                </ActionButton.Item>
+              </ActionButton>
+            ) : null}
           </View>
         </ImageBackground>
       </View>

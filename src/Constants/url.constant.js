@@ -75,6 +75,10 @@ const API_BASE_URL = {
     ROOT_DOMAIN + '/book-table/book-table-store-detail-with-owner',
   CONFIRM_ORDER_OFFLINE: ROOT_DOMAIN + '/book-table/confirm-book-table-store',
   CANCEL_ORDER_OFFLINE: ROOT_DOMAIN + '/book-table/cancel-book-table-store',
+  RIGHT_TO_ORDER_OFFLINE: ROOT_DOMAIN + '/book-table/right-to-order-with-owner',
+  GET_LIST_TABLE_ORDER_OFFLINE: ROOT_DOMAIN + '/book-table/list-table-store',
+  CONFIRM_FOOD_ON_THE_TABLE:
+    ROOT_DOMAIN + '/book-table/confirm-food-on-the-table',
 
   GET_LOCATION_SUGGEST: 'https://rsapi.goong.io/Place/AutoComplete',
   GET_LOCATION_DETAIL: 'https://rsapi.goong.io/Place/Detail',

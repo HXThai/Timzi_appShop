@@ -731,7 +731,7 @@ const LoginScreen = (props) => {
                 />
               </View>
               <View style={{marginTop: 20}}>
-                <Text style={{fontSize: 12}}>Giá combo</Text>
+                <Text style={{fontSize: 12}}>Nội dung</Text>
               </View>
               <TextInput
                 style={[
@@ -742,7 +742,8 @@ const LoginScreen = (props) => {
                     borderWidth: 1,
                     marginTop: 5,
                     textAlignVertical: 'top',
-                    borderRadius: 10,
+                    borderRadius: 8,
+                    height: 100,
                   },
                 ]}
                 multiline={true}
@@ -908,6 +909,7 @@ const LoginScreen = (props) => {
                   borderRadius: 50,
                   backgroundColor: Color.main,
                   marginTop: 10,
+                  marginBottom: 10,
                 }}>
                 <Text style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
                   Xác nhận

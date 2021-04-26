@@ -72,7 +72,7 @@ const Home = (props) => {
           return;
         }
       });
-    wait(2000).then(() => {
+    wait(1000).then(() => {
       setRefreshing(false);
     });
   });
@@ -144,9 +144,9 @@ const Home = (props) => {
       }
     });
     setDataListStore(props.data.responseListStore);
-    storage.getItem('userIdPushNoti').then((data) => {
-      reactotron.log(data);
-    });
+    // storage.getItem('userIdPushNoti').then((data) => {
+    //   reactotron.log(data);
+    // });
   }, [props.data.responseListStore]);
 
   const [roleId, setRoleId] = useState('');

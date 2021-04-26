@@ -167,6 +167,7 @@ const LoginScreen = (props) => {
         if (response) {
           if (response.data.code === 200) {
             // setDataCategory(response?.data?.data);
+            // console.log(response?.data?.data);
             var data = [];
             response?.data?.data?.forEach((element, index) => {
               // reactotron.log(index);

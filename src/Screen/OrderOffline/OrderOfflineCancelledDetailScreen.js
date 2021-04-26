@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -25,6 +26,7 @@ import Swipeout from 'react-native-swipeout';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import services from '../../Redux/Service/orderOfflineService';
 
 const LoginScreen = (props) => {
   const [dataMenu, setDataMenu] = useState([
@@ -65,6 +67,28 @@ const LoginScreen = (props) => {
     numberTable: 1,
   });
 
+  const [dataOrderOffline, setDataOrderOffline] = useState([]);
+
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
+  useEffect(() => {
+    setModalVisibleLoading(true);
+    services
+      .orderOfflineDetail(null, props?.route?.params?.id)
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            setDataOrderOffline(response.data.data);
+            // setDataOrder(response.data.data);
+            // setDataMenu(response.data.data.order_food_detail);
+            setModalVisibleLoading(false);
+          }
+        } else {
+          return;
+        }
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -72,430 +96,363 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
-          <View
-            style={{
-              padding: 10,
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: '100%',
-            }}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={{marginTop: 10}}>
-                <View
-                  style={{
-                    height: 100,
-                    backgroundColor: '#fff',
-                    borderRadius: 8,
-                    marginTop: 10,
-                    flexDirection: 'row',
-                    padding: 8,
-                  }}>
+          {modalVisibleLoading === true ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
+          {modalVisibleLoading === false ? (
+            <View
+              style={{
+                padding: 10,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100%',
+              }}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={{marginTop: 5}}>
                   <View
                     style={{
-                      flexDirection: 'column',
-                      justifyContent: 'space-around',
+                      height: 100,
+                      backgroundColor: '#fff',
+                      borderRadius: 8,
+                      // marginTop: 10,
+                      flexDirection: 'row',
+                      padding: 8,
                     }}>
                     <View
                       style={{
-                        height: 19,
-                        width: 56,
-                        borderRadius: 6,
-                        borderColor: 'red',
-                        borderWidth: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          color: 'red',
-                          fontSize: 11,
-                        }}>
-                        Đã hủy
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        height: 56,
-                        width: 56,
-                        borderRadius: 6,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderColor: 'red',
-                        borderWidth: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Image
-                        source={Images.iconOrderOfflineRed}
-                        style={{height: 44, width: 44}}
-                      />
-                      <View style={{position: 'absolute'}}>
-                        <Text style={{color: '#fff'}}>
-                          {dataNewOrder.numberTable}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                      justifyContent: 'space-around',
-                    }}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginLeft: 10,
-                        width: Dimensions.get('window').width - 100,
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
                       }}>
                       <View
                         style={{
-                          flexDirection: 'row',
+                          height: 19,
+                          width: 56,
+                          borderRadius: 6,
+                          borderColor: Color.red,
+                          borderWidth: 1,
                           alignItems: 'center',
+                          justifyContent: 'center',
                         }}>
-                        <Image
-                          source={Images.iconPersonal}
-                          style={{height: 10, width: 10}}
-                        />
                         <Text
                           style={{
-                            fontWeight: '700',
-                            fontSize: 13,
-                            marginLeft: 5,
+                            color: Color.red,
+                            fontSize: 10,
                           }}>
-                          {dataNewOrder.name}
+                          Đã TT
                         </Text>
                       </View>
-                      <View>
-                        <Text style={{fontSize: 12, color: '#828282'}}>
-                          Vị trí: {dataNewOrder.location}
-                        </Text>
+                      <View
+                        style={{
+                          height: 56,
+                          width: 56,
+                          borderRadius: 6,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderColor: Color.red,
+                          borderWidth: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Image
+                          source={Images.iconOrderOfflineRed}
+                          style={{height: 44, width: 44}}
+                        />
+                        <View style={{position: 'absolute'}}>
+                          <Text style={{color: '#fff'}}>
+                            {dataOrderOffline?.table_store?.number_table}
+                          </Text>
+                        </View>
                       </View>
                     </View>
                     <View
                       style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginLeft: 10,
-                        width: Dimensions.get('window').width - 100,
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
                       }}>
                       <View
                         style={{
                           flexDirection: 'row',
+                          justifyContent: 'space-between',
                           alignItems: 'center',
+                          marginLeft: 10,
+                          width: Dimensions.get('window').width - 100,
                         }}>
-                        <Image
-                          source={Images.iconPersonal}
-                          style={{height: 10, width: 10, opacity: 0}}
-                        />
-                        <Text
+                        <View
                           style={{
-                            fontWeight: '400',
-                            fontSize: 12,
-                            marginLeft: 5,
+                            flexDirection: 'row',
+                            alignItems: 'center',
                           }}>
-                          {dataNewOrder.code}
-                        </Text>
-                      </View>
-                      <View>
-                        <Text style={{fontSize: 12, color: '#828282'}}>
-                          Dịch vụ: {dataNewOrder.service}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginLeft: 10,
-                        width: Dimensions.get('window').width - 100,
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={Images.iconPersonal}
-                          style={{height: 10, width: 10}}
-                        />
-                        <Text
-                          style={{
-                            fontWeight: '600',
-                            fontSize: 13,
-                            marginLeft: 5,
-                          }}>
-                          Số khách: {dataNewOrder.numberCustommer}
-                        </Text>
+                          <Image
+                            source={Images.iconPersonal}
+                            style={{height: 10, width: 10}}
+                          />
+                          <Text
+                            style={{
+                              fontWeight: '700',
+                              fontSize: 13,
+                              marginLeft: 5,
+                            }}>
+                            Bàn số {dataOrderOffline?.table_store?.number_table}
+                          </Text>
+                        </View>
+                        <View>
+                          <Text style={{fontSize: 12, color: '#828282'}}>
+                            Vị trí:{' '}
+                            {dataOrderOffline?.table_store?.number_floor}
+                          </Text>
+                        </View>
                       </View>
                       <View
                         style={{
                           flexDirection: 'row',
+                          justifyContent: 'space-between',
                           alignItems: 'center',
-                        }}></View>
+                          marginLeft: 10,
+                          width: Dimensions.get('window').width - 100,
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <Image
+                            source={Images.iconPersonal}
+                            style={{height: 10, width: 10, opacity: 0}}
+                          />
+                          <Text
+                            style={{
+                              fontWeight: '400',
+                              fontSize: 12,
+                              marginLeft: 5,
+                            }}>
+                            {dataOrderOffline?.code}
+                          </Text>
+                        </View>
+                        <View>
+                          <Text style={{fontSize: 12, color: '#828282'}}>
+                            Dịch vụ
+                          </Text>
+                        </View>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginLeft: 10,
+                          width: Dimensions.get('window').width - 100,
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <Image
+                            source={Images.iconPersonal}
+                            style={{height: 10, width: 10}}
+                          />
+                          <Text
+                            style={{
+                              fontWeight: '600',
+                              fontSize: 13,
+                              marginLeft: 5,
+                            }}>
+                            Số khách: {dataOrderOffline?.number_people}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}></View>
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-              {dataMenu.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      padding: 10,
-                      backgroundColor: '#fff',
-                      marginTop: 20,
-                      borderRadius: 8,
-                      flexDirection: 'column',
-                      justifyContent: 'space-around',
-                      height: 166,
-                    }}>
-                    <Text style={{fontSize: 12, fontWeight: '700'}}>
-                      Khách hàng: {item.title}
-                    </Text>
+                {dataMenu.map((item, index) => {
+                  return (
                     <View
+                      key={index}
                       style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        padding: 10,
+                        backgroundColor: '#fff',
+                        marginTop: 20,
+                        borderRadius: 8,
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
+                        height: 146,
                       }}>
+                      <Text style={{fontSize: 12, fontWeight: '700'}}>
+                        Khách hàng: {dataOrderOffline?.user?.name}
+                      </Text>
                       <View
                         style={{
                           flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
                           justifyContent: 'space-between',
                         }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.foodCore}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {item.priceFoodCore}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option1}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {item.priceOption1} lần
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option2}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {item.priceOption2}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View>
-                        <Text style={{fontSize: 12, fontWeight: '400'}}>
-                          Nội dung đặt
-                        </Text>
-                      </View>
-                      <View>
-                        <Text
+                        <View
                           style={{
-                            fontWeight: '600',
-                            fontSize: 12,
-                            color: 'black',
-                            // color: Color.main,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            width: '50%',
+                            justifyContent: 'space-between',
                           }}>
-                          {item.discount}
-                        </Text>
+                          <View style={{}}>
+                            <Text style={{fontWeight: '400', fontSize: 12}}>
+                              {item.foodCore}
+                            </Text>
+                          </View>
+                        </View>
+                        <View>
+                          <Text style={{fontWeight: '400', fontSize: 12}}>
+                            {dataOrderOffline?.time_booking}
+                          </Text>
+                        </View>
                       </View>
-                    </View>
-                  </View>
-                );
-              })}
 
-              {dataFood.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      padding: 10,
-                      backgroundColor: '#fff',
-                      marginTop: 20,
-                      borderRadius: 8,
-                      flexDirection: 'column',
-                      justifyContent: 'space-around',
-                      height: 166,
-                    }}>
-                    <Text style={{fontSize: 12, fontWeight: '700'}}>
-                      Các món đặt trước
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
                       <View
                         style={{
                           flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
                           justifyContent: 'space-between',
                         }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.foodCore}
-                          </Text>
-                        </View>
-                        <View>
-                          <Text style={{fontSize: 12, fontWeight: '400'}}>
-                            x {item.priceFoodCore}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {styles.dynamicSort(item.price)} đ
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option1}
-                          </Text>
-                        </View>
-                        <View>
-                          <Text style={{fontSize: 12, fontWeight: '400'}}>
-                            x {item.priceOption1}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {styles.dynamicSort(item.price)} đ
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option2}
-                          </Text>
-                        </View>
-                        <View>
-                          <Text style={{fontSize: 12, fontWeight: '400'}}>
-                            x {item.priceOption2}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {styles.dynamicSort(item.price)} đ
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option1}
-                          </Text>
-                        </View>
-                        <View>
-                          <Text style={{fontSize: 12, fontWeight: '400'}}>
-                            x {item.priceOption1}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text
+                        <View
                           style={{
-                            fontWeight: '400',
-                            fontSize: 12,
-                            color: 'black',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            width: '50%',
+                            justifyContent: 'space-between',
                           }}>
-                          {styles.dynamicSort(item.price)} đ
-                        </Text>
+                          <View style={{}}>
+                            <Text style={{fontWeight: '400', fontSize: 12}}>
+                              {item.option2}
+                            </Text>
+                          </View>
+                        </View>
+                        <View>
+                          <Text style={{fontWeight: '400', fontSize: 12}}>
+                            {dataOrderOffline?.phone}
+                          </Text>
+                        </View>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <View>
+                          <Text style={{fontSize: 12, fontWeight: '400'}}>
+                            Nội dung đặt
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            style={{
+                              fontWeight: '600',
+                              fontSize: 12,
+                              color: 'black',
+                              // color: Color.main,
+                            }}>
+                            {dataOrderOffline?.note}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                );
-              })}
-            </ScrollView>
-          </View>
+                  );
+                })}
+                <View
+                  style={{
+                    padding: 10,
+                    backgroundColor: '#fff',
+                    marginTop: 20,
+                    borderRadius: 8,
+                    flexDirection: 'column',
+                    justifyContent: 'space-around',
+                    // height: 166,
+                  }}>
+                  <Text style={{fontSize: 12, fontWeight: '700'}}>
+                    Danh sách món ăn
+                  </Text>
+                  {dataOrderOffline?.book_food?.map((item, index) => {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          margin: 5,
+                        }}>
+                        <View
+                          style={{
+                            width: Dimensions.get('window').width * 0.35,
+                            justifyContent: 'center',
+                          }}>
+                          <Text style={{fontWeight: '400', fontSize: 12}}>
+                            {item?.food?.name}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            width: Dimensions.get('window').width * 0.1,
+                            justifyContent: 'center',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: 12,
+                              fontWeight: '400',
+                              color: 'black',
+                            }}>
+                            x {item.quantity}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={{
+                            height: 20,
+                            width: 80,
+                            borderRadius: 4,
+                            borderWidth: 1,
+                            borderColor: Color.grey,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: Dimensions.get('window').width * 0.2,
+                            justifyContent: 'center',
+                          }}>
+                          <Text style={{fontSize: 11, color: Color.grey}}>
+                            Đã thanh toán
+                          </Text>
+                        </TouchableOpacity>
+                        <View
+                          style={{
+                            width: Dimensions.get('window').width * 0.2,
+                            alignItems: 'flex-end',
+                            justifyContent: 'center',
+                          }}>
+                          <Text
+                            style={{
+                              fontWeight: '400',
+                              fontSize: 12,
+                              color: 'black',
+                            }}>
+                            {styles.dynamicSort(item.price)} đ
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            </View>
+          ) : null}
         </ImageBackground>
       </View>
     </View>

@@ -742,45 +742,7 @@ function EarnCoinStack(props) {
           ),
         }}
       />
-      <Stack.Screen
-        name="AddRestaurantScreen"
-        component={AddRestaurantScreen}
-        options={{
-          // headerShown: false,
-          headerTitle: 'Thêm quán',
-          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
-          headerStyle: {
-            backgroundColor: Color.main,
-            elevation: 0,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate('EarnCoin');
-                // console.log(props);
-              }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons
-                  name={'arrow-back-ios'}
-                  size={26}
-                  color={'#fff'}
-                />
-              </View>
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                // props.navigation.navigate('LoginScreen');
-                // console.log(props);
-              }}>
-              <View style={{marginLeft: 20}}>
-                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
-              </View>
-            </TouchableOpacity>
-          ),
-        }}
-      />
+
       <Stack.Screen
         name="EditTableScreen"
         component={EditTableScreen}

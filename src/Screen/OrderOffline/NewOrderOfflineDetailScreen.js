@@ -201,7 +201,8 @@ const LoginScreen = (props) => {
                       </View>
                       <View>
                         <Text style={{fontSize: 12, color: '#828282'}}>
-                          Vị trí: {dataOrderOffline?.table_store?.number_floor}
+                          Vị trí: Tầng{' '}
+                          {dataOrderOffline?.table_store?.number_floor}
                         </Text>
                       </View>
                     </View>
@@ -232,9 +233,7 @@ const LoginScreen = (props) => {
                         </Text>
                       </View>
                       <View>
-                        <Text style={{fontSize: 12, color: '#828282'}}>
-                          Dịch vụ: {dataOrderOffline?.name}
-                        </Text>
+                        <Text style={{fontSize: 12, color: '#828282'}}></Text>
                       </View>
                     </View>
                     <View
@@ -312,30 +311,7 @@ const LoginScreen = (props) => {
                         </Text>
                       </View>
                     </View>
-                    {/* <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option1}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          {item.priceOption1} lần
-                        </Text>
-                      </View>
-                    </View> */}
+
                     <View
                       style={{
                         flexDirection: 'row',
@@ -379,120 +355,6 @@ const LoginScreen = (props) => {
                             // color: Color.main,
                           }}>
                           {dataOrderOffline?.note}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                );
-              })}
-
-              {dataFood.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      padding: 10,
-                      backgroundColor: '#fff',
-                      marginTop: 20,
-                      borderRadius: 8,
-                      flexDirection: 'column',
-                      justifyContent: 'space-around',
-                      height: 166,
-                    }}>
-                    <Text style={{fontSize: 12, fontWeight: '700'}}>
-                      Món đặt trước
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.foodCore}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          x {item.priceFoodCore}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option1}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          x {item.priceOption1}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '50%',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View style={{}}>
-                          <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item.option2}
-                          </Text>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={{fontWeight: '400', fontSize: 12}}>
-                          x {item.priceOption2}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View>
-                        <Text style={{fontSize: 12, fontWeight: '400'}}>
-                          Nội dung đặt
-                        </Text>
-                      </View>
-                      <View>
-                        <Text
-                          style={{
-                            fontWeight: '600',
-                            fontSize: 12,
-                            color: 'black',
-                            // color: Color.main,
-                          }}>
-                          x {item.discount}
                         </Text>
                       </View>
                     </View>

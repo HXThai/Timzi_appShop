@@ -27,4 +27,19 @@ export default homeService = {
     let response = callApiService.put(url);
     return response;
   },
+  rightToOrderOffline: async (params, id) => {
+    let url = `${API_BASE_URL.RIGHT_TO_ORDER_OFFLINE}/${id}`;
+    let response = callApiService.put(url);
+    return response;
+  },
+  getListTableOrderOffline: async (params, id) => {
+    let url = `${API_BASE_URL.GET_LIST_TABLE_ORDER_OFFLINE}/${id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  confirmFoodOnTheTable: async (params, id) => {
+    let url = `${API_BASE_URL.CONFIRM_FOOD_ON_THE_TABLE}/${id}`;
+    let response = callApiService.put(url);
+    return response;
+  },
 };

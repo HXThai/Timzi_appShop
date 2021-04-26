@@ -113,14 +113,15 @@ const LoginScreen = (props) => {
                         style={{
                           marginLeft: 10,
                           flexDirection: 'column',
-                          justifyContent: 'space-between',
+                          justifyContent: 'center',
                           height: 40,
+                          alignItems: 'center',
                           // backgroundColor: 'red',
                         }}>
                         <Text style={{fontSize: 15, fontWeight: '400'}}>
                           {item.title}
                         </Text>
-                        <Text
+                        {/* <Text
                           style={{
                             fontSize: 12,
                             fontWeight: '400',
@@ -128,7 +129,7 @@ const LoginScreen = (props) => {
                           }}>
                           Số lượng: {item.number}{' '}
                           {item.type === 1 ? 'Combo' : 'Chương trình'}
-                        </Text>
+                        </Text> */}
                       </View>
                     </View>
                     <FontAwesomeIcon

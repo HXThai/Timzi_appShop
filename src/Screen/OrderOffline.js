@@ -63,7 +63,6 @@ const Home = (props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // console.log('thai', props?.route?.params?.tab);
       if (props?.route?.params?.tab) {
         setTab(4);
       }
@@ -82,41 +81,68 @@ const Home = (props) => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    services.getListOrderOffline(null, storeId, tab).then(function (response) {
-      if (response) {
-        if (response.data.code === 200) {
-          setDataOrder(response?.data?.data?.data);
-          setModalVisibleLoading(false);
-        }
-      } else {
-        return;
-      }
-    });
-    wait(2000).then(() => {
+    if (tab === 0) {
+      services
+        .getListTableOrderOffline(null, storeId)
+        .then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataOrder(response?.data?.data);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
+          }
+        });
+    } else {
+      services
+        .getListOrderOffline(null, storeId, tab)
+        .then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataOrder(response?.data?.data?.data);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
+          }
+        });
+    }
+    wait(1000).then(() => {
       setRefreshing(false);
     });
   });
 
   useEffect(() => {
-    // console.log(props.data.responseListStore?.code);
     storage.getItem('dataStore').then((data) => {
-      // console.log(data);
       if (data) {
         setStoreName(data.name);
         setStoreId(data.id);
+        services
+          .getListTableOrderOffline(null, data.id)
+          .then(function (response) {
+            if (response) {
+              if (response.data.code === 200) {
+                setDataOrder(response?.data?.data);
+                setModalVisibleLoading(false);
+              }
+            } else {
+              return;
+            }
+          });
       } else {
         props.data.responseListStore?.data.forEach((element, index) => {
-          // console.log(element.status);
           if (element.status === 1) {
             setStoreName(element.name);
             setStoreId(element.id);
             storage.setItem('dataStore', element);
             services
-              .getListOrderOnline(null, element.id, 1)
+              .getListTableOrderOffline(null, element.id)
               .then(function (response) {
                 if (response) {
-                  if (response?.data?.code === 200) {
+                  if (response.data.code === 200) {
                     setDataOrder(response?.data?.data);
+                    setModalVisibleLoading(false);
                   }
                 } else {
                   return;
@@ -144,18 +170,33 @@ const Home = (props) => {
     setDataOrder([]);
     setTab(index);
     setModalVisibleLoading(true);
-    services
-      .getListOrderOffline(null, storeId, index)
-      .then(function (response) {
-        if (response) {
-          if (response.data.code === 200) {
-            setDataOrder(response?.data?.data?.data);
-            setModalVisibleLoading(false);
+    if (index === 0) {
+      services
+        .getListTableOrderOffline(null, storeId)
+        .then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataOrder(response?.data?.data);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
           }
-        } else {
-          return;
-        }
-      });
+        });
+    } else {
+      services
+        .getListOrderOffline(null, storeId, index)
+        .then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataOrder(response?.data?.data?.data);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
+          }
+        });
+    }
   };
 
   const renderProduct = ({item}) => {
@@ -168,9 +209,9 @@ const Home = (props) => {
           height: 100,
           backgroundColor: '#fff',
           borderRadius: 8,
-          marginTop: 10,
           flexDirection: 'row',
           padding: 8,
+          marginBottom: 10,
         }}>
         <View
           style={{
@@ -184,9 +225,9 @@ const Home = (props) => {
               borderRadius: 6,
               borderColor:
                 tab === 0
-                  ? item.status === 'Còn chỗ'
+                  ? item.status === 1
                     ? Color.buttonColor
-                    : item.status === 'Hết chỗ'
+                    : item.status === 2
                     ? '#828282'
                     : Color.main
                   : tab === 1
@@ -204,9 +245,9 @@ const Home = (props) => {
               style={{
                 color:
                   tab === 0
-                    ? item.status === 'Còn chỗ'
+                    ? item.status === 1
                       ? Color.buttonColor
-                      : item.status === 'Hết chỗ'
+                      : item.status === 2
                       ? '#828282'
                       : Color.main
                     : tab === 1
@@ -219,7 +260,9 @@ const Home = (props) => {
                 fontSize: 11,
               }}>
               {tab === 0
-                ? item.status
+                ? item.status === 1
+                  ? 'Còn chỗ'
+                  : 'Hết chỗ'
                 : tab === 1
                 ? 'Chờ duyệt'
                 : tab === 2
@@ -240,9 +283,9 @@ const Home = (props) => {
               justifyContent: 'center',
               borderColor:
                 tab === 0
-                  ? item.status === 'Còn chỗ'
+                  ? item.status === 1
                     ? Color.buttonColor
-                    : item.status === 'Hết chỗ'
+                    : item.status === 2
                     ? '#828282'
                     : Color.main
                   : tab === 1
@@ -259,9 +302,9 @@ const Home = (props) => {
             <Image
               source={
                 tab === 0
-                  ? item.status === 'Còn chỗ'
+                  ? item.status === 1
                     ? Images.iconOrderOfflineYellow
-                    : item.status === 'Hết chỗ'
+                    : item.status === 2
                     ? Images.iconOrderOfflineGrey
                     : Images.iconOrderOfflineGreen
                   : tab === 1
@@ -276,7 +319,9 @@ const Home = (props) => {
             />
             <View style={{position: 'absolute'}}>
               <Text style={{color: '#fff'}}>
-                {item.table_store.number_table}
+                {tab === 0
+                  ? item?.number_table
+                  : item?.table_store?.number_table}
               </Text>
             </View>
           </View>
@@ -309,13 +354,18 @@ const Home = (props) => {
                   fontSize: 13,
                   marginLeft: 5,
                 }}>
-                Bàn số {item.table_store.number_table}
+                Bàn số{' '}
+                {tab === 0
+                  ? item?.number_table
+                  : item?.table_store?.number_table}
               </Text>
             </View>
             <View>
               <Text style={{fontSize: 12, color: '#828282'}}>
-                {'Vị trí: '}
-                {item.table_store.number_floor}
+                {'Vị trí: Tầng '}
+                {tab === 0
+                  ? item?.number_floor
+                  : item?.table_store?.number_floor}
               </Text>
             </View>
           </View>
@@ -342,14 +392,11 @@ const Home = (props) => {
                   fontSize: 12,
                   marginLeft: 5,
                 }}>
-                {item.code}
+                {item?.code}
               </Text>
             </View>
             <View>
-              <Text style={{fontSize: 12, color: '#828282'}}>
-                {'Dịch vụ: '}
-                {item.name}
-              </Text>
+              <Text style={{fontSize: 12, color: '#828282'}}></Text>
             </View>
           </View>
           <View
@@ -376,7 +423,9 @@ const Home = (props) => {
                   marginLeft: 5,
                 }}>
                 {'Số khách: '}
-                {item.number_people}
+                {tab === 0
+                  ? item?.number_people_min + '-' + item?.number_people_max
+                  : item?.number_people}
               </Text>
             </View>
             <View
@@ -486,7 +535,38 @@ const Home = (props) => {
               ) : tab === 2 ? (
                 <TouchableOpacity
                   onPress={() => {
-                    setTab(3);
+                    // setTab(3);
+                    Alert.alert(
+                      'Xác nhận đặt món ăn tại quán',
+                      'Cho phép khách hàng đặt món ăn tại quán?',
+                      [
+                        {text: 'Hủy', onPress: () => {}},
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {
+                            services
+                              .rightToOrderOffline(null, item?.id)
+                              .then(function (response) {
+                                if (response) {
+                                  if (response.data.code === 200) {
+                                    handleChangeTab(3);
+                                  } else {
+                                    Alert.alert(
+                                      'Thông báo',
+                                      response.data.message,
+                                      [{text: 'Đồng ý', onPress: () => {}}],
+                                      {cancelable: false},
+                                    );
+                                  }
+                                } else {
+                                  return;
+                                }
+                              });
+                          },
+                        },
+                      ],
+                      {cancelable: false},
+                    );
                   }}
                   style={{
                     height: 19,
@@ -498,14 +578,13 @@ const Home = (props) => {
                     justifyContent: 'center',
                     marginRight: 5,
                   }}>
-                  <Text style={{color: Color.main, fontSize: 12}}>Phục vụ</Text>
+                  <Text style={{color: Color.main, fontSize: 12}}>
+                    Xác nhận
+                  </Text>
                 </TouchableOpacity>
               ) : tab === 3 ? (
                 <TouchableOpacity
                   onPress={() => {
-                    // props.navigation.navigate(
-                    //   'OrderOnlineDetailScreen',
-                    // );
                     setTab(4);
                   }}
                   style={{
@@ -525,9 +604,6 @@ const Home = (props) => {
               ) : null}
               <TouchableOpacity
                 onPress={() => {
-                  // props.navigation.navigate(
-                  //   'OrderOnlineDetailScreen',
-                  // );
                   onClickDetail(item.id);
                 }}
                 style={{
@@ -783,7 +859,7 @@ const Home = (props) => {
                     }}
                     style={{
                       marginTop: 10,
-                      marginBottom: 340,
+                      marginBottom: 40,
                     }}
                     data={dataOrder}
                     renderItem={renderProduct}

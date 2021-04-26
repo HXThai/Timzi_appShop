@@ -173,6 +173,7 @@ const LoginScreen = (props) => {
       // console.log('type -> ', response.type);
       // console.log('fileName -> ', response.fileName);
       setFilePath(response);
+      setModalVisible(false);
       // setImage(response.uri);
       // setImageName(response.fileName);
     });
@@ -539,7 +540,6 @@ const LoginScreen = (props) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      setModalVisible(false);
                       chooseFile('photo');
                     }}
                     style={{
