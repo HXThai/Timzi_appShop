@@ -42,4 +42,9 @@ export default homeService = {
     let response = callApiService.put(url);
     return response;
   },
+  confirmPaymentBookfood: async (params, id) => {
+    let url = `${API_BASE_URL.CONFIRM_PAYMENT_BOOKFOOD}/${id}`;
+    let response = callApiService.put(url);
+    return response;
+  },
 };

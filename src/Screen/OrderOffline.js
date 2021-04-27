@@ -585,7 +585,38 @@ const Home = (props) => {
               ) : tab === 3 ? (
                 <TouchableOpacity
                   onPress={() => {
-                    setTab(4);
+                    // setTab(4);
+                    Alert.alert(
+                      'Xác nhận thanh toán',
+                      'Bạn chắc chắn muốn thanh toán bàn này?',
+                      [
+                        {text: 'Hủy', onPress: () => {}},
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {
+                            services
+                              .confirmPaymentBookfood(null, item?.id)
+                              .then(function (response) {
+                                if (response) {
+                                  if (response.data.code === 200) {
+                                    handleChangeTab(4);
+                                  } else {
+                                    Alert.alert(
+                                      'Thông báo',
+                                      response.data.message,
+                                      [{text: 'Đồng ý', onPress: () => {}}],
+                                      {cancelable: false},
+                                    );
+                                  }
+                                } else {
+                                  return;
+                                }
+                              });
+                          },
+                        },
+                      ],
+                      {cancelable: false},
+                    );
                   }}
                   style={{
                     height: 19,
