@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
   Text,
@@ -8,6 +8,7 @@ import {
   ImageBackground,
   TextInput,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -25,6 +26,10 @@ import {connect} from 'react-redux';
 import storage from './asyncStorage/Storage';
 import services from '../Redux/Service/productService';
 
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
+
 const Home = (props) => {
   const [dataListStore, setDataListStore] = useState([]);
 
@@ -36,16 +41,27 @@ const Home = (props) => {
 
   const [data, setData] = useState(null);
 
-  // useEffect(() => {
-  //   const dataStore = storage.getItem('dataStore');
-  //   console.log('thai', storage.getItem('dataStore'));
-  // });
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    services.storeDetail(storeId).then(function (response) {
+      if (response) {
+        // console.log('thai', response);
+        if (response.data.code === 200) {
+          setData(response?.data?.data);
+        }
+      } else {
+        return;
+      }
+    });
+    wait(1000).then(() => {
+      setRefreshing(false);
+    });
+  });
 
   useEffect(() => {
-    // console.log('thai meo');
-    // console.log(props.data.responseListStore?.code);
     storage.getItem('dataStore').then((data) => {
-      // console.log(data);
       if (data) {
         setStoreName(data.name);
         setStoreId(data.id);
@@ -66,22 +82,8 @@ const Home = (props) => {
             setStoreName(element.name);
             setStoreId(element.id);
             storage.setItem('dataStore', element);
-            services
-              .getListOrderOnline(null, element.id, 1)
-              .then(function (response) {
-                if (response) {
-                  if (response?.data?.code === 200) {
-                    setDataOrder(response?.data?.data);
-                  }
-                } else {
-                  return;
-                }
-              });
             services.storeDetail(element.id).then(function (response) {
-              // props.onGetList(response?.data);
-              // console.log(response);
               if (response) {
-                // console.log('thai', response?.data?.status);
                 if (response?.data?.code === 200) {
                   setData(response?.data?.data);
                 }
@@ -192,6 +194,12 @@ const Home = (props) => {
                 </View>
               </Modal>
               <ScrollView
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
                 showsVerticalScrollIndicator={false}
                 style={{marginBottom: 20}}>
                 {roleId === 2 ? (
