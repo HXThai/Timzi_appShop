@@ -8,6 +8,7 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -31,7 +32,10 @@ import services from '../../Redux/Service/productService';
 const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
 
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
   const getData = () => {
+    setModalVisibleLoading(true);
     services.storeDetail(store_id).then(function (response) {
       if (response) {
         console.log('thai mai', response);
@@ -40,6 +44,7 @@ const LoginScreen = (props) => {
           // console.log(response.data.data.data);
           // console.log(response?.data?.data);
           setDataOrderTable(response?.data?.data?.store?.table_store);
+          setModalVisibleLoading(false);
         }
       } else {
         return;
@@ -166,39 +171,56 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
-          <View
-            style={{
-              padding: 10,
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: '100%',
-            }}>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
+          {modalVisibleLoading === true ? (
+            <View
               style={{
-                width: Dimensions.get('window').width - 10,
-                marginTop: 5,
-                marginLeft: 10,
-                borderRadius: 5,
-                marginBottom: 10,
-                flex: 1,
-                paddingLeft: 5,
-                paddingRight: 5,
-              }}
-              data={dataOrderTable}
-              renderItem={renderProduct}
-              keyExtractor={(item, index) => index.toString()}
-              // onEndReached={handleLoadMore}
-              // onEndReachedThreshold={0}
-              // ListFooterComponent={renderFooter}
-            />
-          </View>
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
+          {modalVisibleLoading === false ? (
+            <View
+              style={{
+                padding: 10,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100%',
+              }}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                style={{
+                  width: Dimensions.get('window').width - 10,
+                  marginTop: 5,
+                  marginLeft: 10,
+                  borderRadius: 5,
+                  marginBottom: 10,
+                  flex: 1,
+                  paddingLeft: 5,
+                  paddingRight: 5,
+                }}
+                data={dataOrderTable}
+                renderItem={renderProduct}
+                keyExtractor={(item, index) => index.toString()}
+                // onEndReached={handleLoadMore}
+                // onEndReachedThreshold={0}
+                // ListFooterComponent={renderFooter}
+              />
+            </View>
+          ) : null}
         </ImageBackground>
       </View>
     </View>

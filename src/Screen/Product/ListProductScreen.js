@@ -8,6 +8,7 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -35,9 +36,12 @@ const LoginScreen = (props) => {
 
   const store_id = props?.route?.params?.store_id || null;
 
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
   // console.log(category_food_id, store_id);
 
   const getData = () => {
+    setModalVisibleLoading(true);
     services
       .getListProduct({category_food_id: category_food_id, store_id: store_id})
       .then(function (response) {
@@ -49,6 +53,7 @@ const LoginScreen = (props) => {
             // console.log(response.data.data.data);
             // console.log(response?.data?.data);
             setDataFood(response?.data?.data?.data);
+            setModalVisibleLoading(false);
           }
         } else {
           return;
@@ -64,9 +69,6 @@ const LoginScreen = (props) => {
     return (
       <View
         style={{
-          // flexDirection: 'column',
-          // alignItems: 'center',
-          // justifyContent: 'center',
           width: Dimensions.get('window').width * 0.45,
           marginBottom: 15,
         }}>
@@ -203,39 +205,56 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
-          <View
-            style={{
-              padding: 10,
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: '100%',
-            }}>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
+          {modalVisibleLoading === true ? (
+            <View
               style={{
-                width: Dimensions.get('window').width - 10,
-                marginTop: 5,
-                marginLeft: 10,
-                borderRadius: 5,
-                marginBottom: 10,
-                flex: 1,
-                paddingLeft: 5,
-                paddingRight: 5,
-              }}
-              data={dataFood}
-              renderItem={renderProduct}
-              keyExtractor={(item, index) => index.toString()}
-              // onEndReached={handleLoadMore}
-              // onEndReachedThreshold={0}
-              // ListFooterComponent={renderFooter}
-            />
-          </View>
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
+          {modalVisibleLoading === false ? (
+            <View
+              style={{
+                padding: 10,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100%',
+              }}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                style={{
+                  width: Dimensions.get('window').width - 10,
+                  marginTop: 5,
+                  marginLeft: 10,
+                  borderRadius: 5,
+                  marginBottom: 10,
+                  flex: 1,
+                  paddingLeft: 5,
+                  paddingRight: 5,
+                }}
+                data={dataFood}
+                renderItem={renderProduct}
+                keyExtractor={(item, index) => index.toString()}
+                // onEndReached={handleLoadMore}
+                // onEndReachedThreshold={0}
+                // ListFooterComponent={renderFooter}
+              />
+            </View>
+          ) : null}
         </ImageBackground>
       </View>
     </View>
