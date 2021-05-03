@@ -8,8 +8,8 @@ export default homeService = {
     return response;
   },
 
-  getListOrderOnline: async (params, store_id, status) => {
-    let url = `${API_BASE_URL.GET_LIST_ORDER_ONLINE}?store_id=${store_id}&status=${status}`;
+  getListOrderOnline: async (params, store_id, status, page) => {
+    let url = `${API_BASE_URL.GET_LIST_ORDER_ONLINE}?store_id=${store_id}&status=${status}&page=${page}`;
     let response = callApiService.get(url);
     return response;
   },

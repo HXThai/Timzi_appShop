@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  Platform,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -60,14 +61,39 @@ const Home = (props) => {
 
   const [page, setPage] = useState(1);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
+  const handleLoadMore = () => {
+    console.log('thai meo');
+    setPage(page + 1);
+  };
+
+  useEffect(() => {
+    getData();
+    return () => {};
+  }, [page]);
+
+  const getData = () => {
     services
-      .getListOrderOnline(null, storeId, tab + 1)
+      .getListOrderOnline(null, storeId, tab + 1, page)
       .then(function (response) {
         if (response) {
           if (response.data.code === 200) {
-            setDataOrder(response?.data?.data);
+            setDataOrder((prev) => [...prev, ...response?.data?.data?.data]);
+            setModalVisibleLoading(false);
+          }
+        } else {
+          return;
+        }
+      });
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    services
+      .getListOrderOnline(null, storeId, tab + 1, 1)
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            setDataOrder(response?.data?.data?.data);
             setModalVisibleLoading(false);
           }
         } else {
@@ -114,11 +140,11 @@ const Home = (props) => {
         setStoreName(data.name);
         setStoreId(data.id);
         services
-          .getListOrderOnline(null, data?.id, 1)
+          .getListOrderOnline(null, data?.id, 1, 1)
           .then(function (response) {
             if (response) {
               if (response.data.code === 200) {
-                setDataOrder(response?.data?.data);
+                setDataOrder(response?.data?.data?.data);
               }
             } else {
               return;
@@ -131,11 +157,11 @@ const Home = (props) => {
             setStoreId(element.id);
             storage.setItem('dataStore', element);
             services
-              .getListOrderOnline(null, element.id, 1)
+              .getListOrderOnline(null, element.id, 1, 1)
               .then(function (response) {
                 if (response) {
                   if (response?.data?.code === 200) {
-                    setDataOrder(response?.data?.data);
+                    setDataOrder(response?.data?.data?.data);
                   }
                 } else {
                   return;
@@ -170,11 +196,12 @@ const Home = (props) => {
               null,
               props.dataLogin.responseUserInformation?.data?.data?.store?.id,
               1,
+              1,
             )
             .then(function (response) {
               if (response) {
                 if (response.data.code === 200) {
-                  setDataOrder(response?.data?.data);
+                  setDataOrder(response?.data?.data?.data);
                   setStoreId(
                     props.dataLogin.responseUserInformation?.data?.data?.store
                       ?.id,
@@ -190,11 +217,11 @@ const Home = (props) => {
               setStoreName(data?.name);
               setStoreId(data?.id);
               services
-                .getListOrderOnline(null, data?.id, 1)
+                .getListOrderOnline(null, data?.id, 1, 1)
                 .then(function (response) {
                   if (response) {
                     if (response.data.code === 200) {
-                      setDataOrder(response?.data?.data);
+                      setDataOrder(response?.data?.data?.data);
                     }
                   } else {
                     return;
@@ -207,11 +234,11 @@ const Home = (props) => {
                   setStoreId(element.id);
                   storage.setItem('dataStore', element);
                   services
-                    .getListOrderOnline(null, element.id, 1)
+                    .getListOrderOnline(null, element.id, 1, 1)
                     .then(function (response) {
                       if (response) {
                         if (response?.data?.code === 200) {
-                          setDataOrder(response?.data?.data);
+                          setDataOrder(response?.data?.data?.data);
                         }
                       } else {
                         return;
@@ -230,14 +257,15 @@ const Home = (props) => {
   const handleChangeTab = (index) => {
     setDataOrder([]);
     setTab(index);
+    setPage(1);
     setModalVisibleLoading(true);
     services
-      .getListOrderOnline(null, storeId, index + 1)
+      .getListOrderOnline(null, storeId, index + 1, 1)
       .then(function (response) {
         if (response) {
           if (response.data.code === 200) {
             setTab(index);
-            setDataOrder(response?.data?.data);
+            setDataOrder(response?.data?.data?.data);
             setModalVisibleLoading(false);
           }
         } else {
@@ -807,7 +835,7 @@ const Home = (props) => {
                     keyExtractor={(item, index) => index.toString()}
                     // extraData={dataOrder}
                     onEndReached={handleLoadMore}
-                    onEndReachedThreshold={1}
+                    onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
                     // ListFooterComponent={renderFooter}
                   />
                 </View>

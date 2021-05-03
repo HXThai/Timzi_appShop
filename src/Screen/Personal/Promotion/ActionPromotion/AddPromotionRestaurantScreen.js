@@ -58,6 +58,8 @@ const LoginScreen = (props) => {
 
   const [storeId, setStoreId] = useState(null);
 
+  const [isCheckPercent, setIscheckPercent] = useState(true);
+
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -178,10 +180,8 @@ const LoginScreen = (props) => {
 
   useEffect(() => {
     storage.getItem('dataStore').then((data) => {
-      // console.log(data);
       if (data) {
         setStoreId(data.id);
-        // console.log(data.id);
       } else {
       }
     });
@@ -190,16 +190,12 @@ const LoginScreen = (props) => {
   const handleAddProduct = () => {
     (async () => {
       const res = await services.storeDetail(storeId);
-      // setdata(res?.data?.data?.store);
-      // console.log(res?.data?.data?.category_food);
       var listFood = [];
       res?.data?.data?.category_food?.forEach((element) => {
         element.food.forEach((item) => {
           listFood.push(item);
         });
       });
-      // console.log(listFood);
-      // console.log(dataProduct);
       if (dataProduct.length === listFood.length) {
         setDataFood([]);
       } else {
@@ -277,29 +273,32 @@ const LoginScreen = (props) => {
   );
 
   const handleAddPromotion = () => {
-    // console.log(foodId);
     var body = new FormData();
     dataProduct.forEach((element) => {
       body.append('food_id[]', element.id);
     });
     body.append('store_id', storeId.toString());
     body.append('name', name);
-    // body.append('image', data);
     body.append('image', {
       name: `${filePath.fileName}`,
       type: 'image/jpeg',
       uri: filePath.uri,
     });
     body.append('name_public', namePublic);
-    body.append('percent', percent);
+    if (isCheckPercent === true) {
+      body.append('type_percent_or_money', 1);
+      body.append('percent', percent);
+    } else {
+      body.append('type_percent_or_money', 2);
+      body.append('money', percent);
+    }
+
     body.append('time_open', dateOpen);
     body.append('time_close', dateClose);
     body.append('content', content);
 
     servicesPromotion.addPromotionStore(body).then(function (response) {
-      // props.onGetList(response?.data);
       if (response) {
-        console.log('thai', response);
         if (response.data.code === 200) {
           Alert.alert(
             'Thông báo!',
@@ -350,9 +349,6 @@ const LoginScreen = (props) => {
     return (
       <View
         style={{
-          // flexDirection: 'column',
-          // alignItems: 'center',
-          // justifyContent: 'center',
           width: Dimensions.get('window').width * 0.4,
           marginBottom: 15,
         }}>
@@ -645,11 +641,56 @@ const LoginScreen = (props) => {
                     borderBottomWidth: 0.5,
                     borderBottomColor: '#333333',
                   }}
-                  placeholder="Phần trăm"
+                  placeholder="Giảm giá"
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setPercent(text)}
                   defaultValue={percent}
                 />
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => setIscheckPercent(true)}
+                    style={{
+                      marginRight: 20,
+                      marginTop: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <MaterialIcons
+                      name={
+                        isCheckPercent === true
+                          ? 'radio-button-checked'
+                          : 'radio-button-unchecked'
+                      }
+                      size={28}
+                      style={{color: Color.main}}
+                    />
+                    <Text>Phần trăm</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => setIscheckPercent(false)}
+                    style={{
+                      marginTop: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <MaterialIcons
+                      name={
+                        isCheckPercent === true
+                          ? 'radio-button-unchecked'
+                          : 'radio-button-checked'
+                      }
+                      size={28}
+                      style={{color: Color.main}}
+                    />
+                    <Text>Tiền</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
               <View
                 style={{

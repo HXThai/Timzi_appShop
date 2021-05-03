@@ -69,6 +69,10 @@ const LoginScreen = (props) => {
   const [modalVisibleDistrict, setModalVisibleDistrict] = useState(false);
   const [modalVisibleWard, setModalVisibleWard] = useState(false);
 
+  const [isSearchAddress, setIsSearchAddress] = useState(false);
+  const [isCheckChangeAdress, setIsCheckChangeAdress] = useState(false);
+  const [dataLocationSuggest, setDataLocationSuggest] = useState([]);
+
   useEffect(() => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: true,
@@ -76,7 +80,6 @@ const LoginScreen = (props) => {
     })
       .then((location) => {
         // console.log(location);
-        setDataLocation(location);
       })
       .catch((error) => {
         const {code, message} = error;
@@ -153,6 +156,38 @@ const LoginScreen = (props) => {
       }
     });
   }, [props?.route?.params?.dataStore?.id]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (address != '' && isCheckChangeAdress == false) {
+        services.getLocationSuggest(null, address).then(function (response) {
+          if (response) {
+            setIsSearchAddress(true);
+            setDataLocationSuggest(response.data.predictions);
+            // console.log(response.data.predictions);
+          } else {
+            return;
+          }
+        });
+      }
+    }, 1500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [address]);
+
+  const handleChooseAddress = (item) => {
+    setIsSearchAddress(false);
+    setIsCheckChangeAdress(true);
+    setAddress(item?.description);
+    services.getLocationDetail(null, item.place_id).then(function (response) {
+      if (response) {
+        console.log('thai', response.data.result.geometry.location);
+        setDataLocation(response.data.result.geometry.location);
+      } else {
+        return;
+      }
+    });
+  };
 
   const [isDatePickerOpenVisible, setDatePickerOpenVisibility] = useState(
     false,
@@ -328,8 +363,8 @@ const LoginScreen = (props) => {
       uri: image,
     });
     body.append('address', address);
-    body.append('latitude', dataLocation.latitude);
-    body.append('longtidue', dataLocation.longitude);
+    body.append('latitude', dataLocation.lat);
+    body.append('longtidue', dataLocation.lng);
     body.append('average_price', averagePrice);
     body.append('open_hours', dateOpen);
     body.append('close_hours', dateClose);
@@ -724,10 +759,42 @@ const LoginScreen = (props) => {
                   }}
                   placeholder="Địa chỉ"
                   placeholderTextColor="#333333"
-                  onChangeText={(text) => setAddress(text)}
+                  onChangeText={(text) => {
+                    setIsCheckChangeAdress(false);
+                    setAddress(text);
+                  }}
                   defaultValue={address}
                 />
               </View>
+              {isSearchAddress && dataLocationSuggest != [] ? (
+                <View
+                  style={{
+                    width: '100%',
+                    height: 300,
+                  }}>
+                  <ScrollView>
+                    {dataLocationSuggest.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            handleChooseAddress(item);
+                          }}
+                          key={index}
+                          style={{
+                            padding: 5,
+                            backgroundColor: '#C0C0C0',
+                            height: 50,
+                            justifyContent: 'center',
+                            borderBottomWidth: 0.5,
+                            borderBottomColor: 'grey',
+                          }}>
+                          <Text>{item?.description}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
+              ) : null}
               <View style={{marginTop: 20}}>
                 <Text style={{fontSize: 12}}>Giá trung bình</Text>
               </View>
