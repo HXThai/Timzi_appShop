@@ -107,9 +107,9 @@ const LoginScreen = (props) => {
                 </Text>
               )}
             </View>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <MaterialIcons name={'clear'} size={23} color={Color.main} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View
             style={{
