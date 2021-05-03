@@ -16,7 +16,7 @@ export default class App extends React.Component {
   async componentDidMount() {
     // console.log('thai meo fake');
     /* O N E S I G N A L   S E T U P */
-    OneSignal.setAppId('3c83d522-638f-46fa-9735-392482461178');
+    OneSignal.setAppId('570a33bf-ddd5-414e-9470-a027dfd28faa');
     OneSignal.setLogLevel(6, 0);
     OneSignal.setRequiresUserPrivacyConsent(false);
     OneSignal.promptForPushNotificationsWithUserResponse((response) => {

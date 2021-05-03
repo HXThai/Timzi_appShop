@@ -58,6 +58,8 @@ const Home = (props) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const [page, setPage] = useState(1);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     services
@@ -243,6 +245,40 @@ const Home = (props) => {
         }
       });
   };
+
+  const handleLoadMore = () => {
+    // console.log('thai thai');
+    setPage(page + 1);
+  };
+
+  // useEffect(() => {
+  //   // setIsLoading(true);
+  //   getData(tab, page);
+  //   return () => {};
+  // }, [page]);
+
+  // const getData = (id, page) => {
+  //   services
+  //     .getListService({id: id, page: page})
+  //     .then(function (response) {
+  //       // props.onGetList(response?.data);
+  //       if (response) {
+  //         // console.log(response);
+  //         if (response.data.status_code === 200) {
+  //           // setDataProduct(response?.data?.data?.data);
+  //           console.log(response.data.data.data);
+  //           setDataProduct((prev) => [...prev, ...response?.data?.data?.data]);
+  //         }
+  //       } else {
+  //         Alert.alert('Thông báo!', 'Lỗi!', [{text: 'Đồng ý'}]);
+  //         return;
+  //       }
+  //     })
+  //     .then(function () {
+  //       // setIsLoadingMore(false);
+  //       setIsLoading(false);
+  //     });
+  // };
 
   const renderProduct = ({item}) => {
     return (
@@ -770,8 +806,8 @@ const Home = (props) => {
                     renderItem={renderProduct}
                     keyExtractor={(item, index) => index.toString()}
                     // extraData={dataOrder}
-                    // onEndReached={handleLoadMore}
-                    // onEndReachedThreshold={0}
+                    onEndReached={handleLoadMore}
+                    onEndReachedThreshold={1}
                     // ListFooterComponent={renderFooter}
                   />
                 </View>
