@@ -274,11 +274,6 @@ const Home = (props) => {
       });
   };
 
-  const handleLoadMore = () => {
-    // console.log('thai thai');
-    setPage(page + 1);
-  };
-
   // useEffect(() => {
   //   // setIsLoading(true);
   //   getData(tab, page);
