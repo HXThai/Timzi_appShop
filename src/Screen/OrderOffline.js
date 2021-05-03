@@ -679,6 +679,7 @@ const Home = (props) => {
           ) : null}
           <SafeAreaView style={{flex: 1}}>
             <ScrollView
+              nestedScrollEnabled={true}
               contentContainerStyle={{
                 flex: 1,
                 // backgroundColor: 'pink',
