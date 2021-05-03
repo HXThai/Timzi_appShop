@@ -84,6 +84,8 @@ const API_BASE_URL = {
 
   GET_LOCATION_SUGGEST: 'https://rsapi.goong.io/Place/AutoComplete',
   GET_LOCATION_DETAIL: 'https://rsapi.goong.io/Place/Detail',
+
+  GET_LIST_CATEGORY_WITH_STORE: ROOT_DOMAIN + '/list-category-with-store',
 };
 
 export {API_BASE_URL};

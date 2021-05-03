@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
   Text,
@@ -8,6 +8,7 @@ import {
   ImageBackground,
   TextInput,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -25,6 +26,10 @@ import {connect} from 'react-redux';
 import storage from './asyncStorage/Storage';
 import services from '../Redux/Service/productService';
 
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
+
 const Home = (props) => {
   const [dataListStore, setDataListStore] = useState([]);
 
@@ -36,16 +41,29 @@ const Home = (props) => {
 
   const [data, setData] = useState(null);
 
-  // useEffect(() => {
-  //   const dataStore = storage.getItem('dataStore');
-  //   console.log('thai', storage.getItem('dataStore'));
-  // });
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [dataCateWithStore, setDataCateWithStore] = useState([]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    services.storeDetail(storeId).then(function (response) {
+      if (response) {
+        // console.log('thai', response);
+        if (response.data.code === 200) {
+          setData(response?.data?.data);
+        }
+      } else {
+        return;
+      }
+    });
+    wait(1000).then(() => {
+      setRefreshing(false);
+    });
+  });
 
   useEffect(() => {
-    // console.log('thai meo');
-    // console.log(props.data.responseListStore?.code);
     storage.getItem('dataStore').then((data) => {
-      // console.log(data);
       if (data) {
         setStoreName(data.name);
         setStoreId(data.id);
@@ -66,22 +84,8 @@ const Home = (props) => {
             setStoreName(element.name);
             setStoreId(element.id);
             storage.setItem('dataStore', element);
-            services
-              .getListOrderOnline(null, element.id, 1)
-              .then(function (response) {
-                if (response) {
-                  if (response?.data?.code === 200) {
-                    setDataOrder(response?.data?.data);
-                  }
-                } else {
-                  return;
-                }
-              });
             services.storeDetail(element.id).then(function (response) {
-              // props.onGetList(response?.data);
-              // console.log(response);
               if (response) {
-                // console.log('thai', response?.data?.status);
                 if (response?.data?.code === 200) {
                   setData(response?.data?.data);
                 }
@@ -102,19 +106,23 @@ const Home = (props) => {
     storage.getItem('role_id').then((data) => {
       // console.log(data);
       if (data) {
-        // console.log('role', data);
         setRoleId(data);
       } else {
+      }
+    });
+    services.getListCategoryWithStore(null).then(function (response) {
+      if (response) {
+        // console.log('thai', response);
+        if (response.data.code === 200) {
+          setDataCateWithStore(response.data.data);
+        }
+      } else {
+        return;
       }
     });
   }, []);
 
   return (
-    // <View style={{backgroundColor: 'green', flex: 1}}>
-    //   <SafeAreaView style={{flex: 1}}>
-    //     <View style={styles.container}></View>
-    //   </SafeAreaView>
-    // </View>
     <View style={styles.container}>
       <View style={styles.contend}>
         <ImageBackground
@@ -192,6 +200,12 @@ const Home = (props) => {
                 </View>
               </Modal>
               <ScrollView
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
                 showsVerticalScrollIndicator={false}
                 style={{marginBottom: 20}}>
                 {roleId === 2 ? (
@@ -519,7 +533,7 @@ const Home = (props) => {
                     );
                   })}
                 </ScrollView>
-                {data?.category_food.map((item, index) => {
+                {dataCateWithStore?.map((item, index) => {
                   return (
                     <View key={index}>
                       <View
@@ -532,13 +546,13 @@ const Home = (props) => {
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
                           <Text style={{fontSize: 15, fontWeight: '700'}}>
-                            {item.name}
+                            {item?.name}
                           </Text>
                           <TouchableOpacity
                             onPress={() =>
                               props.navigation.navigate('EditProductScreen', {
                                 status: 'add',
-                                category_food_id: item.id,
+                                category_food_id: item?.id,
                                 store_id: storeId,
                               })
                             }

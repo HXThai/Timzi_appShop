@@ -108,4 +108,9 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+  getListCategoryWithStore: async (params) => {
+    let url = `${API_BASE_URL.GET_LIST_CATEGORY_WITH_STORE}`;
+    let response = callApiService.get(url);
+    return response;
+  },
 };
