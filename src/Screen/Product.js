@@ -43,6 +43,8 @@ const Home = (props) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const [dataCateWithStore, setDataCateWithStore] = useState([]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     services.storeDetail(storeId).then(function (response) {
@@ -104,19 +106,23 @@ const Home = (props) => {
     storage.getItem('role_id').then((data) => {
       // console.log(data);
       if (data) {
-        // console.log('role', data);
         setRoleId(data);
       } else {
+      }
+    });
+    services.getListCategoryWithStore(null).then(function (response) {
+      if (response) {
+        // console.log('thai', response);
+        if (response.data.code === 200) {
+          setDataCateWithStore(response.data.data);
+        }
+      } else {
+        return;
       }
     });
   }, []);
 
   return (
-    // <View style={{backgroundColor: 'green', flex: 1}}>
-    //   <SafeAreaView style={{flex: 1}}>
-    //     <View style={styles.container}></View>
-    //   </SafeAreaView>
-    // </View>
     <View style={styles.container}>
       <View style={styles.contend}>
         <ImageBackground
@@ -527,7 +533,7 @@ const Home = (props) => {
                     );
                   })}
                 </ScrollView>
-                {data?.category_food.map((item, index) => {
+                {dataCateWithStore?.map((item, index) => {
                   return (
                     <View key={index}>
                       <View
@@ -540,13 +546,13 @@ const Home = (props) => {
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
                           <Text style={{fontSize: 15, fontWeight: '700'}}>
-                            {item.name}
+                            {item?.name}
                           </Text>
                           <TouchableOpacity
                             onPress={() =>
                               props.navigation.navigate('EditProductScreen', {
                                 status: 'add',
-                                category_food_id: item.id,
+                                category_food_id: item?.id,
                                 store_id: storeId,
                               })
                             }

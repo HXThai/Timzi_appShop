@@ -144,9 +144,6 @@ const Home = (props) => {
       }
     });
     setDataListStore(props.data.responseListStore);
-    // storage.getItem('userIdPushNoti').then((data) => {
-    //   reactotron.log(data);
-    // });
   }, [props.data.responseListStore]);
 
   const [roleId, setRoleId] = useState('');
@@ -315,7 +312,7 @@ const Home = (props) => {
             <View>
               <Text style={{fontSize: 12, color: '#828282'}}>
                 {'Khoảng cách: '}
-                {item?.distance?.text}
+                {item?.distance}
               </Text>
             </View>
           </View>
