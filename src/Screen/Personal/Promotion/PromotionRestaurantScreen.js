@@ -58,7 +58,7 @@ const LoginScreen = (props) => {
       if (response) {
         // console.log('thai mai', response);
         if (response.data.code === 200) {
-          setDataPromotion(response?.data?.data);
+          setDataPromotion(response?.data?.data?.data);
         }
       } else {
         return;

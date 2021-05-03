@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  Platform,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -46,6 +47,48 @@ const Home = (props) => {
 
   const [dataOrder, setDataOrder] = useState([]);
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
+  const [page, setPage] = useState(1);
+
+  const handleLoadMore = () => {
+    console.log('thai meo');
+    setPage(page + 1);
+  };
+
+  useEffect(() => {
+    getData();
+    return () => {};
+  }, [page]);
+
+  const getData = () => {
+    if (tab === 0) {
+      services
+        .getListTableOrderOffline(null, storeId, page)
+        .then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataOrder((prev) => [...prev, ...response?.data?.data?.data]);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
+          }
+        });
+    } else {
+      services
+        .getListOrderOffline(null, storeId, tab, page)
+        .then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataOrder((prev) => [...prev, ...response?.data?.data?.data]);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
+          }
+        });
+    }
+  };
 
   const onClickDetail = (id) => {
     if (tab === 1) {
@@ -83,11 +126,11 @@ const Home = (props) => {
     setRefreshing(true);
     if (tab === 0) {
       services
-        .getListTableOrderOffline(null, storeId)
+        .getListTableOrderOffline(null, storeId, 1)
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
-              setDataOrder(response?.data?.data);
+              setDataOrder(response?.data?.data?.data);
               setModalVisibleLoading(false);
             }
           } else {
@@ -96,11 +139,11 @@ const Home = (props) => {
         });
     } else {
       services
-        .getListOrderOffline(null, storeId, tab)
+        .getListOrderOffline(null, storeId, tab, 1)
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
-              setDataOrder(response?.data?.data?.data);
+              setDataOrder(response?.data?.data?.data?.data);
               setModalVisibleLoading(false);
             }
           } else {
@@ -119,11 +162,11 @@ const Home = (props) => {
         setStoreName(data.name);
         setStoreId(data.id);
         services
-          .getListTableOrderOffline(null, data.id)
+          .getListTableOrderOffline(null, data.id, 1)
           .then(function (response) {
             if (response) {
               if (response.data.code === 200) {
-                setDataOrder(response?.data?.data);
+                setDataOrder(response?.data?.data?.data);
                 setModalVisibleLoading(false);
               }
             } else {
@@ -137,11 +180,11 @@ const Home = (props) => {
             setStoreId(element.id);
             storage.setItem('dataStore', element);
             services
-              .getListTableOrderOffline(null, element.id)
+              .getListTableOrderOffline(null, element.id, 1)
               .then(function (response) {
                 if (response) {
                   if (response.data.code === 200) {
-                    setDataOrder(response?.data?.data);
+                    setDataOrder(response?.data?.data?.data);
                     setModalVisibleLoading(false);
                   }
                 } else {
@@ -169,14 +212,15 @@ const Home = (props) => {
   const handleChangeTab = (index) => {
     setDataOrder([]);
     setTab(index);
+    setPage(1);
     setModalVisibleLoading(true);
     if (index === 0) {
       services
-        .getListTableOrderOffline(null, storeId)
+        .getListTableOrderOffline(null, storeId, 1)
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
-              setDataOrder(response?.data?.data);
+              setDataOrder(response?.data?.data?.data);
               setModalVisibleLoading(false);
             }
           } else {
@@ -185,7 +229,7 @@ const Home = (props) => {
         });
     } else {
       services
-        .getListOrderOffline(null, storeId, index)
+        .getListOrderOffline(null, storeId, index, 1)
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
@@ -898,8 +942,8 @@ const Home = (props) => {
                     // renderItem={({item}) =><TouchableOpacity></TouchableOpacity> <Text>{item.user_name}</Text>}
                     keyExtractor={(item, index) => index.toString()}
                     // extraData={dataOrder}
-                    // onEndReached={handleLoadMore}
-                    // onEndReachedThreshold={0}
+                    onEndReached={handleLoadMore}
+                    onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
                     // ListFooterComponent={renderFooter}
                   />
                 </View>
