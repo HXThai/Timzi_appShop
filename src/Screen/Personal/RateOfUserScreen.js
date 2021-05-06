@@ -7,6 +7,8 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -18,7 +20,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,7 +29,11 @@ import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
-import {USBPrinter, NetPrinter, BLEPrinter} from 'react-native-printer';
+import {
+  USBPrinter,
+  NetPrinter,
+  BLEPrinter,
+} from 'react-native-thermal-receipt-printer';
 
 const LoginScreen = (props) => {
   const [dataRate, setDataRate] = useState([
@@ -61,37 +67,36 @@ const LoginScreen = (props) => {
     },
   ]);
 
-  const [printers, setPrinters] = useState({});
-
-  const [currentPrinter, setCurrentPrinter] = useState(null);
+  const [printers, setPrinters] = useState([]);
+  const [currentPrinter, setCurrentPrinter] = useState();
 
   useEffect(() => {
     NetPrinter.init().then(() => {
-      setPrinters({host: '192.168.2.222', port: 9100});
+      setPrinters([{host: '192.168.2.222', port: 9100}]);
+      // console.log('success');
     });
   }, []);
 
-  const _connectPrinter = () => {
-    NetPrinter.connectPrinter(printers.host, printers.port).then(
-      (printer) => setCurrentPrinter(printer),
-      (error) => console.warn(error),
+  const _connectPrinter = (printer) => {
+    //connect printer
+    NetPrinter.connectPrinter(printer.host, printer.port).then(
+      (value) => {
+        console.log('test');
+        setCurrentPrinter(value);
+      },
+      (error) => console.log(error),
     );
   };
 
   const printTextTest = () => {
-    if (currentPrinter) {
-      NetPrinter.printText('<C>Test text</C>\n');
-    } else {
-      console.log('Test text');
-    }
+    NetPrinter.printText('\n<C>sample text</C>\n');
   };
 
   const printBillTest = () => {
-    if (currentPrinter) {
-      NetPrinter.printBill('<C>Test bill</C>');
-    } else {
-      console.log('Test bill');
-    }
+    NetPrinter.printBill(
+      '<C>Thái mèo đẹp zai!</C>\n<C>Cái máy in ngu ngốc vl</C>\n<C></C>Cai may in ngu ngoc vl</C>',
+    );
+    NetPrinter.printBill('\x1D\x56\x01');
   };
 
   return (
@@ -101,16 +106,6 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
-          {/* <TouchableOpacity onPress={() => _connectPrinter()}>
-            <Text>Connect</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => printTextTest()}>
-            <Text> Print Text </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => printBillTest()}>
-            <Text> Print Bill Text </Text>
-          </TouchableOpacity> */}
           <View
             style={{
               padding: 10,
@@ -118,8 +113,46 @@ const LoginScreen = (props) => {
               justifyContent: 'space-between',
               height: '100%',
             }}>
+            <View></View>
+            {printers.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={item.host}
+                  onPress={() => _connectPrinter(item)}>
+                  <Text>{item.host}</Text>
+                  {/* {`device_name: ${item.device_name}, inner_mac_address: ${item.inner_mac_address}`} */}
+                </TouchableOpacity>
+              );
+            })}
             <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-              {dataRate.map((item, index) => {
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'blue',
+                  height: 40,
+                  width: 150,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  marginTop: 20,
+                }}
+                onPress={() => printTextTest()}>
+                <Text style={{color: 'white'}}>Print Text</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'blue',
+                  height: 40,
+                  width: 150,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  marginTop: 20,
+                }}
+                onPress={() => printBillTest()}>
+                <Text style={{color: 'white'}}>Print Bill Text</Text>
+              </TouchableOpacity>
+
+              {/* {dataRate.map((item, index) => {
                 return (
                   <View
                     key={index}
@@ -184,7 +217,7 @@ const LoginScreen = (props) => {
                     </View>
                   </View>
                 );
-              })}
+              })} */}
             </ScrollView>
           </View>
         </ImageBackground>
