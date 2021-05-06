@@ -27,7 +27,7 @@ import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
-import {USBPrinter, NetPrinter, BLEPrinter} from 'react-native-printer';
+// import {USBPrinter, NetPrinter, BLEPrinter} from 'react-native-printer';
 
 const LoginScreen = (props) => {
   const [dataRate, setDataRate] = useState([
@@ -65,34 +65,34 @@ const LoginScreen = (props) => {
 
   const [currentPrinter, setCurrentPrinter] = useState(null);
 
-  useEffect(() => {
-    NetPrinter.init().then(() => {
-      setPrinters({host: '192.168.2.222', port: 9100});
-    });
-  }, []);
+  // useEffect(() => {
+  //   NetPrinter.init().then(() => {
+  //     setPrinters({host: '192.168.2.222', port: 9100});
+  //   });
+  // }, []);
 
-  const _connectPrinter = () => {
-    NetPrinter.connectPrinter(printers.host, printers.port).then(
-      (printer) => setCurrentPrinter(printer),
-      (error) => console.warn(error),
-    );
-  };
+  // const _connectPrinter = () => {
+  //   NetPrinter.connectPrinter(printers.host, printers.port).then(
+  //     (printer) => setCurrentPrinter(printer),
+  //     (error) => console.warn(error),
+  //   );
+  // };
 
-  const printTextTest = () => {
-    if (currentPrinter) {
-      NetPrinter.printText('<C>Test text</C>\n');
-    } else {
-      console.log('Test text');
-    }
-  };
+  // const printTextTest = () => {
+  //   if (currentPrinter) {
+  //     NetPrinter.printText('<C>Test text</C>\n');
+  //   } else {
+  //     console.log('Test text');
+  //   }
+  // };
 
-  const printBillTest = () => {
-    if (currentPrinter) {
-      NetPrinter.printBill('<C>Test bill</C>');
-    } else {
-      console.log('Test bill');
-    }
-  };
+  // const printBillTest = () => {
+  //   if (currentPrinter) {
+  //     NetPrinter.printBill('<C>Test bill</C>');
+  //   } else {
+  //     console.log('Test bill');
+  //   }
+  // };
 
   return (
     <View style={styles.container}>

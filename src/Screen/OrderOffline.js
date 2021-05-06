@@ -614,7 +614,7 @@ const Home = (props) => {
                   }}
                   style={{
                     height: 19,
-                    width: 56,
+                    width: 65,
                     borderRadius: 4,
                     borderColor: Color.main,
                     borderWidth: 1,
