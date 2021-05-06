@@ -274,6 +274,35 @@ const Home = (props) => {
       });
   };
 
+  // useEffect(() => {
+  //   // setIsLoading(true);
+  //   getData(tab, page);
+  //   return () => {};
+  // }, [page]);
+
+  // const getData = (id, page) => {
+  //   services
+  //     .getListService({id: id, page: page})
+  //     .then(function (response) {
+  //       // props.onGetList(response?.data);
+  //       if (response) {
+  //         // console.log(response);
+  //         if (response.data.status_code === 200) {
+  //           // setDataProduct(response?.data?.data?.data);
+  //           console.log(response.data.data.data);
+  //           setDataProduct((prev) => [...prev, ...response?.data?.data?.data]);
+  //         }
+  //       } else {
+  //         Alert.alert('Thông báo!', 'Lỗi!', [{text: 'Đồng ý'}]);
+  //         return;
+  //       }
+  //     })
+  //     .then(function () {
+  //       // setIsLoadingMore(false);
+  //       setIsLoading(false);
+  //     });
+  // };
+
   const renderProduct = ({item}) => {
     return (
       <TouchableOpacity
