@@ -143,7 +143,7 @@ const Home = (props) => {
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
-              setDataOrder(response?.data?.data?.data?.data);
+              setDataOrder(response?.data?.data?.data);
               setModalVisibleLoading(false);
             }
           } else {
@@ -201,6 +201,7 @@ const Home = (props) => {
   const [roleId, setRoleId] = useState('');
 
   useEffect(() => {
+    setModalVisibleLoading(true);
     storage.getItem('role_id').then((data) => {
       if (data) {
         setRoleId(data);
@@ -920,7 +921,7 @@ const Home = (props) => {
                             padding: 10,
                             margin: 5,
                           }}>
-                          <Text style={{fontSize: 13}}>{item.name}</Text>
+                          <Text style={{fontSize: 11}}>{item.name}</Text>
                         </TouchableOpacity>
                       );
                     })}

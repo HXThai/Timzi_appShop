@@ -29,16 +29,37 @@ const LoginScreen = (props) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [displayPassword, setDisplayPassword] = useState(false);
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [displayPasswordConfirm, setDisplayPasswordConfirm] = useState(false);
 
   const handleRegister = () => {
     registerService
-      .register({name: name, phone: phoneNumber, password: password})
+      .register({
+        name: name,
+        phone: phoneNumber,
+        password: password,
+        password_confirmation: passwordConfirm,
+      })
       .then(function (response) {
-        // props.onGetList(response?.data);
         if (response) {
-          // console.log(response);
           if (response?.data?.code === 200) {
-            props.navigation.navigate('ConfirmOTPRegisterScreen');
+            Alert.alert(
+              'Thông báo!',
+              'Mã OTP của bạn là: ' + response?.data?.otp,
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: () => {
+                    props.navigation.navigate('ConfirmOTPRegisterScreen');
+                  },
+                },
+              ],
+            );
+          } else {
+            Alert.alert('Thông báo!', response?.data?.message, [
+              {text: 'Đồng ý'},
+            ]);
           }
         } else {
           Alert.alert('Thông báo!', 'Lỗi!', [{text: 'Đồng ý'}]);
@@ -134,8 +155,74 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setPassword(text)}
                   value={password}
-                  // keyboardType="number-pad"
+                  secureTextEntry={displayPassword === true ? false : true}
                 />
+                <View
+                  style={{
+                    height: 40,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => setDisplayPassword(!displayPassword)}>
+                    <MaterialIcons
+                      name={
+                        displayPassword === true
+                          ? 'visibility'
+                          : 'visibility-off'
+                      }
+                      size={22}
+                      color={'black'}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View
+                style={{
+                  height: 40,
+                  width: '80%',
+                  marginTop: 30,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: '#333333',
+                }}>
+                <TextInput
+                  style={{
+                    color: '#000000',
+                    // fontFamily: 'Nunito',
+                    width: '87%',
+                    height: 40,
+                  }}
+                  placeholder="Nhập lại mật khẩu"
+                  placeholderTextColor="#333333"
+                  onChangeText={(text) => setPasswordConfirm(text)}
+                  value={passwordConfirm}
+                  secureTextEntry={
+                    displayPasswordConfirm === true ? false : true
+                  }
+                />
+                <View
+                  style={{
+                    height: 40,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setDisplayPasswordConfirm(!displayPasswordConfirm)
+                    }>
+                    <MaterialIcons
+                      name={
+                        displayPassword === true
+                          ? 'visibility'
+                          : 'visibility-off'
+                      }
+                      size={22}
+                      color={'black'}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
               <View style={{width: '80%', marginTop: 40}}>
                 <TouchableOpacity

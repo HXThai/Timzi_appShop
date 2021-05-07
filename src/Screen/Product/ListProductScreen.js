@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -20,7 +21,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -169,6 +170,55 @@ const LoginScreen = (props) => {
                 flexDirection: 'row',
               }}>
               <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    'Xoá món ăn!',
+                    'Bạn chắc chắn muốn xoá món ăn này?',
+                    [
+                      {
+                        text: 'Đồng ý',
+                        onPress: async () => {
+                          services
+                            .deleteFood(null, item.id)
+                            .then(function (response) {
+                              if (response) {
+                                if (response.data.code === 200) {
+                                  getData();
+                                  Alert.alert(
+                                    'Thông báo!',
+                                    'Xoá món ăn thành công!',
+                                    [
+                                      {
+                                        text: 'Đồng ý',
+                                      },
+                                    ],
+                                    {cancelable: false},
+                                  );
+                                } else {
+                                  Alert.alert(
+                                    'Thông báo!',
+                                    response.data.message,
+                                    [
+                                      {
+                                        text: 'Đồng ý',
+                                      },
+                                    ],
+                                    {cancelable: false},
+                                  );
+                                }
+                              } else {
+                                return;
+                              }
+                            });
+                        },
+                      },
+                      {
+                        text: 'Huỷ',
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                }}
                 style={{
                   width: 42,
                   height: 20,
@@ -194,6 +244,7 @@ const LoginScreen = (props) => {
                     statusFood: item.status,
                     promotion: item.price_discount.toString(),
                     category_food_id: category_food_id,
+                    category_store_food: item.category_store_food_id,
                     store_id: store_id,
                     image: item.image,
                     productDetail: item,

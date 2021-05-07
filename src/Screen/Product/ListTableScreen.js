@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -20,17 +21,21 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Modal from 'react-native-modal';
 import services from '../../Redux/Service/productService';
+import QRCode from 'react-native-qrcode-svg';
 
 const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
@@ -38,11 +43,7 @@ const LoginScreen = (props) => {
     setModalVisibleLoading(true);
     services.storeDetail(store_id).then(function (response) {
       if (response) {
-        console.log('thai mai', response);
         if (response.data.code === 200) {
-          // setDataProduct(response?.data?.data?.data);
-          // console.log(response.data.data.data);
-          // console.log(response?.data?.data);
           setDataOrderTable(response?.data?.data?.store?.table_store);
           setModalVisibleLoading(false);
         }
@@ -58,13 +59,16 @@ const LoginScreen = (props) => {
 
   const [dataOrderTable, setDataOrderTable] = useState([]);
 
+  const [chooseTable, setChooseTable] = useState({});
+
   const renderProduct = ({item}) => {
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          setChooseTable(item);
+          setModalVisible(true);
+        }}
         style={{
-          // flexDirection: 'column',
-          // alignItems: 'center',
-          // justifyContent: 'center',
           width: Dimensions.get('window').width * 0.45,
           marginBottom: 15,
         }}>
@@ -114,7 +118,7 @@ const LoginScreen = (props) => {
                 fontWeight: '400',
                 marginTop: 5,
               }}>
-              {item.number_people_max} chỗ ngồi
+              {item.number_people_min} - {item.number_people_max} chỗ ngồi
             </Text>
             <View
               style={{
@@ -128,6 +132,55 @@ const LoginScreen = (props) => {
                 flexDirection: 'row',
               }}>
               <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    'Xoá bàn ăn!',
+                    'Bạn chắc chắn muốn xoá bàn ăn này?',
+                    [
+                      {
+                        text: 'Đồng ý',
+                        onPress: async () => {
+                          services
+                            .deleteTable(null, item.id)
+                            .then(function (response) {
+                              if (response) {
+                                if (response.data.code === 200) {
+                                  getData();
+                                  Alert.alert(
+                                    'Thông báo!',
+                                    'Xoá bàn ăn thành công!',
+                                    [
+                                      {
+                                        text: 'Đồng ý',
+                                      },
+                                    ],
+                                    {cancelable: false},
+                                  );
+                                } else {
+                                  Alert.alert(
+                                    'Thông báo!',
+                                    response.data.message,
+                                    [
+                                      {
+                                        text: 'Đồng ý',
+                                      },
+                                    ],
+                                    {cancelable: false},
+                                  );
+                                }
+                              } else {
+                                return;
+                              }
+                            });
+                        },
+                      },
+                      {
+                        text: 'Huỷ',
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                }}
                 style={{
                   width: 42,
                   height: 20,
@@ -160,7 +213,7 @@ const LoginScreen = (props) => {
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -171,6 +224,40 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          <Modal
+            onBackdropPress={() => setModalVisible(false)}
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            isVisible={modalVisible}>
+            <View
+              style={{
+                height: '40%',
+                width: '80%',
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+              }}>
+              <Text style={{fontSize: 16, fontWeight: '700'}}>
+                QR code bàn số {chooseTable.number_table}
+              </Text>
+              <QRCode value={chooseTable.code} />
+              <TouchableOpacity
+                style={{
+                  height: 40,
+                  width: 100,
+                  borderRadius: 6,
+                  backgroundColor: Color.main,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{color: Color.white, fontSize: 16, fontWeight: '700'}}>
+                  Tải xuống
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
           {modalVisibleLoading === true ? (
             <View
               style={{

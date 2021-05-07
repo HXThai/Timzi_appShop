@@ -369,7 +369,9 @@ const LoginScreen = (props) => {
                             justifyContent: 'center',
                           }}>
                           <Text style={{fontWeight: '400', fontSize: 12}}>
-                            {item?.food?.name}
+                            {item?.food === null
+                              ? item?.combo_food?.name
+                              : item?.food?.name}
                           </Text>
                         </View>
                         <View
@@ -388,47 +390,57 @@ const LoginScreen = (props) => {
                         </View>
                         <TouchableOpacity
                           onPress={() => {
-                            Alert.alert(
-                              'Xác nhận đơn hàng',
-                              'Bạn chắc chắn muốn xác nhận đơn hàng?',
-                              [
-                                {text: 'Hủy', onPress: () => {}},
-                                {
-                                  text: 'Đồng ý',
-                                  onPress: async () => {
-                                    services
-                                      .confirmFoodOnTheTable(null, item.id)
-                                      .then(function (response) {
-                                        if (response) {
-                                          if (response.data.code === 200) {
-                                            services
-                                              .orderOfflineDetail(
-                                                null,
-                                                props?.route?.params?.id,
-                                              )
-                                              .then(function (response) {
-                                                if (response) {
-                                                  if (
-                                                    response.data.code === 200
-                                                  ) {
-                                                    setDataOrderOffline(
-                                                      response.data.data,
-                                                    );
-                                                  }
-                                                } else {
-                                                  return;
+                            {
+                              item.status === 2
+                                ? Alert.alert(
+                                    'Xác nhận món ăn',
+                                    'Bạn chắc chắn muốn xác nhận món ăn đã lên bàn?',
+                                    [
+                                      {text: 'Hủy', onPress: () => {}},
+                                      {
+                                        text: 'Đồng ý',
+                                        onPress: async () => {
+                                          services
+                                            .confirmFoodOnTheTable(
+                                              null,
+                                              item.id,
+                                            )
+                                            .then(function (response) {
+                                              if (response) {
+                                                if (
+                                                  response.data.code === 200
+                                                ) {
+                                                  services
+                                                    .orderOfflineDetail(
+                                                      null,
+                                                      props?.route?.params?.id,
+                                                    )
+                                                    .then(function (response) {
+                                                      if (response) {
+                                                        if (
+                                                          response.data.code ===
+                                                          200
+                                                        ) {
+                                                          setDataOrderOffline(
+                                                            response.data.data,
+                                                          );
+                                                        }
+                                                      } else {
+                                                        return;
+                                                      }
+                                                    });
                                                 }
-                                              });
-                                          }
-                                        } else {
-                                          return;
-                                        }
-                                      });
-                                  },
-                                },
-                              ],
-                              {cancelable: false},
-                            );
+                                              } else {
+                                                return;
+                                              }
+                                            });
+                                        },
+                                      },
+                                    ],
+                                    {cancelable: false},
+                                  )
+                                : null;
+                            }
                           }}
                           style={{
                             height: 20,

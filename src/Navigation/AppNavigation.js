@@ -53,6 +53,7 @@ import EditTableScreen from './../Screen/Product/EditTableScreen';
 import EditProductScreen from './../Screen/Product/EditProductScreen';
 import ListProductScreen from './../Screen/Product/ListProductScreen';
 import ListTableScreen from './../Screen/Product/ListTableScreen';
+import ListCategoryStoreFood from './../Screen/Product/ListCategoryStoreFood';
 import YourRestaurantScreen from './../Screen/Personal/YourRestaurantScreen';
 import PromotionScreen from './../Screen/Personal/PromotionScreen';
 import AccountShipperScreen from './../Screen/Personal/AccountShipperScreen';
@@ -213,6 +214,9 @@ const getTabBarVisibility = (route) => {
     return false;
   }
   if (routename == 'PromotionTimziDetailScreen') {
+    return false;
+  }
+  if (routename == 'ListCategoryStoreFood') {
     return false;
   }
   return true;
@@ -808,11 +812,12 @@ function EarnCoinStack(props) {
                 //   index: 0,
                 //   routes: [{name: 'ListProductScreen'}],
                 // });
-                props.navigation.navigate('ListProductScreen', {
-                  category_food_id: route?.params?.category_food_id,
-                  store_id: route?.params?.store_id,
-                });
-                // console.log(route);
+                route?.params?.status === 'edit'
+                  ? props.navigation.navigate('ListProductScreen', {
+                      category_food_id: route?.params?.category_food_id,
+                      store_id: route?.params?.store_id,
+                    })
+                  : props.navigation.navigate('EarnCoin');
               }}>
               <View style={{marginLeft: 20}}>
                 <MaterialIcons
@@ -849,7 +854,48 @@ function EarnCoinStack(props) {
             <TouchableOpacity
               onPress={() => {
                 props.navigation.reset({
-                  index: 0,
+                  routes: [{name: 'EarnCoin'}],
+                });
+                props.navigation.navigate('EarnCoin');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="ListCategoryStoreFood"
+        component={ListCategoryStoreFood}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Danh sách danh mục',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.reset({
                   routes: [{name: 'EarnCoin'}],
                 });
                 props.navigation.navigate('EarnCoin');

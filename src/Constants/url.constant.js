@@ -97,6 +97,15 @@ const API_BASE_URL = {
     ROOT_DOMAIN + '/program/list-program-system-with-store',
   STOP_PROGRAM_SYSTEM_WITH_STORE:
     ROOT_DOMAIN + '/program/stop-program-system-with-store',
+
+  CREATE_CATEGORY_STORE_FOOD:
+    ROOT_DOMAIN + '/category/create-category-store-food',
+  UPDATE_CATEGORY_STORE_FOOD:
+    ROOT_DOMAIN + '/category/update-category-store-food',
+  DELETE_CATEGORY_STORE_FOOD:
+    ROOT_DOMAIN + '/category/delete-category-store-food',
+  DELETE_FOOD: ROOT_DOMAIN + '/food/delete-food',
+  DELETE_TABLE: ROOT_DOMAIN + '/table-store/delete-table-store',
 };
 
 export {API_BASE_URL};

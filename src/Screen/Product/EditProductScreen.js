@@ -225,9 +225,6 @@ const LoginScreen = (props) => {
     setDataCategoryTopping(
       props?.route?.params?.productDetail?.category_topping_food,
     );
-    // setDataSize(props?.route?.params?.productDetail?.size);
-    // props?.route?.params?.productDetail?.size?
-    // console.log(props?.route?.params?.productDetail?.category_topping_food);
     var newDataSize = [];
 
     props?.route?.params?.productDetail?.size?.forEach((element) => {
@@ -242,7 +239,11 @@ const LoginScreen = (props) => {
       if (response) {
         if (response.data.code === 200) {
           setDataCateWithStore(response.data.data);
-          setCategory(response.data.data[0]);
+          response.data.data.forEach((element) => {
+            if (element.id == props?.route?.params?.category_food_id) {
+              setCategory(element);
+            }
+          });
         }
       } else {
         return;
@@ -252,7 +253,11 @@ const LoginScreen = (props) => {
       if (response) {
         if (response.data.code === 200) {
           setDataCateStoreFood(response.data.data);
-          setStoreFood(response.data.data[0]);
+          response.data.data.forEach((element) => {
+            if (element.id == props?.route?.params?.category_store_food) {
+              setStoreFood(element);
+            }
+          });
         }
       } else {
         return;
@@ -292,7 +297,6 @@ const LoginScreen = (props) => {
                   text: 'Đồng ý',
                   onPress: async () => {
                     props.navigation.reset({
-                      index: 0,
                       routes: [
                         {
                           name: 'ListProductScreen',
@@ -362,11 +366,17 @@ const LoginScreen = (props) => {
       type: 'image/jpeg',
       uri: image,
     });
+    body.append('_method', 'put');
     body.append('status', status);
     body.append('price', price);
-    body.append('category_food_id', category_food_id);
-    body.append('_method', 'put');
+    body.append('category_food_id', category.id);
     body.append('price_discount', promotion);
+    body.append('is_new', dataIsStatusFood[0].status);
+    body.append('is_specialties', dataIsStatusFood[1].status);
+    body.append('is_out_of_food', dataIsStatusFood[2].status);
+    body.append('category_store_food_id', storeFood.id);
+    body.append('description', description);
+    console.log(body);
     services.editFood(body, id).then(function (response) {
       // props.onGetList(response?.data);
       if (response) {
@@ -402,6 +412,17 @@ const LoginScreen = (props) => {
           );
           // setDataProduct(response?.data?.data?.data);
           // console.log(response.data.data.data);
+        } else {
+          Alert.alert(
+            'Thông báo!',
+            response.data.message,
+            [
+              {
+                text: 'Đồng ý',
+              },
+            ],
+            {cancelable: false},
+          );
         }
       } else {
         Alert.alert(
@@ -611,7 +632,7 @@ const LoginScreen = (props) => {
               isVisible={modalVisibleStoreFood}>
               <View
                 style={{
-                  height: '20%',
+                  height: '25%',
                   width: '80%',
                   backgroundColor: '#fff',
                   borderRadius: 10,
