@@ -12,6 +12,11 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+  getListProductType: async (params) => {
+    let url = `${API_BASE_URL.GET_LIST_PRODUCT}?category_food_id=${params.category_food_id}&store_id=${params.store_id}&type=${params.type}`;
+    let response = callApiService.get(url);
+    return response;
+  },
   addFood: async (params) => {
     let url = `${API_BASE_URL.ADD_FOOD}`;
     let response = callApiService.postFD(url, params);
@@ -110,6 +115,11 @@ export default homeService = {
   },
   getListCategoryWithStore: async (params) => {
     let url = `${API_BASE_URL.GET_LIST_CATEGORY_WITH_STORE}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  getListCategoryStoreFood: async (params) => {
+    let url = `${API_BASE_URL.GET_LIST_CATEGORY_STORE_FOOD}`;
     let response = callApiService.get(url);
     return response;
   },

@@ -43,4 +43,31 @@ export default homeService = {
     let response = callApiService.delete(url, params);
     return response;
   },
+
+  getListProgramSystem: async (params, store_id, page) => {
+    let url = `${API_BASE_URL.GET_LIST_PROGRAM_SYSTEM}?store_id=${store_id}&page=${page}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  promotionTimziDetail: async (params) => {
+    let url = `${API_BASE_URL.PROMOTION_TIMZI_DETAIL}/${params.id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  receiveProgramSystem: async (params) => {
+    let url = `${API_BASE_URL.RECEIVE_PROGRAM_SYSTEM}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
+
+  getListProgramSystemWithStore: async (params, store_id) => {
+    let url = `${API_BASE_URL.GET_LIST_PROGRAM_SYSTEM_WITH_STORE}/${store_id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
+  stopProgramSystemWithStore: async (params) => {
+    let url = `${API_BASE_URL.STOP_PROGRAM_SYSTEM_WITH_STORE}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
 };

@@ -86,6 +86,17 @@ const API_BASE_URL = {
   GET_LOCATION_DETAIL: 'https://rsapi.goong.io/Place/Detail',
 
   GET_LIST_CATEGORY_WITH_STORE: ROOT_DOMAIN + '/list-category-with-store',
+  GET_LIST_CATEGORY_STORE_FOOD:
+    ROOT_DOMAIN + '/category/list-category-store-food',
+
+  GET_LIST_PROGRAM_SYSTEM: ROOT_DOMAIN + '/program/list-program-system',
+  PROMOTION_TIMZI_DETAIL: ROOT_DOMAIN + '/program/program-system-detail',
+  RECEIVE_PROGRAM_SYSTEM: ROOT_DOMAIN + '/program/receive-program-system',
+
+  GET_LIST_PROGRAM_SYSTEM_WITH_STORE:
+    ROOT_DOMAIN + '/program/list-program-system-with-store',
+  STOP_PROGRAM_SYSTEM_WITH_STORE:
+    ROOT_DOMAIN + '/program/stop-program-system-with-store',
 };
 
 export {API_BASE_URL};

@@ -42,23 +42,41 @@ const LoginScreen = (props) => {
 
   const getData = () => {
     setModalVisibleLoading(true);
-    services
-      .getListProduct({category_food_id: category_food_id, store_id: store_id})
-      .then(function (response) {
-        // props.onGetList(response?.data);
-        if (response) {
-          // console.log('thai mai', response);
-          if (response.data.code === 200) {
-            // setDataProduct(response?.data?.data?.data);
-            // console.log(response.data.data.data);
-            // console.log(response?.data?.data);
-            setDataFood(response?.data?.data?.data);
-            setModalVisibleLoading(false);
+    if (props?.route?.params?.type) {
+      services
+        .getListProductType({
+          category_food_id: category_food_id,
+          store_id: store_id,
+          type: 'food',
+        })
+        .then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataFood(response?.data?.data?.data);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
           }
-        } else {
-          return;
-        }
-      });
+        });
+    } else {
+      services
+        .getListProduct({
+          category_food_id: category_food_id,
+          store_id: store_id,
+        })
+        .then(function (response) {
+          // props.onGetList(response?.data);
+          if (response) {
+            if (response.data.code === 200) {
+              setDataFood(response?.data?.data?.data);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
+          }
+        });
+    }
   };
 
   useEffect(() => {

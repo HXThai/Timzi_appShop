@@ -74,18 +74,25 @@ const LoginScreen = (props) => {
     NetPrinter.init().then(() => {
       setPrinters([{host: '192.168.2.222', port: 9100}]);
       // console.log('success');
+      NetPrinter.connectPrinter('192.168.2.222', 9100).then(
+        (value) => {
+          console.log('test');
+          setCurrentPrinter(value);
+        },
+        (error) => console.log(error),
+      );
     });
   }, []);
 
   const _connectPrinter = (printer) => {
     //connect printer
-    NetPrinter.connectPrinter(printer.host, printer.port).then(
-      (value) => {
-        console.log('test');
-        setCurrentPrinter(value);
-      },
-      (error) => console.log(error),
-    );
+    // NetPrinter.connectPrinter(printer.host, printer.port).then(
+    //   (value) => {
+    //     console.log('test');
+    //     setCurrentPrinter(value);
+    //   },
+    //   (error) => console.log(error),
+    // );
   };
 
   const printTextTest = () => {
@@ -94,9 +101,10 @@ const LoginScreen = (props) => {
 
   const printBillTest = () => {
     NetPrinter.printBill(
-      '<C>Thái mèo đẹp zai!</C>\n<C>Cái máy in ngu ngốc vl</C>\n<C></C>Cai may in ngu ngoc vl</C>',
+      '<C>Thái mèo đẹp zai!</C>\n<C>Cái máy in ngu ngốc vl</C>\n<C></C>Cai may in ngu ngoc vl</C>\n',
+      {encoding: 'utf8'},
     );
-    NetPrinter.printBill('\x1D\x56\x01');
+    // NetPrinter.printBill('\x1D\x56\x01');
   };
 
   return (

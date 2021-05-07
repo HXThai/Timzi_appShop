@@ -371,7 +371,7 @@ const Home = (props) => {
             <View>
               <Text style={{fontSize: 12, color: '#828282'}}>
                 {'Khoảng cách: '}
-                {item?.distance}
+                {item?.distance?.text ? item?.distance?.text : item?.distance}
               </Text>
             </View>
           </View>
@@ -455,7 +455,7 @@ const Home = (props) => {
                     }}
                     style={{
                       height: 19,
-                      width: 56,
+                      width: 65,
                       borderRadius: 4,
                       marginRight: 10,
                       borderColor: tab === 3 ? 'red' : Color.main,

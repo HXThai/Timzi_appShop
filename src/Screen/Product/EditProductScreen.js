@@ -46,6 +46,7 @@ const LoginScreen = (props) => {
   const [priceSize, setPriceSize] = useState('');
   const [toppingDetail, setToppingDetail] = useState('');
   const [priceTopping, setPriceTopping] = useState('');
+  const [description, setDescription] = useState('');
   const [currentCategoryTopping, setCurrentCategoryTopping] = useState();
   const [currentCategoryToppingId, setCurrentCategoryToppingId] = useState();
   const [data, setData] = useState([]);
@@ -69,12 +70,14 @@ const LoginScreen = (props) => {
 
   const [modalVisibleShowTopping, setModalVisibleShowTopping] = useState(false);
 
-  const [isStatusFood, setIsStatusFood] = useState(0);
+  const [modalVisibleCategory, setModalVisibleCategory] = useState(false);
+
+  const [modalVisibleStoreFood, setModalVisibleStoreFood] = useState(false);
 
   const [dataIsStatusFood, setDataIsStatusFood] = useState([
-    {title: 'Món mới'},
-    {title: 'Đặc sản'},
-    {title: 'Tạm hết'},
+    {status: 0, title: 'Món mới'},
+    {status: 0, title: 'Đặc sản'},
+    {status: 0, title: 'Tạm hết'},
   ]);
 
   const requestCameraPermission = async () => {
@@ -206,6 +209,14 @@ const LoginScreen = (props) => {
   const [dataCategoryTopping, setDataCategoryTopping] = useState([]);
   const [dataShowToping, setDataShowTopping] = useState([]);
 
+  const [dataCateWithStore, setDataCateWithStore] = useState([]);
+
+  const [category, setCategory] = useState({});
+
+  const [dataCateStoreFood, setDataCateStoreFood] = useState([]);
+
+  const [storeFood, setStoreFood] = useState({});
+
   useEffect(() => {
     setName(props?.route?.params?.name?.toString());
     setPrice(props?.route?.params?.price?.toString());
@@ -226,6 +237,29 @@ const LoginScreen = (props) => {
     setDataSize(newDataSize);
   }, [props?.route?.params?.name]);
 
+  useEffect(() => {
+    services.getListCategoryWithStore(null).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          setDataCateWithStore(response.data.data);
+          setCategory(response.data.data[0]);
+        }
+      } else {
+        return;
+      }
+    });
+    services.getListCategoryStoreFood(null).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          setDataCateStoreFood(response.data.data);
+          setStoreFood(response.data.data[0]);
+        }
+      } else {
+        return;
+      }
+    });
+  }, []);
+
   const handleAddFood = () => {
     try {
       var body = new FormData();
@@ -239,21 +273,14 @@ const LoginScreen = (props) => {
       });
       body.append('status', status);
       body.append('price', price);
-      body.append('category_food_id', category_food_id);
+      body.append('category_food_id', category.id);
       body.append('price_discount', promotion);
-      if (isStatusFood === 0) {
-        body.append('is_new', 1);
-        body.append('is_specialties', 0);
-        body.append('is_out_of_food', 0);
-      } else if (isStatusFood === 1) {
-        body.append('is_new', 0);
-        body.append('is_specialties', 1);
-        body.append('is_out_of_food', 0);
-      } else {
-        body.append('is_new', 0);
-        body.append('is_specialties', 0);
-        body.append('is_out_of_food', 1);
-      }
+      body.append('is_new', dataIsStatusFood[0].status);
+      body.append('is_specialties', dataIsStatusFood[1].status);
+      body.append('is_out_of_food', dataIsStatusFood[2].status);
+      body.append('category_store_food_id', storeFood.id);
+      body.append('description', description);
+
       services.addFood(body).then(function (response) {
         if (response) {
           if (response.data.code === 200) {
@@ -392,6 +419,16 @@ const LoginScreen = (props) => {
     });
   };
 
+  const handeChooseStatusFood = (index) => {
+    var data = [...dataIsStatusFood];
+    if (data[index].status === 0) {
+      data[index].status = 1;
+    } else {
+      data[index].status = 0;
+    }
+    setDataIsStatusFood(data);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -524,6 +561,88 @@ const LoginScreen = (props) => {
                     <Text style={{fontSize: 17, marginLeft: 10}}>Hết hàng</Text>
                   </TouchableOpacity>
                 </View>
+              </View>
+            </Modal>
+            {/* Modal Category */}
+            <Modal
+              onBackdropPress={() => setModalVisibleCategory(false)}
+              style={{alignItems: 'center', justifyContent: 'center'}}
+              isVisible={modalVisibleCategory}>
+              <View
+                style={{
+                  height: '20%',
+                  width: '80%',
+                  backgroundColor: '#fff',
+                  borderRadius: 10,
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                }}>
+                <ScrollView>
+                  {dataCateWithStore.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          setCategory(item);
+                          setModalVisibleCategory(false);
+                        }}
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginTop: 10,
+                          borderBottomWidth: 0.5,
+                          borderBottomColor: Color.grey,
+                          width: Dimensions.get('window').width * 0.6,
+                          justifyContent: 'center',
+                          paddingBottom: 10,
+                        }}>
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            </Modal>
+            {/* Modal store food */}
+            <Modal
+              onBackdropPress={() => setModalVisibleStoreFood(false)}
+              style={{alignItems: 'center', justifyContent: 'center'}}
+              isVisible={modalVisibleStoreFood}>
+              <View
+                style={{
+                  height: '20%',
+                  width: '80%',
+                  backgroundColor: '#fff',
+                  borderRadius: 10,
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                }}>
+                <ScrollView>
+                  {dataCateStoreFood.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          setStoreFood(item);
+                          setModalVisibleStoreFood(false);
+                        }}
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginTop: 10,
+                          borderBottomWidth: 0.5,
+                          borderBottomColor: Color.grey,
+                          width: Dimensions.get('window').width * 0.6,
+                          justifyContent: 'center',
+                          paddingBottom: 10,
+                        }}>
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
               </View>
             </Modal>
             {/* Modal Size */}
@@ -1081,26 +1200,6 @@ const LoginScreen = (props) => {
               </View>
               {statusFood === 'edit' ? (
                 <View style={{marginTop: 10}}>
-                  <Text style={{fontSize: 12}}>Tình trạng</Text>
-                </View>
-              ) : null}
-              <TouchableOpacity
-                onPress={() => setModalVisibleStatus(true)}
-                style={{
-                  // width: '50%',
-                  marginBottom: 15,
-                  marginTop: 10,
-                  height: 45,
-                  borderRadius: 8,
-                  backgroundColor: '#fff',
-                  padding: 10,
-                  justifyContent: 'center',
-                }}>
-                <Text>{status === 1 ? 'Còn hàng' : 'Hết hàng'}</Text>
-              </TouchableOpacity>
-
-              {statusFood === 'edit' ? (
-                <View style={{marginTop: 10}}>
                   <Text style={{fontSize: 12}}>Khuyến mãi</Text>
                 </View>
               ) : null}
@@ -1122,12 +1221,71 @@ const LoginScreen = (props) => {
                   defaultValue={promotion}
                 />
               </View>
+
+              <View style={{marginTop: 10}}>
+                <Text style={{fontSize: 12}}>Tình trạng</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setModalVisibleStatus(true)}
+                style={{
+                  // width: '50%',
+                  marginBottom: 15,
+                  marginTop: 10,
+                  height: 45,
+                  borderRadius: 8,
+                  backgroundColor: '#fff',
+                  padding: 10,
+                  justifyContent: 'center',
+                }}>
+                <Text>{status === 1 ? 'Còn hàng' : 'Hết hàng'}</Text>
+              </TouchableOpacity>
+
+              <View style={{marginTop: 10}}>
+                <Text style={{fontSize: 12}}>Danh mục món ăn</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setModalVisibleCategory(true)}
+                style={{
+                  // width: '50%',
+                  marginBottom: 15,
+                  marginTop: 10,
+                  height: 45,
+                  borderRadius: 8,
+                  backgroundColor: '#fff',
+                  padding: 10,
+                  justifyContent: 'center',
+                }}>
+                <Text>{category.name}</Text>
+              </TouchableOpacity>
+
+              <View style={{marginTop: 10}}>
+                <Text style={{fontSize: 12}}>Phân loại món ăn</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setModalVisibleStoreFood(true)}
+                style={{
+                  // width: '50%',
+                  marginBottom: 15,
+                  marginTop: 10,
+                  height: 45,
+                  borderRadius: 8,
+                  backgroundColor: '#fff',
+                  padding: 10,
+                  justifyContent: 'center',
+                }}>
+                <Text>{storeFood.name}</Text>
+              </TouchableOpacity>
+
+              <View style={{marginTop: 10}}>
+                <Text style={{fontSize: 12}}>Trạng thái món ăn</Text>
+              </View>
               {dataIsStatusFood.map((item, index) => {
                 return (
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      setIsStatusFood(index);
+                      // setIsStatusFood(index);
+                      handeChooseStatusFood(index);
                     }}
                     style={{
                       flexDirection: 'row',
@@ -1136,7 +1294,7 @@ const LoginScreen = (props) => {
                     }}>
                     <MaterialIcons
                       name={
-                        isStatusFood === index
+                        item.status === 1
                           ? 'radio-button-checked'
                           : 'radio-button-unchecked'
                       }
@@ -1148,6 +1306,28 @@ const LoginScreen = (props) => {
                   </TouchableOpacity>
                 );
               })}
+              <View style={{marginTop: 10}}>
+                <Text style={{fontSize: 12}}>Mô tả món ăn</Text>
+              </View>
+              <TextInput
+                style={[
+                  styles.text,
+                  {
+                    padding: 5,
+                    borderColor: '#11111150',
+                    borderWidth: 1,
+                    marginTop: 5,
+                    textAlignVertical: 'top',
+                    borderRadius: 8,
+                    height: 100,
+                  },
+                ]}
+                multiline={true}
+                numberOfLines={5}
+                placeholder="Mô tả món ăn"
+                onChangeText={(text) => setDescription(text)}
+                value={description}
+              />
 
               {statusFood === 'edit' ? (
                 <View style={{marginTop: 10}}>
@@ -1247,6 +1427,7 @@ const LoginScreen = (props) => {
                       borderRadius: 50,
                       backgroundColor: Color.main,
                       marginTop: 10,
+                      marginBottom: 10,
                     }}>
                     <Text
                       style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
