@@ -91,6 +91,7 @@ const Home = (props) => {
   };
 
   const onClickDetail = (id) => {
+    reactotron.log('tab', tab);
     if (tab === 1) {
       props.navigation.navigate('NewOrderOfflineDetailScreen', {id: id});
     } else if (tab === 2) {
@@ -101,6 +102,8 @@ const Home = (props) => {
       props.navigation.navigate('OrderOfflineServedDetailScreen', {id: id});
     } else if (tab === 5) {
       props.navigation.navigate('OrderOfflineCancelledDetailScreen', {id: id});
+    } else if (tab == 0) {
+      props.navigation.navigate('OrderTable', {id: id});
     }
   };
 
@@ -249,6 +252,7 @@ const Home = (props) => {
       <TouchableOpacity
         onPress={() => {
           onClickDetail(item.id);
+          reactotron.log('day ne');
         }}
         style={{
           height: 100,

@@ -92,6 +92,7 @@ const API_BASE_URL = {
   GET_LIST_PROGRAM_SYSTEM: ROOT_DOMAIN + '/program/list-program-system',
   PROMOTION_TIMZI_DETAIL: ROOT_DOMAIN + '/program/program-system-detail',
   RECEIVE_PROGRAM_SYSTEM: ROOT_DOMAIN + '/program/receive-program-system',
+  BOOK_TABLE_WITH_STAFF: ROOT_DOMAIN + '/book-table/book-table-with-staff',
 
   GET_LIST_PROGRAM_SYSTEM_WITH_STORE:
     ROOT_DOMAIN + '/program/list-program-system-with-store',

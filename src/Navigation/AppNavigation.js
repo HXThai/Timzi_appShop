@@ -84,6 +84,7 @@ import OrderOfflineServedDetailScreen from '../Screen/OrderOffline/OrderOfflineS
 import OrderOfflineCancelledDetailScreen from '../Screen/OrderOffline/OrderOfflineCancelledDetailScreen';
 import ChooseRestaurantScreen from '../Screen/Staff/ChooseRestaurantScreen';
 import FindRestaurantScreen from '../Screen/Staff/FindRestaurantScreen';
+import OrderTableScreen from '../Screen/OrderTableScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -2431,6 +2432,53 @@ function UtilitiesStack(props) {
         options={{
           // headerShown: false,
           headerTitle: 'Chi tiết bàn đang phục vụ',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Utilities');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="OrderTable"
+        component={OrderTableScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Nhập thông tin bàn',
           headerTitleStyle: {alignSelf: 'center', color: '#fff'},
           headerStyle: {
             backgroundColor: Color.main,

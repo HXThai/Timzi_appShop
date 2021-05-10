@@ -47,4 +47,9 @@ export default homeService = {
     let response = callApiService.put(url);
     return response;
   },
+  bookTableWithStaff: async (params, id) => {
+    let url = `${API_BASE_URL.BOOK_TABLE_WITH_STAFF}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
 };
