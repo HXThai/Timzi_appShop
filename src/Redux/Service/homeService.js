@@ -7,4 +7,10 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+  getStoreDetailWithBookTableInStore: async (params) => {
+    console.log('thái ssssss');
+    let url = `${API_BASE_URL.GET_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE}?book_table_id=${params.id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
 };

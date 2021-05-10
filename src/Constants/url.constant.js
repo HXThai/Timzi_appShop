@@ -107,6 +107,9 @@ const API_BASE_URL = {
     ROOT_DOMAIN + '/category/delete-category-store-food',
   DELETE_FOOD: ROOT_DOMAIN + '/food/delete-food',
   DELETE_TABLE: ROOT_DOMAIN + '/table-store/delete-table-store',
+
+  GET_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE:
+    ROOT_DOMAIN + '/book-table/store-detail-with-book-table-in-store',
 };
 
 export {API_BASE_URL};

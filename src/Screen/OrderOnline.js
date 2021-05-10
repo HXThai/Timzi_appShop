@@ -63,7 +63,7 @@ const Home = (props) => {
 
   const handleLoadMore = () => {
     console.log('thai meo');
-    setPage(page + 1);
+    dataOrder.length >= 12 ? setPage(page + 1) : null;
   };
 
   useEffect(() => {

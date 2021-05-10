@@ -78,6 +78,7 @@ import PromotionTimziDetailScreen from './../Screen/Personal/Promotion/ActionPro
 import PromotionComboDetailScreen from './../Screen/Personal/Promotion/ActionPromotion/PromotionComboDetailScreen';
 import EditComboScreen from './../Screen/Personal/Promotion/ActionPromotion/EditComboScreen';
 import NewOrderOfflineDetailScreen from '../Screen/OrderOffline/NewOrderOfflineDetailScreen';
+import OrderFoodScreen from '../Screen/OrderOffline/OrderFoodScreen';
 import OrderOfflineReceivedDetailScreen from '../Screen/OrderOffline/OrderOfflineReceivedDetailScreen';
 import OrderOfflineServingDetailScreen from '../Screen/OrderOffline/OrderOfflineServingDetailScreen';
 import OrderOfflineServedDetailScreen from '../Screen/OrderOffline/OrderOfflineServedDetailScreen';
@@ -218,6 +219,9 @@ const getTabBarVisibility = (route) => {
     return false;
   }
   if (routename == 'ListCategoryStoreFood') {
+    return false;
+  }
+  if (routename == 'OrderFoodScreen') {
     return false;
   }
   return true;
@@ -2338,6 +2342,53 @@ function UtilitiesStack(props) {
         options={{
           // headerShown: false,
           headerTitle: 'Chi tiết đơn đặt mới',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Utilities');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="OrderFoodScreen"
+        component={OrderFoodScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Gọi món ăn',
           headerTitleStyle: {alignSelf: 'center', color: '#fff'},
           headerStyle: {
             backgroundColor: Color.main,

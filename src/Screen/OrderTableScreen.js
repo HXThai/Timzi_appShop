@@ -28,7 +28,7 @@ export const OrderTableScreen = (props) => {
       const res = await api.bookTableWithStaff(payload);
       if (res.data.status == 1) {
         Alert.alert(
-          'Thôn báo',
+          'Thông báo',
           res.message,
           [
             {text: 'Hủy', onPress: () => {}},
@@ -43,7 +43,7 @@ export const OrderTableScreen = (props) => {
         );
       }
       if (res.data.status == 0) {
-        Alert.alert('Thôn báo', res.data.message, {cancelable: false});
+        Alert.alert('Thông báo', res.data.message, {cancelable: false});
       }
     } catch (error) {
       console.log('fấd');
@@ -54,19 +54,19 @@ export const OrderTableScreen = (props) => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <TextInput
-        value={note}
+        value={name}
         style={{borderWidth: 1, marginTop: 10, height: 40}}
-        onChangeText={(txt) => setNote(txt)}
+        onChangeText={(txt) => setName(txt)}
       />
       <TextInput
-        value={note}
+        value={phone}
         style={{borderWidth: 1, marginTop: 10, height: 40}}
-        onChangeText={(txt) => setNote(txt)}
+        onChangeText={(txt) => setPhone(txt)}
       />
       <TextInput
-        value={note}
+        value={numberPeople}
         style={{borderWidth: 1, marginTop: 10, height: 40}}
-        onChangeText={(txt) => setNote(txt)}
+        onChangeText={(txt) => setNumberPeople(txt)}
       />
       <TextInput
         value={note}
