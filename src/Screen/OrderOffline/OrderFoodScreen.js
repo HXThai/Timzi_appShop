@@ -26,13 +26,12 @@ import {connect} from 'react-redux';
 import * as actionsHome from '../../Redux/Action/homeAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import services from '../../Redux/Service/orderOfflineService';
-
+import reactotron from 'reactotron-react-native';
 const LoginScreen = (props) => {
   useEffect(() => {
-    console.log(props?.route?.params?.id);
     props.onGetStoreDetail({params: null, id: props?.route?.params?.id});
   }, [props.onGetStoreDetail]);
-
+  reactotron.log('truong ne', props);
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -50,6 +49,8 @@ const LoginScreen = (props) => {
             <ScrollView showsVerticalScrollIndicator={false}></ScrollView>
             <View
               style={{
+
+                
                 flexDirection: 'column',
                 marginTop: 5,
               }}></View>
