@@ -1,7 +1,3 @@
-import R from '@app/assets/R'
-
-
-
 
 import React, { useEffect, useState } from 'react'
 import { Animated, Dimensions } from 'react-native'
@@ -32,19 +28,19 @@ interface DishItemProps {
 
 export const txtStatus = (value) => {
     try {
-      if (value.is_out_of_food == 1)
-        return "TẠM HẾT"
-      if (value.is_new == 1)
-        return "MÓN MỚI"
-      if (value.is_specialties == 1)
-        return "ĐẶC SẢN"
-      return " "
+        if (value.is_out_of_food == 1)
+            return "TẠM HẾT"
+        if (value.is_new == 1)
+            return "MÓN MỚI"
+        if (value.is_specialties == 1)
+            return "ĐẶC SẢN"
+        return " "
     } catch (error) {
-      return "Lỗi"
+        return "Lỗi"
     }
-  
-  
-  }
+
+
+}
 export const DishItem = (props: DishItemProps) => {
     const checkComoboIos = (combo) => {
         if (!combo) return dimension.width * 0.32
@@ -94,7 +90,7 @@ export const DishItem = (props: DishItemProps) => {
                                 backgroundColor: 'white',
                                 elevation: 5,
                             }}
-                        // resizeMode='contain'
+                            resizeMode='contain'
                         >
 
                         </Image>
@@ -102,38 +98,38 @@ export const DishItem = (props: DishItemProps) => {
 
 
                     <Animated.View style={{ width: 10, aspectRatio: 1, backgroundColor: 'red', position: "absolute", bottom: -100 }} />
-                    <Text children={props.nameFood || 'Cà phê đen'} style={{ fontSize:13, color: '#4F4F4F', marginTop: "10%", textAlign: 'center', marginHorizontal: 6 }} numberOfLines={2} />
-                    <Text children={props.price_discount || '75.000 đ'} style={{ fontSize:15, marginTop: "1%" }} />
+                    <Text children={props.nameFood || 'Cà phê đen'} style={{ fontSize: 13, color: '#4F4F4F', marginTop: "10%", textAlign: 'center', marginHorizontal: 6 }} numberOfLines={2} />
+                    <Text children={props.price_discount || '75.000 đ'} style={{ fontSize: 15, marginTop: "1%" }} />
                     {!props.combo && <>
-                        <Text children={props.money || '100.000 đ'} style={{ marginTop: "1%", fontSize:13 }} />
+                        <Text children={props.money || '100.000 đ'} style={{ marginTop: "1%", fontSize: 13 }} />
                         <View style={{ height: 1, backgroundColor: 'black', marginTop: -9 }} >
                             <Text children={props.money} style={{ color: "white" }} />
                         </View>
                     </>}
                 </View>
-                <View style={{ borderTopWidth: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 6, borderColor:"gray", marginTop: 5 }}>
+                <View style={{ borderTopWidth: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 6, borderColor: "gray", marginTop: 5 }}>
                     <TouchableOpacity
                         onPress={() => {
                             // checkAuth(() => {
-                                if (props.onPressSubtract)
-                                    props.onPressSubtract(props.infoFood)
+                            if (props.onPressSubtract)
+                                props.onPressSubtract(props.infoFood)
                             // })
                             // props.onPressSubtract ? props.onPressSubtract(props.infoFood) : null
                         }}
                         style={{ backgroundColor: "red", padding: 8, borderRadius: 4, justifyContent: 'center', alignItems: 'center', }}>
-                        <Image source={require("../Theme/img/img_cafe.png")} style={{ width: 10, aspectRatio: 1 }} resizeMode='contain' tintColor='black' />
+                        <Image source={require("../Theme/img/ic_sub.png")} style={{ width: 10, aspectRatio: 1 }} resizeMode='contain' tintColor='black' />
                     </TouchableOpacity>
                     <Text children={props.count || 0} style={{ marginHorizontal: 10 }} />
                     <TouchableOpacity
                         onPress={() => {
                             // checkAuth(() => {
-                                if (props.onPressAdd)
-                                    props.onPressAdd(props.infoFood)
+                            if (props.onPressAdd)
+                                props.onPressAdd(props.infoFood)
                             // })
                             // props.onPressAdd ? props.onPressAdd(props.infoFood) : null
                         }}
                         style={{ backgroundColor: "red", padding: 8, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require("../Theme/img/img_cafe.png")} style={{ width: 10, aspectRatio: 1 }} tintColor='black' />
+                        <Image source={require("../Theme/img/ic_add.png")} style={{ width: 10, aspectRatio: 1 }} tintColor='black' resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
 
