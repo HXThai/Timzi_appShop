@@ -7,12 +7,13 @@ import {
   TextInput,
   Alert,
   Dimensions,
-  Animated
+  Animated,
+  FlatList
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { ShopDetailitem } from '../../component/ShopDetailitem';
+import { formatNumber, ShopDetailitem } from '../../component/ShopDetailitem';
 import { CALCULATION, TYPE_UPDATE_CART } from '../../Constants/Constant'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -33,6 +34,7 @@ import reactotron from 'reactotron-react-native';
 import { useRef } from 'react'
 import BottomSheetBehavior from '../../component/FiteBottomSheet';
 import { BottomSheetShop } from '../../component/BottomSheetShop';
+import { DishItem } from '../../component/DishItem';
 const dimension = Dimensions.get('window');
 const { width, height } = dimension;
 const LoginScreen = (props) => {
@@ -84,6 +86,120 @@ const LoginScreen = (props) => {
     // sheet.current.snapTo(0)
     getData(false)
   }
+  const handleComoboFood = async (payload) => {
+    try {
+      const res = await services.comboBookTable(payload)
+      if (res.data.status == 1) {
+
+      }
+    } catch (error) {
+
+    } finally {
+      getData(false)
+    }
+  }
+  const renderItem = ({ item, index }) => {
+    const infoComboFood = { item, index }
+    return (
+      <View style={{ marginTop: 50 }}>
+        <DishItem
+          onPress={(val) => {
+            console.log(item);
+
+            // NavigationUtil.navigate(SCREEN_ROUTER_APP.DETAIL_DISH, {
+            //   params: {
+            //     id: val.id,
+            //     props1: { infoComboFood },
+            //     type: TYPE_UPDATE_CART.COMBO,
+
+            //     store_id: id
+            //   }
+            // })
+          }}
+          infoFood={item}
+          combo={true}
+          onPressImage={(val) => {
+            // NavigationUtil.navigate(SCREEN_ROUTER_APP.IMAGE_VIEW, val.image)
+          }}
+          price_discount={formatNumber(item.price)}
+          onPressAdd={(val) => {
+            if (item.quantity == 0) {
+              Alert.alert(
+                'Thông báo',
+                'Sản phẩm đã hết.',
+                [
+                  // {
+                  //   text: 'Cancel',
+                  //   onPress: () => {},
+                  //   style: 'cancel',
+                  // },
+                  { text: 'Hủy', onPress: () => { } },
+
+                ],
+                { cancelable: false },
+              )
+              return
+            }
+            props.updateQuantity({ type: TYPE_UPDATE_CART.COMBO, status: CALCULATION.ADD, data: infoComboFood, })
+            clearTimeout(timeOut.current)
+            if (item.book_food.length > 0) {
+              timeOut.current = setTimeout(() => {
+                handleSubBookFood({
+                  "book_food_id": item.book_food[0].id,
+                  "quantity": item.count_book_food,
+                }, () => { })
+              }, 500)
+              return
+            }
+            timeOut.current = setTimeout(() => {
+              handleComoboFood({
+                book_table_id: props?.route?.params?.id,
+                "combo_food_id": item.id,
+                "quantity": item.count_book_food,
+              })
+            }, 500)
+          }
+          }
+          onPressSubtract={(val) => {
+
+            reactotron.log("ne", item.book_food.length);
+            if (item.book_food.length <= 0) return
+            props.updateQuantity({ type: TYPE_UPDATE_CART.COMBO, status: CALCULATION.SUBTRACTION, data: infoComboFood, })
+
+
+            clearTimeout(timeOut.current)
+            if (item.book_food.length > 0) {
+              timeOut.current = setTimeout(() => {
+                handleSubBookFood({
+                  "book_food_id": item.book_food[0].id,
+                  "quantity": item.count_book_food,
+                }, () => { })
+              }, 500)
+              return
+            }
+          }}
+          // infoFood={infoComboFood}
+          combo
+          urlImage={item.image}
+          nameFood={item.name}
+          count={item.count_book_food}
+        />
+      </View>
+    )
+  }
+  const ComBoList = () => {
+    return (
+      <View >
+        <Text children='COMBO' style={{ marginHorizontal: 20, fontSize: 15, marginTop: 10 }} />
+        <FlatList
+          data={data.combo_food}
+          horizontal
+          renderItem={renderItem}
+        />
+      </View>
+
+    )
+  }
   if (isLoading) return <Text>dfsafsa</Text>
 
   return (
@@ -101,6 +217,7 @@ const LoginScreen = (props) => {
               height: '100%',
             }}>
             <ScrollView showsVerticalScrollIndicator={false}>
+              {ComBoList()}
               {/* Chương trình */}
               <ShopDetailitem
                 combo={false}

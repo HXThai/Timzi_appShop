@@ -62,4 +62,9 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+  comboBookTable: async (params, id) => {
+    let url = `${API_BASE_URL.COMBO_BOOK_TABLE_IN_STORE}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
 };
