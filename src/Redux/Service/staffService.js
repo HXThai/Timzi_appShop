@@ -64,4 +64,15 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+
+  getNotification: async (params, page) => {
+    let url = `${API_BASE_URL.GET_NOTIFICATION}?page=${page}`;
+    let response = callApiService.get(url, params);
+    return response;
+  },
+  confirmViewNotification: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_VIEW_NOTIFICATION}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };
