@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ImageBackground, Text, View, TextInput} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  Text,
+  View,
+  TextInput,
+  Alert,
+} from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -13,8 +20,42 @@ import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
+import registerService from '../../Redux/Service/LoginService';
 
 const ConfirmOTPScreen = (props) => {
+  const [otp, setOtp] = useState('');
+
+  const handleConfirmOtp = () => {
+    // console.log(otp);
+    registerService
+      .confirmOtp({otp: otp})
+      .then(function (response) {
+        if (response) {
+          if (response?.data?.code === 200) {
+            Alert.alert('Thông báo!', response?.data?.message, [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  props.navigation.navigate('LoginScreen');
+                },
+              },
+            ]);
+          } else {
+            Alert.alert('Thông báo!', response?.data?.message, [
+              {text: 'Đồng ý'},
+            ]);
+          }
+        } else {
+          Alert.alert('Thông báo!', 'Lỗi!', [{text: 'Đồng ý'}]);
+          return;
+        }
+      })
+      .then(function () {
+        // setIsLoadingMore(false);
+        // setIsLoading(false);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -26,7 +67,7 @@ const ConfirmOTPScreen = (props) => {
             <View style={{alignItems: 'center', width: '100%'}}>
               <Text
                 style={{
-                  marginTop: '45%',
+                  marginTop: '50%',
                   fontSize: 20,
                   // fontFamily: 'UTM Ericsson Capital',
                 }}>
@@ -39,12 +80,12 @@ const ConfirmOTPScreen = (props) => {
                   flexDirection: 'row',
                   width: '80%',
                 }}>
-                <Text style={{color: 'red'}}>Mã OTP không chính xác</Text>
+                {/* <Text style={{color: 'red'}}>Mã OTP không chính xác</Text>  */}
               </View>
               <View
                 style={{width: '80%', marginTop: 10, justifyContent: 'center'}}>
                 <OtpInputs
-                  handleChange={(code) => console.log(code)}
+                  handleChange={(code) => setOtp(code)}
                   numberOfInputs={6}
                   style={{
                     flexDirection: 'row',
@@ -85,7 +126,7 @@ const ConfirmOTPScreen = (props) => {
                   <Text>Gửi lại</Text>
                 </TouchableOpacity>
               </View>
-              <View
+              {/* <View
                 style={{
                   flexDirection: 'row',
                   marginTop: 15,
@@ -93,11 +134,12 @@ const ConfirmOTPScreen = (props) => {
                 }}>
                 <Text>Mã OTP sẽ được gửi lại sau: </Text>
                 <Text style={{fontWeight: 'bold'}}>30s</Text>
-              </View>
+              </View> */}
               <View style={{width: '80%', marginTop: 30}}>
                 <TouchableOpacity
                   onPress={() => {
-                    props.navigation.navigate('ConfirmForgotPasswordScreen');
+                    // props.navigation.navigate('ConfirmForgotPasswordScreen');
+                    handleConfirmOtp();
                   }}>
                   <View
                     style={{

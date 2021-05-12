@@ -29,6 +29,11 @@ import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
 import {connect} from 'react-redux';
 import services from '../Redux/Service/orderOfflineService';
 import reactotron from 'reactotron-react-native';
+import {
+  USBPrinter,
+  NetPrinter,
+  BLEPrinter,
+} from 'react-native-thermal-receipt-printer';
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -47,12 +52,12 @@ const Home = (props) => {
 
   const [dataOrder, setDataOrder] = useState([]);
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
-
+  const [printers, setPrinters] = useState([]);
   const [page, setPage] = useState(1);
 
   const handleLoadMore = () => {
     console.log('thai meo');
-    setPage(page + 1);
+    dataOrder.length >= 12 ? setPage(page + 1) : null;
   };
 
   useEffect(() => {
@@ -61,6 +66,7 @@ const Home = (props) => {
   }, [page]);
 
   const getData = () => {
+    console.log('page', page);
     if (tab === 0) {
       services
         .getListTableOrderOffline(null, storeId, page)
@@ -122,6 +128,8 @@ const Home = (props) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const [currentPrinter, setCurrentPrinter] = useState();
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     if (tab === 0) {
@@ -143,7 +151,7 @@ const Home = (props) => {
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
-              setDataOrder(response?.data?.data?.data?.data);
+              setDataOrder(response?.data?.data?.data);
               setModalVisibleLoading(false);
             }
           } else {
@@ -201,6 +209,7 @@ const Home = (props) => {
   const [roleId, setRoleId] = useState('');
 
   useEffect(() => {
+    setModalVisibleLoading(true);
     storage.getItem('role_id').then((data) => {
       if (data) {
         setRoleId(data);
@@ -209,7 +218,22 @@ const Home = (props) => {
     });
   }, []);
 
+  useEffect(() => {
+    NetPrinter.init().then(() => {
+      setPrinters([{host: '192.168.2.222', port: 9100}]);
+      // console.log('success');
+      NetPrinter.connectPrinter('192.168.2.222', 9100).then(
+        (value) => {
+          console.log('test');
+          setCurrentPrinter(value);
+        },
+        (error) => console.log(error),
+      );
+    });
+  }, []);
+
   const handleChangeTab = (index) => {
+    console.log(index);
     setDataOrder([]);
     setTab(index);
     setPage(1);
@@ -812,7 +836,7 @@ const Home = (props) => {
                       }}
                       style={{
                         height: 45,
-                        width: '100%',
+                        width: Dimensions.get('window').width - 20,
                         backgroundColor: Color.main,
                         alignItems: 'center',
                         borderRadius: 20,
@@ -920,7 +944,7 @@ const Home = (props) => {
                             padding: 10,
                             margin: 5,
                           }}>
-                          <Text style={{fontSize: 13}}>{item.name}</Text>
+                          <Text style={{fontSize: 11}}>{item.name}</Text>
                         </TouchableOpacity>
                       );
                     })}
@@ -939,7 +963,6 @@ const Home = (props) => {
                     }}
                     data={dataOrder}
                     renderItem={renderProduct}
-                    // renderItem={({item}) =><TouchableOpacity></TouchableOpacity> <Text>{item.user_name}</Text>}
                     keyExtractor={(item, index) => index.toString()}
                     // extraData={dataOrder}
                     onEndReached={handleLoadMore}

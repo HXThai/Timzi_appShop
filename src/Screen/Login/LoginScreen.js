@@ -30,16 +30,11 @@ import * as actionsLogin from '../../Redux/Action/loginAction';
 import * as actionsGetListStore from '../../Redux/Action/orderOnlineAction';
 import loginService from '../../Redux/Service/LoginService';
 import storage from '../asyncStorage/Storage';
-import {
-  getUniqueId,
-  DeviceInfo,
-  getManufacturer,
-} from 'react-native-device-info';
 import OneSignal from 'react-native-onesignal';
 
 const LoginScreen = (props) => {
-  const [phoneNumber, setPhoneNumber] = useState('0329714646');
-  const [password, setPassword] = useState('123456');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
   const [displayPassword, setDisplayPassword] = useState(false);
   const [dataLogin, setDataLogin] = useState([]);
   // console.log('dv', deviceId);
@@ -123,12 +118,6 @@ const LoginScreen = (props) => {
       });
   };
 
-  // useEffect(() => {
-  //   BackHandler.addEventListener('hardwareBackPress', () => true);
-  //   return () =>
-  //     BackHandler.removeEventListener('hardwareBackPress', () => true);
-  // }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -156,9 +145,9 @@ const LoginScreen = (props) => {
             <View style={{alignItems: 'center', width: '100%'}}>
               <View style={{marginTop: 50}}>
                 <Image
-                  source={Images.logo}
+                  source={Images.logoNoLine}
                   resizeMode="cover"
-                  style={{width: 308, height: 109}}
+                  style={{width: 120, height: 115}}
                 />
               </View>
               <Text

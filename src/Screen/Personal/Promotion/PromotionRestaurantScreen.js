@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Images from '../../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -35,8 +36,7 @@ import storage from './../../asyncStorage/Storage';
 const LoginScreen = (props) => {
   const [storeId, setStoreId] = useState(null);
 
-  // console.log(store_id);
-
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
   const [dataPromotion, setDataPromotion] = useState([]);
 
   useEffect(() => {
@@ -53,12 +53,14 @@ const LoginScreen = (props) => {
   }, []);
 
   const getData = (id) => {
+    setModalVisibleLoading(true);
     services.getListStorePromotion({store_id: id}).then(function (response) {
       // props.onGetList(response?.data);
       if (response) {
         // console.log('thai mai', response);
         if (response.data.code === 200) {
           setDataPromotion(response?.data?.data?.data);
+          setModalVisibleLoading(false);
         }
       } else {
         return;
@@ -225,6 +227,21 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          {modalVisibleLoading === true ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
           <View
             style={{
               padding: 10,

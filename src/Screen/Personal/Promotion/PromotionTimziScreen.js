@@ -37,8 +37,10 @@ import services from '../../../Redux/Service/promotionService';
 const LoginScreen = (props) => {
   const [storeId, setStoreId] = useState(null);
   const [dataPromotion, setDataPromotion] = useState([]);
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
   useEffect(() => {
+    setModalVisibleLoading(true);
     storage.getItem('dataStore').then((data) => {
       if (data) {
         setStoreId(data.id);
@@ -48,7 +50,7 @@ const LoginScreen = (props) => {
             if (response) {
               if (response.data.code === 200) {
                 setDataPromotion(response?.data?.data?.list_program?.data);
-                // setModalVisibleLoading(false);
+                setModalVisibleLoading(false);
               }
             } else {
               return;
@@ -256,6 +258,21 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          {modalVisibleLoading === true ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
           <View
             style={{
               padding: 10,

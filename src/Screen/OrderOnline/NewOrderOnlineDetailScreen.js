@@ -238,7 +238,9 @@ const LoginScreen = (props) => {
                             }}>
                             <View style={{}}>
                               <Text style={{fontWeight: '700', fontSize: 12}}>
-                                {item?.food?.name}
+                                {item.food === null
+                                  ? item?.combo_food?.name
+                                  : item?.food?.name}
                               </Text>
                             </View>
                             <View>
@@ -345,6 +347,43 @@ const LoginScreen = (props) => {
                   marginTop: 5,
                 }}>
                 <TouchableOpacity
+                  onPress={() => {
+                    Alert.alert(
+                      'Hủy đơn hàng',
+                      'Bạn chắc chắn muốn hủy đơn hàng?',
+                      [
+                        {text: 'Hủy', onPress: () => {}},
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {
+                            services
+                              .cancelOrderOnline(null, props?.route?.params?.id)
+                              .then(function (response) {
+                                if (response) {
+                                  if (response.data.code === 200) {
+                                    props.navigation.navigate('Home', {tab: 4});
+                                  } else {
+                                    Alert.alert(
+                                      'Thông báo',
+                                      response.data.message,
+                                      [
+                                        {
+                                          text: 'Đồng ý',
+                                        },
+                                      ],
+                                      {cancelable: false},
+                                    );
+                                  }
+                                } else {
+                                  return;
+                                }
+                              });
+                          },
+                        },
+                      ],
+                      {cancelable: false},
+                    );
+                  }}
                   style={{
                     height: 50,
                     width: '100%',
@@ -356,6 +395,46 @@ const LoginScreen = (props) => {
                   <Text style={{fontWeight: '700', fontSize: 15}}>Từ chối</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  onPress={() => {
+                    Alert.alert(
+                      'Xác nhận đơn hàng',
+                      'Bạn chắc chắn muốn xác nhận đơn hàng?',
+                      [
+                        {text: 'Hủy', onPress: () => {}},
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {
+                            services
+                              .confirmOrderOnline(
+                                null,
+                                props?.route?.params?.id,
+                              )
+                              .then(function (response) {
+                                if (response) {
+                                  if (response.data.code === 200) {
+                                    props.navigation.navigate('Home', {tab: 1});
+                                  } else {
+                                    Alert.alert(
+                                      'Thông báo',
+                                      response.data.message,
+                                      [
+                                        {
+                                          text: 'Đồng ý',
+                                        },
+                                      ],
+                                      {cancelable: false},
+                                    );
+                                  }
+                                } else {
+                                  return;
+                                }
+                              });
+                          },
+                        },
+                      ],
+                      {cancelable: false},
+                    );
+                  }}
                   style={{
                     height: 50,
                     width: '100%',

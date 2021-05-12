@@ -123,4 +123,31 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+
+  createCategoryStoreFood: async (params) => {
+    let url = `${API_BASE_URL.CREATE_CATEGORY_STORE_FOOD}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
+  updateCategoryStoreFood: async (params, id) => {
+    let url = `${API_BASE_URL.UPDATE_CATEGORY_STORE_FOOD}/${id}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
+  deleteCategoryStoreFood: async (params, id) => {
+    let url = `${API_BASE_URL.DELETE_CATEGORY_STORE_FOOD}/${id}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
+
+  deleteFood: async (params, id) => {
+    let url = `${API_BASE_URL.DELETE_FOOD}/${id}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
+  deleteTable: async (params, id) => {
+    let url = `${API_BASE_URL.DELETE_TABLE}/${id}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
 };

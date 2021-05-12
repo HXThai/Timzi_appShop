@@ -53,6 +53,7 @@ const API_BASE_URL = {
   ACTIVE_STAFF: ROOT_DOMAIN + '/store/active-staff',
 
   CHANGE_PASSWORD: ROOT_DOMAIN + '/change-password',
+  CONFIRM_OTP: ROOT_DOMAIN + '/check-otp-register',
 
   GET_LIST_ORDER_ONLINE: ROOT_DOMAIN + '/order/list-order-with-owner',
   ORDER_ONLINE_DETAIL: ROOT_DOMAIN + '/order/order-detail-with-owner',
@@ -97,6 +98,17 @@ const API_BASE_URL = {
     ROOT_DOMAIN + '/program/list-program-system-with-store',
   STOP_PROGRAM_SYSTEM_WITH_STORE:
     ROOT_DOMAIN + '/program/stop-program-system-with-store',
+
+  CREATE_CATEGORY_STORE_FOOD:
+    ROOT_DOMAIN + '/category/create-category-store-food',
+  UPDATE_CATEGORY_STORE_FOOD:
+    ROOT_DOMAIN + '/category/update-category-store-food',
+  DELETE_CATEGORY_STORE_FOOD:
+    ROOT_DOMAIN + '/category/delete-category-store-food',
+  DELETE_FOOD: ROOT_DOMAIN + '/food/delete-food',
+  DELETE_TABLE: ROOT_DOMAIN + '/table-store/delete-table-store',
+
+  RATE_OF_USER: ROOT_DOMAIN + '/order/list-evaluate-with-store',
 };
 
 export {API_BASE_URL};

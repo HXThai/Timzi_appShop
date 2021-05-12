@@ -63,7 +63,7 @@ const Home = (props) => {
 
   const handleLoadMore = () => {
     console.log('thai meo');
-    setPage(page + 1);
+    dataOrder.length >= 12 ? setPage(page + 1) : null;
   };
 
   useEffect(() => {
@@ -124,13 +124,16 @@ const Home = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (props?.route?.params?.tab) {
-        setTab(2);
+      if (props?.route?.params?.tab === 1) {
+        handleChangeTab(1);
+      } else if (props?.route?.params?.tab === 4) {
+        handleChangeTab(4);
       }
     }, [props?.route?.params?.tab]),
   );
 
   useEffect(() => {
+    setModalVisibleLoading(true);
     props.onGetListStore({});
   }, [props.onGetListStore]);
 
@@ -145,6 +148,7 @@ const Home = (props) => {
             if (response) {
               if (response.data.code === 200) {
                 setDataOrder(response?.data?.data?.data);
+                setModalVisibleLoading(false);
               }
             } else {
               return;
@@ -162,6 +166,7 @@ const Home = (props) => {
                 if (response) {
                   if (response?.data?.code === 200) {
                     setDataOrder(response?.data?.data?.data);
+                    setModalVisibleLoading(false);
                   }
                 } else {
                   return;
@@ -206,6 +211,7 @@ const Home = (props) => {
                     props.dataLogin.responseUserInformation?.data?.data?.store
                       ?.id,
                   );
+                  setModalVisibleLoading(false);
                 }
               } else {
                 return;
@@ -222,6 +228,7 @@ const Home = (props) => {
                   if (response) {
                     if (response.data.code === 200) {
                       setDataOrder(response?.data?.data?.data);
+                      setModalVisibleLoading(false);
                     }
                   } else {
                     return;
@@ -239,6 +246,7 @@ const Home = (props) => {
                       if (response) {
                         if (response?.data?.code === 200) {
                           setDataOrder(response?.data?.data?.data);
+                          setModalVisibleLoading(false);
                         }
                       } else {
                         return;
@@ -273,35 +281,6 @@ const Home = (props) => {
         }
       });
   };
-
-  // useEffect(() => {
-  //   // setIsLoading(true);
-  //   getData(tab, page);
-  //   return () => {};
-  // }, [page]);
-
-  // const getData = (id, page) => {
-  //   services
-  //     .getListService({id: id, page: page})
-  //     .then(function (response) {
-  //       // props.onGetList(response?.data);
-  //       if (response) {
-  //         // console.log(response);
-  //         if (response.data.status_code === 200) {
-  //           // setDataProduct(response?.data?.data?.data);
-  //           console.log(response.data.data.data);
-  //           setDataProduct((prev) => [...prev, ...response?.data?.data?.data]);
-  //         }
-  //       } else {
-  //         Alert.alert('Thông báo!', 'Lỗi!', [{text: 'Đồng ý'}]);
-  //         return;
-  //       }
-  //     })
-  //     .then(function () {
-  //       // setIsLoadingMore(false);
-  //       setIsLoading(false);
-  //     });
-  // };
 
   const renderProduct = ({item}) => {
     return (
@@ -706,7 +685,7 @@ const Home = (props) => {
                       }}
                       style={{
                         height: 45,
-                        width: '100%',
+                        width: Dimensions.get('window').width - 20,
                         backgroundColor: Color.main,
                         alignItems: 'center',
                         borderRadius: 20,
@@ -808,7 +787,7 @@ const Home = (props) => {
                             borderColor: tab === index ? Color.main : '#fff',
                             borderRadius: 6,
                           }}>
-                          <Text style={{fontSize: 13}}>{item.name}</Text>
+                          <Text style={{fontSize: 11}}>{item.name}</Text>
                         </TouchableOpacity>
                       );
                     })}

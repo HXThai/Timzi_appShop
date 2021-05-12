@@ -9,6 +9,8 @@ import {
   Dimensions,
   TouchableOpacity,
   DeviceEventEmitter,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -29,82 +31,115 @@ import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
-import {
-  USBPrinter,
-  NetPrinter,
-  BLEPrinter,
-} from 'react-native-thermal-receipt-printer';
+import services from '../../Redux/Service/promotionService';
 
 const LoginScreen = (props) => {
-  const [dataRate, setDataRate] = useState([
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      star: 4,
-      content:
-        'Thức ăn quán ngon, cửa hàng phục vụ tận tinh, nhân viên dễ thương!',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      star: 4,
-      content:
-        'Thức ăn quán ngon, cửa hàng phục vụ tận tinh, nhân viên dễ thương!',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      star: 4,
-      content:
-        'Thức ăn quán ngon, cửa hàng phục vụ tận tinh, nhân viên dễ thương!',
-    },
-    {
-      image: Images.avatar,
-      name: 'Trần Văn Tét',
-      star: 4,
-      content:
-        'Thức ăn quán ngon, cửa hàng phục vụ tận tinh, nhân viên dễ thương!',
-    },
-  ]);
+  const [dataRate, setDataRate] = useState([]);
 
-  const [printers, setPrinters] = useState([]);
-  const [currentPrinter, setCurrentPrinter] = useState();
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
   useEffect(() => {
-    NetPrinter.init().then(() => {
-      setPrinters([{host: '192.168.2.222', port: 9100}]);
-      // console.log('success');
-      NetPrinter.connectPrinter('192.168.2.222', 9100).then(
-        (value) => {
-          console.log('test');
-          setCurrentPrinter(value);
-        },
-        (error) => console.log(error),
-      );
+    setModalVisibleLoading(true);
+    storage.getItem('dataStore').then((data) => {
+      if (data) {
+        services.getListRateOfUser(null, data.id).then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataRate(response?.data?.data?.data);
+              setModalVisibleLoading(false);
+            }
+          } else {
+            return;
+          }
+        });
+      }
     });
   }, []);
 
-  const _connectPrinter = (printer) => {
-    //connect printer
-    // NetPrinter.connectPrinter(printer.host, printer.port).then(
-    //   (value) => {
-    //     console.log('test');
-    //     setCurrentPrinter(value);
-    //   },
-    //   (error) => console.log(error),
-    // );
-  };
-
-  const printTextTest = () => {
-    NetPrinter.printText('\n<C>sample text</C>\n');
-  };
-
-  const printBillTest = () => {
-    NetPrinter.printBill(
-      '<C>Thái mèo đẹp zai!</C>\n<C>Cái máy in ngu ngốc vl</C>\n<C></C>Cai may in ngu ngoc vl</C>\n',
-      {encoding: 'utf8'},
+  const renderProduct = ({item}) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'column',
+          alignItems: 'center',
+          marginBottom: 25,
+          // paddingBottom: 20,
+          // backgroundColor: Color.white,
+          // borderTopLeftRadius: 8,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            width: Dimensions.get('window').width,
+          }}>
+          <Image
+            source={{uri: item?.user?.avatar}}
+            style={{width: 80, height: 80, borderRadius: 6}}
+          />
+          <View
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              marginLeft: 10,
+            }}>
+            <Text style={{fontWeight: '700', fontSize: 15, marginTop: 5}}>
+              Khách hàng: {item?.user?.name}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 5,
+              }}>
+              <MaterialIcons
+                name={'star'}
+                size={30}
+                color={item.star > 0 ? Color.buttonColor : '#E0E0E0'}
+              />
+              <MaterialIcons
+                name={'star'}
+                size={30}
+                color={item.star > 1 ? Color.buttonColor : '#E0E0E0'}
+              />
+              <MaterialIcons
+                name={'star'}
+                size={30}
+                color={item.star > 2 ? Color.buttonColor : '#E0E0E0'}
+              />
+              <MaterialIcons
+                name={'star'}
+                size={30}
+                color={item.star > 3 ? Color.buttonColor : '#E0E0E0'}
+              />
+              <MaterialIcons
+                name={'star'}
+                size={30}
+                color={item.star > 4 ? Color.buttonColor : '#E0E0E0'}
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            padding: 10,
+            borderWidth: 1,
+            borderColor: 'grey',
+            borderRadius: 10,
+            marginTop: 5,
+            width: Dimensions.get('window').width - 20,
+          }}>
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: '400',
+              width: Dimensions.get('window').width - 40,
+            }}>
+            {item?.content}
+          </Text>
+        </View>
+      </View>
     );
-    // NetPrinter.printBill('\x1D\x56\x01');
   };
 
   return (
@@ -114,6 +149,21 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          {modalVisibleLoading === true ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
           <View
             style={{
               padding: 10,
@@ -121,112 +171,26 @@ const LoginScreen = (props) => {
               justifyContent: 'space-between',
               height: '100%',
             }}>
-            <View></View>
-            {printers.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={item.host}
-                  onPress={() => _connectPrinter(item)}>
-                  <Text>{item.host}</Text>
-                  {/* {`device_name: ${item.device_name}, inner_mac_address: ${item.inner_mac_address}`} */}
-                </TouchableOpacity>
-              );
-            })}
-            <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: 'blue',
-                  height: 40,
-                  width: 150,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 8,
-                  marginTop: 20,
-                }}
-                onPress={() => printTextTest()}>
-                <Text style={{color: 'white'}}>Print Text</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: 'blue',
-                  height: 40,
-                  width: 150,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 8,
-                  marginTop: 20,
-                }}
-                onPress={() => printBillTest()}>
-                <Text style={{color: 'white'}}>Print Bill Text</Text>
-              </TouchableOpacity>
-
-              {/* {dataRate.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      marginBottom: 25,
-                    }}>
-                    <Image
-                      source={item.image}
-                      style={{width: 80, height: 80}}
-                    />
-                    <Text
-                      style={{fontWeight: '700', fontSize: 15, marginTop: 5}}>
-                      Khách hàng: {item.name}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: 5,
-                        // width: Dimensions.get('window').width - 136,
-                        // justifyContent: 'space-between',
-                      }}>
-                      <MaterialIcons
-                        name={'star'}
-                        size={30}
-                        color={item.star > 0 ? Color.buttonColor : '#E0E0E0'}
-                      />
-                      <MaterialIcons
-                        name={'star'}
-                        size={30}
-                        color={item.star > 1 ? Color.buttonColor : '#E0E0E0'}
-                      />
-                      <MaterialIcons
-                        name={'star'}
-                        size={30}
-                        color={item.star > 2 ? Color.buttonColor : '#E0E0E0'}
-                      />
-                      <MaterialIcons
-                        name={'star'}
-                        size={30}
-                        color={item.star > 3 ? Color.buttonColor : '#E0E0E0'}
-                      />
-                      <MaterialIcons
-                        name={'star'}
-                        size={30}
-                        color={item.star > 4 ? Color.buttonColor : '#E0E0E0'}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        padding: 10,
-                        borderWidth: 1,
-                        borderColor: 'grey',
-                        borderRadius: 10,
-                        marginTop: 5,
-                      }}>
-                      <Text style={{fontSize: 15, fontWeight: '400'}}>
-                        {item.content}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })} */}
-            </ScrollView>
+            <FlatList
+              // key={}
+              nestedScrollEnabled={true}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+              style={{
+                marginTop: 10,
+                marginBottom: 40,
+              }}
+              data={dataRate}
+              renderItem={renderProduct}
+              keyExtractor={(item, index) => index.toString()}
+              // extraData={dataOrder}
+              // onEndReached={handleLoadMore}
+              onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
+              // ListFooterComponent={renderFooter}
+            />
           </View>
         </ImageBackground>
       </View>

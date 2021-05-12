@@ -8,6 +8,7 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -30,11 +31,15 @@ import services from '../../Redux/Service/orderOnlineService';
 const LoginScreen = (props) => {
   const [dataRestaurant, setDataRestaurant] = useState([]);
 
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
   useEffect(() => {
+    setModalVisibleLoading(true);
     services.getListStore(null).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
           setDataRestaurant(response.data.data);
+          setModalVisibleLoading(false);
         }
       } else {
         return;
@@ -170,6 +175,21 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          {modalVisibleLoading === true ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
           <View
             style={{
               padding: 10,

@@ -36,4 +36,11 @@ export default homeService = {
     // console.log(response);
     return response;
   },
+
+  confirmOtp: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_OTP}`;
+    let response = callApiService.put(url, params);
+    // console.log(response);
+    return response;
+  },
 };

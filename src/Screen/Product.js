@@ -9,6 +9,8 @@ import {
   TextInput,
   Dimensions,
   RefreshControl,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -47,8 +49,17 @@ const Home = (props) => {
 
   const [dataCateStoreFood, setDataCateStoreFood] = useState([]);
 
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    getDataFood();
+    wait(1000).then(() => {
+      setRefreshing(false);
+    });
+  });
+
+  const getDataFood = () => {
     services.storeDetail(storeId).then(function (response) {
       if (response) {
         // console.log('thai', response);
@@ -59,10 +70,25 @@ const Home = (props) => {
         return;
       }
     });
-    wait(1000).then(() => {
-      setRefreshing(false);
+    services.getListCategoryWithStore(null).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          setDataCateWithStore(response.data.data);
+        }
+      } else {
+        return;
+      }
     });
-  });
+    services.getListCategoryStoreFood(null).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          setDataCateStoreFood(response.data.data);
+        }
+      } else {
+        return;
+      }
+    });
+  };
 
   useEffect(() => {
     storage.getItem('dataStore').then((data) => {
@@ -71,7 +97,6 @@ const Home = (props) => {
         setStoreId(data.id);
         services.storeDetail(data.id).then(function (response) {
           if (response) {
-            // console.log('thai', response);
             if (response.data.code === 200) {
               setData(response?.data?.data);
             }
@@ -105,8 +130,8 @@ const Home = (props) => {
   const [roleId, setRoleId] = useState('');
 
   useEffect(() => {
+    setModalVisibleLoading(true);
     storage.getItem('role_id').then((data) => {
-      // console.log(data);
       if (data) {
         setRoleId(data);
       } else {
@@ -127,6 +152,7 @@ const Home = (props) => {
         // console.log('thai', response);
         if (response.data.code === 200) {
           setDataCateStoreFood(response.data.data);
+          setModalVisibleLoading(false);
         }
       } else {
         return;
@@ -141,6 +167,21 @@ const Home = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          {modalVisibleLoading === true ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+                position: 'absolute',
+                // backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          ) : null}
           <SafeAreaView style={{flex: 1}}>
             <View style={{padding: 10}}>
               <Modal
@@ -510,6 +551,55 @@ const Home = (props) => {
                               flexDirection: 'row',
                             }}>
                             <TouchableOpacity
+                              onPress={() => {
+                                Alert.alert(
+                                  'Xoá bàn ăn!',
+                                  'Bạn chắc chắn muốn xoá bàn ăn này?',
+                                  [
+                                    {
+                                      text: 'Đồng ý',
+                                      onPress: async () => {
+                                        services
+                                          .deleteTable(null, item.id)
+                                          .then(function (response) {
+                                            if (response) {
+                                              if (response.data.code === 200) {
+                                                getDataFood();
+                                                Alert.alert(
+                                                  'Thông báo!',
+                                                  'Xoá bàn ăn thành công!',
+                                                  [
+                                                    {
+                                                      text: 'Đồng ý',
+                                                    },
+                                                  ],
+                                                  {cancelable: false},
+                                                );
+                                              } else {
+                                                Alert.alert(
+                                                  'Thông báo!',
+                                                  response.data.message,
+                                                  [
+                                                    {
+                                                      text: 'Đồng ý',
+                                                    },
+                                                  ],
+                                                  {cancelable: false},
+                                                );
+                                              }
+                                            } else {
+                                              return;
+                                            }
+                                          });
+                                      },
+                                    },
+                                    {
+                                      text: 'Huỷ',
+                                    },
+                                  ],
+                                  {cancelable: false},
+                                );
+                              }}
                               style={{
                                 width: 42,
                                 height: 20,
@@ -545,6 +635,54 @@ const Home = (props) => {
                     );
                   })}
                 </ScrollView>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 20,
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      props.navigation.navigate('ListCategoryStoreFood')
+                    }
+                    style={{
+                      padding: 5,
+                      borderRadius: 4,
+                      borderWidth: 1,
+                      borderColor: Color.main,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: Color.main,
+                      }}>
+                      Quản lý danh mục món ăn
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      props.navigation.navigate('EditProductScreen', {
+                        status: 'add',
+                        // category_food_id: item?.id,
+                        store_id: storeId,
+                      })
+                    }
+                    style={{
+                      padding: 5,
+                      borderRadius: 4,
+                      borderWidth: 1,
+                      borderColor: Color.main,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: Color.main,
+                      }}>
+                      Thêm món ăn
+                    </Text>
+                  </TouchableOpacity>
+                </View>
                 {dataCateWithStore?.map((item, index) => {
                   return (
                     <View key={index}>
@@ -560,7 +698,7 @@ const Home = (props) => {
                           <Text style={{fontSize: 15, fontWeight: '700'}}>
                             {item?.name}
                           </Text>
-                          <TouchableOpacity
+                          {/* <TouchableOpacity
                             onPress={() =>
                               props.navigation.navigate('EditProductScreen', {
                                 status: 'add',
@@ -582,7 +720,7 @@ const Home = (props) => {
                               }}>
                               Thêm món
                             </Text>
-                          </TouchableOpacity>
+                          </TouchableOpacity> */}
                         </View>
                         <TouchableOpacity
                           onPress={() =>
@@ -681,6 +819,57 @@ const Home = (props) => {
                                     flexDirection: 'row',
                                   }}>
                                   <TouchableOpacity
+                                    onPress={() => {
+                                      Alert.alert(
+                                        'Xoá món ăn!',
+                                        'Bạn chắc chắn muốn xoá món ăn này?',
+                                        [
+                                          {
+                                            text: 'Đồng ý',
+                                            onPress: async () => {
+                                              services
+                                                .deleteFood(null, item.id)
+                                                .then(function (response) {
+                                                  if (response) {
+                                                    if (
+                                                      response.data.code === 200
+                                                    ) {
+                                                      getDataFood();
+                                                      Alert.alert(
+                                                        'Thông báo!',
+                                                        'Xoá món ăn thành công!',
+                                                        [
+                                                          {
+                                                            text: 'Đồng ý',
+                                                          },
+                                                        ],
+                                                        {cancelable: false},
+                                                      );
+                                                    } else {
+                                                      Alert.alert(
+                                                        'Thông báo!',
+                                                        response.data.message,
+                                                        [
+                                                          {
+                                                            text: 'Đồng ý',
+                                                          },
+                                                        ],
+                                                        {cancelable: false},
+                                                      );
+                                                    }
+                                                  } else {
+                                                    return;
+                                                  }
+                                                });
+                                            },
+                                          },
+                                          {
+                                            text: 'Huỷ',
+                                          },
+                                        ],
+                                        {cancelable: false},
+                                      );
+                                    }}
                                     style={{
                                       width: 42,
                                       height: 20,
@@ -693,10 +882,6 @@ const Home = (props) => {
                                   </TouchableOpacity>
                                   <TouchableOpacity
                                     onPress={() => {
-                                      // console.log(
-                                      //   item.category_food_id,
-                                      //   storeId,
-                                      // );
                                       props.navigation.navigate(
                                         'EditProductScreen',
                                         {
@@ -705,15 +890,14 @@ const Home = (props) => {
                                           name: item.name,
                                           price: item.price,
                                           statusFood: item.status,
-                                          typeFood: 'Món ăn chính',
-                                          typeSize: 'L',
-                                          number: '99',
                                           promotion: item.price_discount,
                                           category_food_id:
                                             item.category_food_id,
                                           store_id: storeId,
                                           image: item.image,
                                           productDetail: item,
+                                          category_store_food:
+                                            item.category_store_food_id,
                                         },
                                       );
                                     }}
@@ -751,7 +935,7 @@ const Home = (props) => {
                           <Text style={{fontSize: 15, fontWeight: '700'}}>
                             {item?.name}
                           </Text>
-                          <TouchableOpacity
+                          {/* <TouchableOpacity
                             onPress={() =>
                               props.navigation.navigate('EditProductScreen', {
                                 status: 'add',
@@ -773,7 +957,7 @@ const Home = (props) => {
                               }}>
                               Thêm món
                             </Text>
-                          </TouchableOpacity>
+                          </TouchableOpacity> */}
                         </View>
                         <TouchableOpacity
                           onPress={() =>
@@ -874,6 +1058,58 @@ const Home = (props) => {
                                       flexDirection: 'row',
                                     }}>
                                     <TouchableOpacity
+                                      onPress={() => {
+                                        Alert.alert(
+                                          'Xoá món ăn!',
+                                          'Bạn chắc chắn muốn xoá món ăn này?',
+                                          [
+                                            {
+                                              text: 'Đồng ý',
+                                              onPress: async () => {
+                                                services
+                                                  .deleteFood(null, item.id)
+                                                  .then(function (response) {
+                                                    if (response) {
+                                                      if (
+                                                        response.data.code ===
+                                                        200
+                                                      ) {
+                                                        getDataFood();
+                                                        Alert.alert(
+                                                          'Thông báo!',
+                                                          'Xoá món ăn thành công!',
+                                                          [
+                                                            {
+                                                              text: 'Đồng ý',
+                                                            },
+                                                          ],
+                                                          {cancelable: false},
+                                                        );
+                                                      } else {
+                                                        Alert.alert(
+                                                          'Thông báo!',
+                                                          response.data.message,
+                                                          [
+                                                            {
+                                                              text: 'Đồng ý',
+                                                            },
+                                                          ],
+                                                          {cancelable: false},
+                                                        );
+                                                      }
+                                                    } else {
+                                                      return;
+                                                    }
+                                                  });
+                                              },
+                                            },
+                                            {
+                                              text: 'Huỷ',
+                                            },
+                                          ],
+                                          {cancelable: false},
+                                        );
+                                      }}
                                       style={{
                                         width: 42,
                                         height: 20,
@@ -886,10 +1122,6 @@ const Home = (props) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                       onPress={() => {
-                                        // console.log(
-                                        //   item.category_food_id,
-                                        //   storeId,
-                                        // );
                                         props.navigation.navigate(
                                           'EditProductScreen',
                                           {
@@ -898,15 +1130,14 @@ const Home = (props) => {
                                             name: item.name,
                                             price: item.price,
                                             statusFood: item.status,
-                                            typeFood: 'Món ăn chính',
-                                            typeSize: 'L',
-                                            number: '99',
                                             promotion: item.price_discount,
                                             category_food_id:
                                               item.category_food_id,
                                             store_id: storeId,
                                             image: item.image,
                                             productDetail: item,
+                                            category_store_food:
+                                              item.category_store_food_id,
                                           },
                                         );
                                       }}

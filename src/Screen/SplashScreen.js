@@ -75,7 +75,7 @@ const SplashScreen = (props) => {
       <Image
         source={Images.logo}
         resizeMode="cover"
-        style={{width: 228, height: 79}}
+        style={{width: 140, height: 140}}
       />
     </View>
   );

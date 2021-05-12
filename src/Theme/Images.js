@@ -34,5 +34,6 @@ const Images = {
   backgroundBank: require('./img/backgroundBank.png'),
   iconPrintRed: require('./img/iconPrintRed.png'),
   iconOrderOfflineRed: require('./img/iconOrderOfflineRed.png'),
+  logoNoLine: require('./img/logoNoLine.png'),
 };
 export default Images;

@@ -1,4 +1,4 @@
-package com.newapp;
+package com.vn.timmerchant;
 
 import com.facebook.react.ReactActivity;
 

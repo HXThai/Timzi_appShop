@@ -70,4 +70,10 @@ export default homeService = {
     let response = callApiService.delete(url, params);
     return response;
   },
+
+  getListRateOfUser: async (params, store_id) => {
+    let url = `${API_BASE_URL.RATE_OF_USER}/${store_id}`;
+    let response = callApiService.get(url);
+    return response;
+  },
 };

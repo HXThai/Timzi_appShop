@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.newapp"
+        applicationId "com.vn.timmerchant"
         minSdkVersion 21
         // minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

@@ -343,7 +343,7 @@ const LoginScreen = (props) => {
                   </View>
                 </View>
               </ScrollView>
-              <View
+              {/* <View
                 style={{
                   flexDirection: 'column',
                   marginTop: 5,
@@ -364,7 +364,7 @@ const LoginScreen = (props) => {
                     Đã lấy hàng
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           ) : null}
         </ImageBackground>
