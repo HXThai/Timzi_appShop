@@ -139,10 +139,7 @@ export default function async(state = initialState, action) {
       };
     }
     case ADD_TOPPING: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
+      
       const {
         indexCategory,
         indexFood,
@@ -181,10 +178,6 @@ export default function async(state = initialState, action) {
       };
     }
     case UPDATE_SIZE: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
       const {
         indexToppingFood,
         indexCategory,
@@ -229,10 +222,6 @@ export default function async(state = initialState, action) {
       };
     }
     case UPDATE_TEMP_COUNT: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
       var price =
         action.payload.value.itemfood.price_discount_with_program ||
         action.payload.value.itemfood.price_discount ||

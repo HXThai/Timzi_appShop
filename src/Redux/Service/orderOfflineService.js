@@ -57,4 +57,9 @@ export default homeService = {
     let response = callApiService.post(url, params);
     return response;
   },
+  subtractQuantityFood: async (params, id) => {
+    let url = `${API_BASE_URL.SUBTRACT_QUANTITY_BOOK_FOOD_IN_STORE}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };
