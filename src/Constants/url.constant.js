@@ -110,6 +110,14 @@ const API_BASE_URL = {
 
   GET_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE:
     ROOT_DOMAIN + '/book-table/store-detail-with-book-table-in-store',
+
+  GET_NOTIFICATION: ROOT_DOMAIN + '/notify/list-notify',
+  CONFIRM_VIEW_NOTIFICATION: ROOT_DOMAIN + '/notify/confirm-view-notify',
+
+  GET_LIST_RENENUE_STORE: ROOT_DOMAIN + '/store/list-revenue-store',
+  GET_LIST_DISCOUNT_STORE: ROOT_DOMAIN + '/store/list-discount-store',
+  GET_LIST_DISCOUNT_THIS_MONTH_STORE:
+    ROOT_DOMAIN + '/store/discount-this-month-store',
 };
 
 export {API_BASE_URL};

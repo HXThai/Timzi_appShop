@@ -168,11 +168,6 @@ const Home = (props) => {
         'Đăng xuất',
         'Bạn chắc chắn muốn đăng xuất?',
         [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => {},
-          //   style: 'cancel',
-          // },
           {text: 'Hủy', onPress: () => {}},
           {
             text: 'Đồng ý',
@@ -189,11 +184,6 @@ const Home = (props) => {
   };
 
   return (
-    // <View style={{backgroundColor: 'green', flex: 1}}>
-    //   <SafeAreaView style={{flex: 1}}>
-    //     <View style={styles.container}></View>
-    //   </SafeAreaView>
-    // </View>
     <View style={styles.container}>
       <View style={styles.contend}>
         <ImageBackground
@@ -217,6 +207,9 @@ const Home = (props) => {
                       position: 'absolute',
                     }}>
                     <TouchableOpacity
+                      onPress={() => {
+                        props.navigation.navigate('NotificationScreen');
+                      }}
                       style={{
                         height: 50,
                         width: 50,

@@ -46,6 +46,7 @@ const Home = (props) => {
   ]);
 
   const [dataOrder, setDataOrder] = useState([]);
+
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
   const [page, setPage] = useState(1);

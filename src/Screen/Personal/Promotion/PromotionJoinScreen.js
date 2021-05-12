@@ -75,7 +75,7 @@ const LoginScreen = (props) => {
                   if (response.data.code === 200) {
                     Alert.alert(
                       'Thông báo',
-                      'Tham gia chương trình thành công!',
+                      'Dừng chương trình thành công!',
                       [
                         {
                           text: 'Đồng ý',
