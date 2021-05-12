@@ -52,4 +52,9 @@ export default homeService = {
     let response = callApiService.post(url, params);
     return response;
   },
+  orderFoodWithBookTable: async (params, id) => {
+    let url = `${API_BASE_URL.ORDER_FOOD_WITH_BOOK_TABLE_IN_STORE}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
 };

@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';

@@ -37,7 +37,7 @@ export default function async(state = initialState, action) {
         ...state,
         error: false,
         responseStoreDetailWithBookTableInStore: null,
-        isLoading: true,
+        isLoading: action.payload.isLoading,
       };
 
     case actions.ACTION_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE_SUCCESS:
@@ -56,7 +56,7 @@ export default function async(state = initialState, action) {
         Object.assign(dataTemp, {category_store_food: value});
       });
       Object.assign(dataTemp, {
-        combo_food: [... action.payload.data.store.combo_food],
+        combo_food: [...action.payload.data.store.combo_food],
       });
       return {
         ...state,
@@ -264,11 +264,6 @@ export default function async(state = initialState, action) {
       };
     }
     case UPDATE_QUANTITY: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
-
       var tempArr =
         action.payload.type === TYPE_UPDATE_CART.CATEGORY
           ? state.data.category_food
