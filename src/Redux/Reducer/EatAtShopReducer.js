@@ -112,10 +112,6 @@ export default function async(state = initialState, action) {
     //   };
     // }
     case UPDATE_CART: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
       if (action.payload.calculation == CALCULATION.SUBTRACTION) {
         state.data.category_food[action.payload.value.itemFood.index].food[
           action.payload.value.itemFood.indexitemfood
@@ -139,7 +135,6 @@ export default function async(state = initialState, action) {
       };
     }
     case ADD_TOPPING: {
-      
       const {
         indexCategory,
         indexFood,

@@ -35,12 +35,17 @@ import { useRef } from 'react'
 import BottomSheetBehavior from '../../component/FiteBottomSheet';
 import { BottomSheetShop } from '../../component/BottomSheetShop';
 import { DishItem } from '../../component/DishItem';
+import { BottomsheetSub } from '../../component/BottomsheetSub';
+import { FiteButton } from '../../component/FiteButton';
 const dimension = Dimensions.get('window');
 const { width, height } = dimension;
 const LoginScreen = (props) => {
   const { data, isLoading } = props.eatatshopState;
   const sheetTopping = useRef<any>('sheetTopping');
+  const sheetSub = useRef<any>('sheetSub');
   const [itemFocus, setItemFocus] = useState({})
+  const [isRequestBottomSub, setIsRequestBottomSub] = useState(false);
+  const sheet = useRef<any>('sheet');
   const fall = new Animated.Value(1);
   reactotron.log(data)
   const timeOut = useRef('timeOut');
@@ -79,11 +84,12 @@ const LoginScreen = (props) => {
 
     } finally {
       getData(false)
+      callback()
     }
   }
   const onPressCloseTopping = (value) => {
     sheetTopping.current.snapTo(1)
-    // sheet.current.snapTo(0)
+    sheet.current.snapTo(0)
     getData(false)
   }
   const handleComoboFood = async (payload) => {
@@ -251,7 +257,7 @@ const LoginScreen = (props) => {
                     setItemFocus({ itemfood, index, indexitemfood, type: TYPE_UPDATE_CART.PROGRAM, })
                     fall.setValue(1)
                     sheetTopping.current.snapTo(0)
-                    // sheet.current.snapTo(1)
+                    sheet.current.snapTo(1)
                     return
                   }
                   if (itemfood.book_food.length == 0) {
@@ -294,11 +300,10 @@ const LoginScreen = (props) => {
                     return
                   }
                   if (itemfood.book_food.length > 1) {
-                    console.log("vao ne 1");
-                    return
+
                     fall.setValue(0.3)
                     sheetSub.current.snapTo(0)
-                    // sheet.current.snapTo(1)
+                    sheet.current.snapTo(1)
                     setItemFocus({ itemfood, index, indexitemfood, type: TYPE_UPDATE_CART.PROGRAM })
 
                   }
@@ -337,7 +342,7 @@ const LoginScreen = (props) => {
                     return
                   }
                   if (itemfood.book_food.length > 1) {
-                    return
+
                     fall.setValue(0.3)
                     sheetSub.current.snapTo(0)
                     sheet.current.snapTo(1)
@@ -371,7 +376,7 @@ const LoginScreen = (props) => {
                     setItemFocus({ itemfood, index, indexitemfood, type: TYPE_UPDATE_CART.CATEGORY, })
                     fall.setValue(1)
                     sheetTopping.current.snapTo(0)
-                    // sheet.current.snapTo(1)
+                    sheet.current.snapTo(1)
                     return
                   }
                   if (itemfood.book_food.length == 0) {
@@ -434,7 +439,7 @@ const LoginScreen = (props) => {
                     setItemFocus({ itemfood, index, indexitemfood, type: TYPE_UPDATE_CART.CATEGORY_STORE_FOOD, })
                     fall.setValue(1)
                     sheetTopping.current.snapTo(0)
-                    // sheet.current.snapTo(1)
+                    sheet.current.snapTo(1)
                     return
                   }
                   if (itemfood.book_food.length == 0) {
@@ -478,9 +483,6 @@ const LoginScreen = (props) => {
                     return
                   }
                   if (itemfood.book_food.length > 1) {
-                    console.log("SO LUONG THỨC ĂN LỚN HƠN 2");
-
-                    return
                     fall.setValue(0.3)
                     sheetSub.current.snapTo(0)
                     sheet.current.snapTo(1)
@@ -588,11 +590,102 @@ const LoginScreen = (props) => {
                       size_id: value.itemfood.temp_size
                     }, () => {
                       sheetTopping.current.snapTo(1)
-                      // sheet.current.snapTo(0)
+                      sheet.current.snapTo(0)
                     })
 
                   }}
                 />
+              )}
+            />
+            <BottomSheetBehavior
+              ref={sheetSub}
+              snapPoints={[height, -100]}
+              initialSnap={1}
+              enabledGestureInteraction={false}
+              renderContent={() => (
+                <BottomsheetSub
+                  isRequest={isRequestBottomSub}
+                  onPressClose={() => {
+                    fall.setValue(0)
+                    sheetSub.current.snapTo(1)
+                    data.total_price > 0 && sheet.current.snapTo(0)
+                  }}
+                  onPressSubCount={(value) => {
+                    if (value.itemCard.item.quantity <= 0) return
+                    setIsRequestBottomSub(true)
+                    if (value.itemCard.item.quantity == 1) {
+                      value.itemFood.itemfood.book_food.length == 1 && sheetSub.current.snapTo(1)
+                      props.updateCart({ calculation: CALCULATION.SUBTRACTION, value, })
+                      setItemFocus({ itemfood: data.category_food[value.itemFood.index].food[value.itemFood.indexitemfood], index: value.itemFood.index, indexitemfood: value.itemFood.indexitemfood, type: value.type })
+                    }
+
+                    handleSubBookFood({
+                      "book_food_id": value.itemCard.item.id,
+                      "quantity": --value.itemCard.item.quantity
+                    }, () => { setIsRequestBottomSub(false) })
+
+                  }}
+                  onPressAddCount={(value) => {
+                    props.updateCart({ calculation: CALCULATION.ADD, value, });
+                    // setTimeout(() => {
+                    setIsRequestBottomSub(true)
+                    handleSubBookFood({
+                      "book_food_id": value.itemCard.item.id,
+                      "quantity": ++value.itemCard.item.quantity
+                    }, () => { setIsRequestBottomSub(false) })
+                    // }, 10);
+                    // if()
+                  }}
+                  data={itemFocus}
+                  backgroundColor={backgroundColor} />
+              )}
+            />
+            <BottomSheetBehavior
+              ref={sheet}
+              enabledGestureInteraction={false}
+              snapPoints={[80, -100]}
+              initialSnap={0}
+              renderContent={() => (
+                <View style={{ backgroundColor: 'white', height: 80, alignItems: 'center', paddingHorizontal: 10, flexDirection: 'row' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                    {/* <FstImage
+                      source={R.images.ic_table}
+                      style={{ aspectRatio: 1, width: 50, alignItems: 'center', justifyContent: 'center' }}
+                      resizeMode='contain'
+                    > */}
+
+                    <Text children={data.book_table?.table_store_id} style={{ fontSize: 17, color: 'white' }} />
+                    {/* </FstImage> */}
+                    <Text style={{ marginLeft: 20, fontSize: 17 }}
+                      children={formatNumber(data.total_price)}
+                    />
+                  </View>
+                  <FiteButton
+                    onPress={() => {
+                      if (!data.book_table) {
+                        Alert.alert(
+                          'Thông báo',
+                          'Không tìm thấy bàn',
+                          [
+                            // {
+                            //   text: 'Cancel',
+                            //   onPress: () => {},
+                            //   style: 'cancel',
+                            // },
+                            { text: 'Hủy', onPress: () => { } },
+
+                          ],
+                          { cancelable: false },
+                        )
+                        return
+                      }
+
+                    }}
+                    title='Thêm món'
+                    style={{ paddingVertical: 7, paddingHorizontal: 20, borderRadius: 10 }}
+                    titleStyle={{ fontSize: 15 }}
+                  />
+                </View>
               )}
             />
           </View>
@@ -624,6 +717,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   updateTempCount: (params) => {
     dispatch(actionsEat.updateTempCount(params));
+  },
+  updateCart: (params) => {
+    dispatch(actionsEat.updateCart(params));
   },
 });
 
