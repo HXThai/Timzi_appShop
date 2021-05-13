@@ -110,6 +110,12 @@ const API_BASE_URL = {
 
   GET_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE:
     ROOT_DOMAIN + '/book-table/store-detail-with-book-table-in-store',
+  ORDER_FOOD_WITH_BOOK_TABLE_IN_STORE:
+    ROOT_DOMAIN + '/book-table/order-food-with-book-table-in-store',
+  SUBTRACT_QUANTITY_BOOK_FOOD_IN_STORE:
+    ROOT_DOMAIN + '/book-table/subtract-quantity-book-food-in-store',
+  COMBO_BOOK_TABLE_IN_STORE:
+    ROOT_DOMAIN + '/book-table/order-combo-with-book-table-in-store',
 
   GET_NOTIFICATION: ROOT_DOMAIN + '/notify/list-notify',
   CONFIRM_VIEW_NOTIFICATION: ROOT_DOMAIN + '/notify/confirm-view-notify',

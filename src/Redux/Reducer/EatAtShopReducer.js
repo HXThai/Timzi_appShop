@@ -6,9 +6,8 @@ import {
   UPDATE_CART,
   EAT_AT_SHOP,
 } from '../Action/EatAtShop';
-import {fail, success} from '@app/utils/SagaHelper';
 import reactotron from 'reactotron-react-native';
-import {CALCULATION, CATEGORY, TYPE_UPDATE_CART} from '@app/constants/Constant';
+import {CALCULATION, TYPE_UPDATE_CART} from '../../Constants/Constant';
 import {useRef} from 'react';
 import * as actions from '../Action/homeAction';
 
@@ -27,7 +26,7 @@ const initialState = {
 
   isErrorStoreDetailWithBookTableInStore: false,
   responseStoreDetailWithBookTableInStore: null,
-  loadingStoreDetailWithBookTableInStore: false,
+  isLoading: false,
   msgStoreDetailWithBookTableInStore: null,
 };
 
@@ -36,68 +35,82 @@ export default function async(state = initialState, action) {
     case actions.ACTION_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE:
       return {
         ...state,
-        isErrorStoreDetailWithBookTableInStore: false,
+        error: false,
         responseStoreDetailWithBookTableInStore: null,
-        loadingStoreDetailWithBookTableInStore: true,
-        msgStoreDetailWithBookTableInStore: null,
+        isLoading: action.payload.isLoading,
       };
 
     case actions.ACTION_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE_SUCCESS:
+      var dataTemp = action.payload.data;
+      var program_store = action.payload.data.store.program_store;
+      var combo_food = action.payload.data.store.combo_food;
+      var category_food = action.payload.data.category_food;
+      var category_store_food = action.payload.data.category_store_food;
+      spShopDetailReducer(program_store, true, (value) => {
+        Object.assign(dataTemp, {program_store: value});
+      });
+      spShopDetailReducer(category_food, false, (value) => {
+        Object.assign(dataTemp, {category_food: value});
+      });
+      spShopDetailReducer(category_store_food, false, (value) => {
+        Object.assign(dataTemp, {category_store_food: value});
+      });
+      Object.assign(dataTemp, {
+        combo_food: [...action.payload.data.store.combo_food],
+      });
       return {
         ...state,
-        isErrorStoreDetailWithBookTableInStore: false,
-        responseStoreDetailWithBookTableInStore: action.payload,
-        loadingStoreDetailWithBookTableInStore: false,
-        msgStoreDetailWithBookTableInStore: null,
+        error: false,
+        data: dataTemp,
+        isLoading: false,
       };
 
     case actions.ACTION_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE_FAILD:
       return {
         ...state,
-        isErrorStoreDetailWithBookTableInStore: true,
-        responseStoreDetailWithBookTableInStore: null,
-        loadingStoreDetailWithBookTableInStore: false,
-        msgStoreDetailWithBookTableInStore: action.payload,
-      };
-    case EAT_AT_SHOP: {
-      return {
-        ...state,
-        isLoading: action.payload.loading ? true : false,
-        isLoadingModalSub: true,
-      };
-    }
-
-    case success(EAT_AT_SHOP): {
-      // var dataTemp = action.payload;
-      // var program_store = action.payload.store.program_store;
-      // var combo_food = action.payload.store.combo_food;
-      // var category_food = action.payload.category_food;
-      // var category_store_food = action.payload.category_store_food;
-      // spShopDetailReducer(program_store, true, value => {
-      //     Object.assign(dataTemp, { program_store: value });
-      // });
-      // spShopDetailReducer(category_food, false, value => {
-      //     Object.assign(dataTemp, { category_food: value });
-      // });
-      // spShopDetailReducer(category_store_food, false, value => {
-      //     Object.assign(dataTemp, { category_store_food: value });
-      // });
-      // Object.assign(dataTemp, { combo_food: [...action.payload.store.combo_food] });
-      // return {
-      //     ...state,
-      //     isLoading: false,
-      //     error: false,
-      //     isLoadingModalSub: false,
-      //     data: dataTemp
-      // };
-    }
-    case fail(EAT_AT_SHOP): {
-      return {
-        ...state,
         error: true,
         isLoading: false,
+        msgStoreDetailWithBookTableInStore: action.payload,
       };
-    }
+    // case EAT_AT_SHOP: {
+    //   return {
+    //     ...state,
+    //     isLoading: action.payload.loading ? true : false,
+    //     isLoadingModalSub: true,
+    //   };
+    // }
+
+    // case success(EAT_AT_SHOP): {
+    //   // var dataTemp = action.payload;
+    //   // var program_store = action.payload.store.program_store;
+    //   // var combo_food = action.payload.store.combo_food;
+    //   // var category_food = action.payload.category_food;
+    //   // var category_store_food = action.payload.category_store_food;
+    //   // spShopDetailReducer(program_store, true, value => {
+    //   //     Object.assign(dataTemp, { program_store: value });
+    //   // });
+    //   // spShopDetailReducer(category_food, false, value => {
+    //   //     Object.assign(dataTemp, { category_food: value });
+    //   // });
+    //   // spShopDetailReducer(category_store_food, false, value => {
+    //   //     Object.assign(dataTemp, { category_store_food: value });
+    //   // });
+    //   // Object.assign(dataTemp, { combo_food: [...action.payload.store.combo_food] });
+    //   // return {
+    //   //     ...state,
+    //   //     isLoading: false,
+    //   //     error: false,
+    //   //     isLoadingModalSub: false,
+    //   //     data: dataTemp
+    //   // };
+    // }
+    // case fail(EAT_AT_SHOP): {
+    //   return {
+    //     ...state,
+    //     error: true,
+    //     isLoading: false,
+    //   };
+    // }
     case UPDATE_CART: {
       if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
         return {
@@ -126,10 +139,7 @@ export default function async(state = initialState, action) {
       };
     }
     case ADD_TOPPING: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
+      
       const {
         indexCategory,
         indexFood,
@@ -168,10 +178,6 @@ export default function async(state = initialState, action) {
       };
     }
     case UPDATE_SIZE: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
       const {
         indexToppingFood,
         indexCategory,
@@ -216,10 +222,6 @@ export default function async(state = initialState, action) {
       };
     }
     case UPDATE_TEMP_COUNT: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
       var price =
         action.payload.value.itemfood.price_discount_with_program ||
         action.payload.value.itemfood.price_discount ||
@@ -251,11 +253,6 @@ export default function async(state = initialState, action) {
       };
     }
     case UPDATE_QUANTITY: {
-      if (action.payload.category !== CATEGORY.EAT_AT_SHOP)
-        return {
-          ...state,
-        };
-
       var tempArr =
         action.payload.type === TYPE_UPDATE_CART.CATEGORY
           ? state.data.category_food
