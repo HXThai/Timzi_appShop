@@ -52,6 +52,17 @@ export default homeService = {
     let response = callApiService.post(url, params);
     return response;
   },
+
+  getListTableEmpty: async (params, id) => {
+    let url = `${API_BASE_URL.GET_LIST_TABLE_EMPTY}/${id}`;
+    let response = callApiService.get(url, params);
+    return response;
+  },
+  mergeTableWithOwner: async (params) => {
+    let url = `${API_BASE_URL.MERGE_TABLE_WITH_OWNER}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
   orderFoodWithBookTable: async (params, id) => {
     let url = `${API_BASE_URL.ORDER_FOOD_WITH_BOOK_TABLE_IN_STORE}`;
     let response = callApiService.post(url, params);

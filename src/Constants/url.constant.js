@@ -124,6 +124,14 @@ const API_BASE_URL = {
   GET_LIST_DISCOUNT_STORE: ROOT_DOMAIN + '/store/list-discount-store',
   GET_LIST_DISCOUNT_THIS_MONTH_STORE:
     ROOT_DOMAIN + '/store/discount-this-month-store',
+
+  CONFIRM_OTP_REGISTER: ROOT_DOMAIN + '/check-otp-register',
+  CONFIRM_OTP_FORGOT_PASSWORD: ROOT_DOMAIN + '/check-otp-verify',
+  FORGOT_PASSWORD: ROOT_DOMAIN + '/forgot-password',
+  CONFIRM_FORGOT_PASSWORD: ROOT_DOMAIN + '/update-new-password',
+
+  GET_LIST_TABLE_EMPTY: ROOT_DOMAIN + '/store/list-table-empty',
+  MERGE_TABLE_WITH_OWNER: ROOT_DOMAIN + '/book-table/table-merge-with-owner',
 };
 
 export {API_BASE_URL};

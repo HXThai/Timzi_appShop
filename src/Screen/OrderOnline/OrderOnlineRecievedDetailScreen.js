@@ -348,22 +348,24 @@ const LoginScreen = (props) => {
                   flexDirection: 'column',
                   marginTop: 5,
                 }}>
-                <TouchableOpacity
-                  style={{
-                    height: 50,
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 50,
-                    backgroundColor: Color.main,
-                    marginTop: 10,
-                    marginBottom: 10,
-                  }}>
-                  <Text
-                    style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
-                    Đã lấy hàng
-                  </Text>
-                </TouchableOpacity>
+                {dataOrder.status === 9 ? (
+                  <TouchableOpacity
+                    style={{
+                      height: 50,
+                      width: '100%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 50,
+                      backgroundColor: Color.main,
+                      marginTop: 10,
+                      marginBottom: 10,
+                    }}>
+                    <Text
+                      style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
+                      Đã lấy hàng
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
               </View>
             </View>
           ) : null}

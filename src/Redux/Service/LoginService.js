@@ -36,4 +36,28 @@ export default homeService = {
     // console.log(response);
     return response;
   },
+  confirmOTPRegister: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_OTP_REGISTER}`;
+    let response = callApiService.put(url, params);
+    // console.log(response);
+    return response;
+  },
+  confirmOTPForgotPassword: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_OTP_FORGOT_PASSWORD}`;
+    let response = callApiService.put(url, params);
+    // console.log(response);
+    return response;
+  },
+  forgotPassword: async (params) => {
+    let url = `${API_BASE_URL.FORGOT_PASSWORD}`;
+    let response = callApiService.put(url, params);
+    // console.log(response);
+    return response;
+  },
+  confirmForgotPassword: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_FORGOT_PASSWORD}`;
+    let response = callApiService.put(url, params);
+    // console.log(response);
+    return response;
+  },
 };

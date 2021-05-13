@@ -77,7 +77,7 @@ const LoginScreen = (props) => {
                         text: 'Đồng ý',
                         onPress: () => {
                           props.navigation.reset({
-                            index: 0,
+                            // index: 0,
                             routes: [
                               {
                                 name: 'ChooseRestaurantScreen',

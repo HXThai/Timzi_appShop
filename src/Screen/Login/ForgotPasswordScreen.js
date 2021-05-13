@@ -23,6 +23,7 @@ import Swipeout from 'react-native-swipeout';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
+import services from '../../Redux/Service/LoginService';
 
 const LoginScreen = (props) => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -67,7 +68,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-                    
+
                     width: '87%',
                     height: 40,
                   }}
@@ -80,10 +81,54 @@ const LoginScreen = (props) => {
               </View>
               <View style={{width: '80%', marginTop: 60}}>
                 <TouchableOpacity
-                  onPress={() =>
-                    // props.navigation.navigate('ConfirmForgotPasswordScreen')
-                    props.navigation.navigate('ConfirmOTPRegisterScreen')
-                  }>
+                  onPress={() => {
+                    services
+                      .forgotPassword({phone: phoneNumber})
+                      .then(function (response) {
+                        if (response) {
+                          if (response?.data?.code === 200) {
+                            Alert.alert('Thông báo!', response?.data?.message, [
+                              {
+                                text: 'Đồng ý',
+                                onPress: () => {
+                                  props.navigation.navigate(
+                                    'ConfirmOTPRegisterScreen',
+                                    {
+                                      type: 'forgotPassword',
+                                      phone: phoneNumber,
+                                    },
+                                  );
+                                },
+                              },
+                            ]);
+                          } else {
+                            Alert.alert('Thông báo!', response?.data?.message, [
+                              {
+                                text: 'Đồng ý',
+                                onPress: () => {
+                                  props.navigation.navigate('LoginScreen');
+                                },
+                              },
+                            ]);
+                            return;
+                          }
+                        } else {
+                          Alert.alert('Thông báo!', 'Lỗi!', [
+                            {
+                              text: 'Đồng ý',
+                              onPress: () => {
+                                setModalVisible(false);
+                              },
+                            },
+                          ]);
+                          return;
+                        }
+                      })
+                      .then(function () {
+                        // setIsLoadingMore(false);
+                        // setModalVisible(false);
+                      });
+                  }}>
                   <View
                     style={{
                       height: 40,
