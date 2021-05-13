@@ -41,15 +41,10 @@ const Home = (props) => {
   const [storeId, setStoreId] = useState(null);
 
   useEffect(() => {
-    // console.log('thai meo');
-    // console.log(props.data.responseListStore?.code);
     storage.getItem('dataStore').then((data) => {
-      // console.log(data);
       if (data) {
-        // setStoreName(data.name);
         setStoreId(data.id);
       } else {
-        // setStoreName(props.data.responseListStore?.data[0]?.name);
         setStoreId(props.data.responseListStore?.data[0]?.id);
       }
     });
@@ -173,11 +168,6 @@ const Home = (props) => {
         'Đăng xuất',
         'Bạn chắc chắn muốn đăng xuất?',
         [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => {},
-          //   style: 'cancel',
-          // },
           {text: 'Hủy', onPress: () => {}},
           {
             text: 'Đồng ý',
@@ -194,11 +184,6 @@ const Home = (props) => {
   };
 
   return (
-    // <View style={{backgroundColor: 'green', flex: 1}}>
-    //   <SafeAreaView style={{flex: 1}}>
-    //     <View style={styles.container}></View>
-    //   </SafeAreaView>
-    // </View>
     <View style={styles.container}>
       <View style={styles.contend}>
         <ImageBackground
@@ -216,6 +201,34 @@ const Home = (props) => {
                     backgroundColor: '#fff',
                     borderRadius: 10,
                   }}>
+                  <View
+                    style={{
+                      width: Dimensions.get('window').width - 30,
+                      position: 'absolute',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        props.navigation.navigate('NotificationScreen');
+                      }}
+                      style={{
+                        height: 50,
+                        width: 50,
+                        borderRadius: 50,
+                        borderColor: Color.main,
+                        borderWidth: 0.5,
+                        position: 'absolute',
+                        alignSelf: 'flex-end',
+                        marginTop: 10,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <MaterialIcons
+                        name={'notifications'}
+                        size={26}
+                        color={Color.main}
+                      />
+                    </TouchableOpacity>
+                  </View>
                   <Image
                     source={{uri: dataUser?.avatar}}
                     style={{width: 60, height: 60}}

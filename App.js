@@ -11,7 +11,7 @@ if (__DEV__) {
   import('./ReactotronConfig').then(() => {});
 }
 import OneSignal from 'react-native-onesignal';
-
+console.disableYellowBox = true;
 export default class App extends React.Component {
   async componentDidMount() {
     // console.log('thai meo fake');

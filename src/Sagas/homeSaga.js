@@ -11,6 +11,23 @@ export function* getListCategory(params) {
   }
 }
 
+export function* getStoreDetail(params) {
+  console.log('thai saga');
+  try {
+    let data = yield call(
+      services.getStoreDetailWithBookTableInStore,
+      params.payload,
+    );
+    yield put(actions.getStoreDetailWithBookTableInStoreSuccess(data.data));
+  } catch (error) {
+    yield put(actions.getStoreDetailWithBookTableInStoreFaild(error.message));
+  }
+}
+
 export function* watchHome() {
   yield takeLatest(actions.ACTION_GET_CATEGORY, getListCategory);
+  yield takeLatest(
+    actions.ACTION_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE,
+    getStoreDetail,
+  );
 }

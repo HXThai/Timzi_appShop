@@ -93,6 +93,7 @@ const API_BASE_URL = {
   GET_LIST_PROGRAM_SYSTEM: ROOT_DOMAIN + '/program/list-program-system',
   PROMOTION_TIMZI_DETAIL: ROOT_DOMAIN + '/program/program-system-detail',
   RECEIVE_PROGRAM_SYSTEM: ROOT_DOMAIN + '/program/receive-program-system',
+  BOOK_TABLE_WITH_STAFF: ROOT_DOMAIN + '/book-table/book-table-with-staff',
 
   GET_LIST_PROGRAM_SYSTEM_WITH_STORE:
     ROOT_DOMAIN + '/program/list-program-system-with-store',
@@ -109,6 +110,16 @@ const API_BASE_URL = {
   DELETE_TABLE: ROOT_DOMAIN + '/table-store/delete-table-store',
 
   RATE_OF_USER: ROOT_DOMAIN + '/order/list-evaluate-with-store',
+  GET_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE:
+    ROOT_DOMAIN + '/book-table/store-detail-with-book-table-in-store',
+
+  GET_NOTIFICATION: ROOT_DOMAIN + '/notify/list-notify',
+  CONFIRM_VIEW_NOTIFICATION: ROOT_DOMAIN + '/notify/confirm-view-notify',
+
+  GET_LIST_RENENUE_STORE: ROOT_DOMAIN + '/store/list-revenue-store',
+  GET_LIST_DISCOUNT_STORE: ROOT_DOMAIN + '/store/list-discount-store',
+  GET_LIST_DISCOUNT_THIS_MONTH_STORE:
+    ROOT_DOMAIN + '/store/discount-this-month-store',
 };
 
 export {API_BASE_URL};

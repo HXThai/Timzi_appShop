@@ -295,7 +295,7 @@ const LoginScreen = (props) => {
                         height: 146,
                       }}>
                       <Text style={{fontSize: 12, fontWeight: '700'}}>
-                        Khách hàng: {dataOrderOffline?.user?.name}
+                        Khách hàng: {dataOrderOffline?.name}
                       </Text>
                       <View
                         style={{

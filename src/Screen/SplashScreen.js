@@ -27,6 +27,7 @@ const SplashScreen = (props) => {
       // console.log('userSP', userId.userId);
       storage.getItem('dataLogin').then((data) => {
         if (data) {
+          // console.log(userId.userId);
           loginService
             .login({
               phone: data.phone,

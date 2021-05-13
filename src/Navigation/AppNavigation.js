@@ -66,6 +66,9 @@ import ManageAccountStaffScreen from './../Screen/Personal/ManageAccountStaffScr
 import DecentralizationStaffScreen from './../Screen/Personal/DecentralizationStaffScreen';
 import ActionDecentralizationStaffScreen from './../Screen/Personal/DecentralizationStaff/ActionDecentralizationStaffScreen';
 import RateOfUserScreen from './../Screen/Personal/RateOfUserScreen';
+import NotificationScreen from './../Screen/Personal/NotificationScreen';
+import IncomeHistoryScreen from './../Screen/Income/IncomeHistoryScreen';
+import DiscountScreen from './../Screen/Income/DiscountScreen';
 import ChangePasswordScreen from './../Screen/Personal/ChangePasswordScreen';
 import ConfirmChangePasswordScreen from './../Screen/Personal/ChangePassword/ConfirmChangePasswordScreen';
 import WalletScreen from './../Screen/Personal/WalletScreen';
@@ -78,12 +81,14 @@ import PromotionTimziDetailScreen from './../Screen/Personal/Promotion/ActionPro
 import PromotionComboDetailScreen from './../Screen/Personal/Promotion/ActionPromotion/PromotionComboDetailScreen';
 import EditComboScreen from './../Screen/Personal/Promotion/ActionPromotion/EditComboScreen';
 import NewOrderOfflineDetailScreen from '../Screen/OrderOffline/NewOrderOfflineDetailScreen';
+import OrderFoodScreen from '../Screen/OrderOffline/OrderFoodScreen';
 import OrderOfflineReceivedDetailScreen from '../Screen/OrderOffline/OrderOfflineReceivedDetailScreen';
 import OrderOfflineServingDetailScreen from '../Screen/OrderOffline/OrderOfflineServingDetailScreen';
 import OrderOfflineServedDetailScreen from '../Screen/OrderOffline/OrderOfflineServedDetailScreen';
 import OrderOfflineCancelledDetailScreen from '../Screen/OrderOffline/OrderOfflineCancelledDetailScreen';
 import ChooseRestaurantScreen from '../Screen/Staff/ChooseRestaurantScreen';
 import FindRestaurantScreen from '../Screen/Staff/FindRestaurantScreen';
+import OrderTableScreen from '../Screen/OrderTableScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -219,6 +224,18 @@ const getTabBarVisibility = (route) => {
   if (routename == 'ListCategoryStoreFood') {
     return false;
   }
+  if (routename == 'OrderFoodScreen') {
+    return false;
+  }
+  if (routename == 'NotificationScreen') {
+    return false;
+  }
+  if (routename == 'IncomeHistoryScreen') {
+    return false;
+  }
+  if (routename == 'DiscountScreen') {
+    return false;
+  }
   return true;
 };
 export function isIPhoneX() {
@@ -257,7 +274,7 @@ function TabNav(props) {
             url = focused ? Images.ultitiC : Images.ultiti;
           } else if (routeName === 'Sản phẩm') {
             url = focused ? Images.earncoinC : Images.earncoin;
-          } else if (routeName === 'Thu nhập') {
+          } else if (routeName === 'Doanh thu') {
             url = focused ? Images.notificationC : Images.notification;
           } else if (routeName === 'Tài khoản') {
             url = focused ? Images.personalC : Images.personal;
@@ -295,7 +312,7 @@ function TabNav(props) {
         navigationOptions={{tabBarLabel: 'Kiếm xu'}}
       />
       <Tab.Screen
-        name="Thu nhập"
+        name="Doanh thu"
         component={NotificationStack}
         navigationOptions={{tabBarLabel: 'Thông báo'}}
       />
@@ -1167,6 +1184,86 @@ function NotificationStack(props) {
           },
         }}
       />
+      <Stack.Screen
+        name="IncomeHistoryScreen"
+        component={IncomeHistoryScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Lịch sử doanh thu',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Notification');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="DiscountScreen"
+        component={DiscountScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Lịch sử chiết khấu',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Notification');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -1642,6 +1739,53 @@ function PersonalStack(props) {
         options={{
           // headerShown: false,
           headerTitle: 'Đánh giá của người dùng',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Personal');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="NotificationScreen"
+        component={NotificationScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Thông báo',
           headerTitleStyle: {alignSelf: 'center', color: '#fff'},
           headerStyle: {
             backgroundColor: Color.main,
@@ -2380,6 +2524,53 @@ function UtilitiesStack(props) {
         }}
       />
       <Stack.Screen
+        name="OrderFoodScreen"
+        component={OrderFoodScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Gọi món ăn',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Utilities');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
         name="OrderOfflineReceivedDetailScreen"
         component={OrderOfflineReceivedDetailScreen}
         options={{
@@ -2432,6 +2623,53 @@ function UtilitiesStack(props) {
         options={{
           // headerShown: false,
           headerTitle: 'Chi tiết bàn đang phục vụ',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Utilities');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}></View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="OrderTable"
+        component={OrderTableScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Nhập thông tin bàn',
           headerTitleStyle: {alignSelf: 'center', color: '#fff'},
           headerStyle: {
             backgroundColor: Color.main,

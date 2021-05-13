@@ -51,6 +51,7 @@ const Home = (props) => {
   ]);
 
   const [dataOrder, setDataOrder] = useState([]);
+
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
   const [printers, setPrinters] = useState([]);
   const [page, setPage] = useState(1);
@@ -97,6 +98,7 @@ const Home = (props) => {
   };
 
   const onClickDetail = (id) => {
+    reactotron.log('tab', tab);
     if (tab === 1) {
       props.navigation.navigate('NewOrderOfflineDetailScreen', {id: id});
     } else if (tab === 2) {
@@ -107,6 +109,8 @@ const Home = (props) => {
       props.navigation.navigate('OrderOfflineServedDetailScreen', {id: id});
     } else if (tab === 5) {
       props.navigation.navigate('OrderOfflineCancelledDetailScreen', {id: id});
+    } else if (tab == 0) {
+      props.navigation.navigate('OrderTable', {id: id});
     }
   };
 
@@ -218,19 +222,19 @@ const Home = (props) => {
     });
   }, []);
 
-  useEffect(() => {
-    NetPrinter.init().then(() => {
-      setPrinters([{host: '192.168.2.222', port: 9100}]);
-      // console.log('success');
-      NetPrinter.connectPrinter('192.168.2.222', 9100).then(
-        (value) => {
-          console.log('test');
-          setCurrentPrinter(value);
-        },
-        (error) => console.log(error),
-      );
-    });
-  }, []);
+  // useEffect(() => {
+  //   NetPrinter.init().then(() => {
+  //     setPrinters([{host: '192.168.2.222', port: 9100}]);
+  //     // console.log('success');
+  //     NetPrinter.connectPrinter('192.168.2.222', 9100).then(
+  //       (value) => {
+  //         console.log('test');
+  //         setCurrentPrinter(value);
+  //       },
+  //       (error) => console.log(error),
+  //     );
+  //   });
+  // }, []);
 
   const handleChangeTab = (index) => {
     console.log(index);
@@ -272,6 +276,7 @@ const Home = (props) => {
       <TouchableOpacity
         onPress={() => {
           onClickDetail(item.id);
+          reactotron.log('day ne');
         }}
         style={{
           height: 100,
@@ -289,7 +294,7 @@ const Home = (props) => {
           <View
             style={{
               height: 19,
-              width: 56,
+              width: 60,
               borderRadius: 6,
               borderColor:
                 tab === 0
@@ -344,8 +349,8 @@ const Home = (props) => {
           </View>
           <View
             style={{
-              height: 56,
-              width: 56,
+              height: 60,
+              width: 60,
               borderRadius: 6,
               alignItems: 'center',
               justifyContent: 'center',
@@ -540,7 +545,7 @@ const Home = (props) => {
                     }}
                     style={{
                       height: 19,
-                      width: 56,
+                      width: 60,
                       borderRadius: 4,
                       borderColor: Color.main,
                       borderWidth: 1,
@@ -600,41 +605,10 @@ const Home = (props) => {
                     <Text style={{color: Color.red, fontSize: 12}}>Hủy</Text>
                   </TouchableOpacity>
                 </View>
-              ) : tab === 2 ? (
+              ) : tab === 2 && item.is_shop_book === 1 ? (
                 <TouchableOpacity
                   onPress={() => {
-                    // setTab(3);
-                    Alert.alert(
-                      'Xác nhận đặt món ăn tại quán',
-                      'Cho phép khách hàng đặt món ăn tại quán?',
-                      [
-                        {text: 'Hủy', onPress: () => {}},
-                        {
-                          text: 'Đồng ý',
-                          onPress: async () => {
-                            services
-                              .rightToOrderOffline(null, item?.id)
-                              .then(function (response) {
-                                if (response) {
-                                  if (response.data.code === 200) {
-                                    handleChangeTab(3);
-                                  } else {
-                                    Alert.alert(
-                                      'Thông báo',
-                                      response.data.message,
-                                      [{text: 'Đồng ý', onPress: () => {}}],
-                                      {cancelable: false},
-                                    );
-                                  }
-                                } else {
-                                  return;
-                                }
-                              });
-                          },
-                        },
-                      ],
-                      {cancelable: false},
-                    );
+                    props.navigation.navigate('OrderFoodScreen', {id: item.id});
                   }}
                   style={{
                     height: 19,
@@ -646,9 +620,7 @@ const Home = (props) => {
                     justifyContent: 'center',
                     marginRight: 5,
                   }}>
-                  <Text style={{color: Color.main, fontSize: 12}}>
-                    Xác nhận
-                  </Text>
+                  <Text style={{color: Color.main, fontSize: 12}}>Gọi món</Text>
                 </TouchableOpacity>
               ) : tab === 3 ? (
                 <TouchableOpacity
@@ -707,7 +679,7 @@ const Home = (props) => {
                 }}
                 style={{
                   height: 19,
-                  width: 56,
+                  width: 60,
                   borderRadius: 4,
                   borderColor: Color.main,
                   borderWidth: 1,
