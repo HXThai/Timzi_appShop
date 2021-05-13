@@ -233,7 +233,7 @@ const LoginScreen = (props) => {
                 onPress={() => {
                   // console.log(item.name);
                   props.navigation.reset({
-                    index: 0,
+                    // index: 0,
                     routes: [{name: 'EditProductScreen'}],
                   });
                   props.navigation.navigate('EditProductScreen', {

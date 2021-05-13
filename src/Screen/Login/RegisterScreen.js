@@ -44,18 +44,16 @@ const LoginScreen = (props) => {
       .then(function (response) {
         if (response) {
           if (response?.data?.code === 200) {
-            Alert.alert(
-              'Thông báo!',
-              'Mã OTP của bạn là: ' + response?.data?.otp,
-              [
-                {
-                  text: 'Đồng ý',
-                  onPress: () => {
-                    props.navigation.navigate('ConfirmOTPRegisterScreen');
-                  },
+            Alert.alert('Thông báo!', response?.data?.message, [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  props.navigation.navigate('ConfirmOTPRegisterScreen', {
+                    type: 'register',
+                  });
                 },
-              ],
-            );
+              },
+            ]);
           } else {
             Alert.alert('Thông báo!', response?.data?.message, [
               {text: 'Đồng ý'},

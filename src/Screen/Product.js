@@ -206,7 +206,7 @@ const Home = (props) => {
                               setStoreName(item.name);
                               storage.setItem('dataStore', item);
                               props.navigation.reset({
-                                index: 0,
+                                // index: 0,
                                 routes: [{name: 'TabNav'}],
                               });
                               setModalVisible(false);
