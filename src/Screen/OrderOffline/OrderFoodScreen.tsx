@@ -66,7 +66,7 @@ const LoginScreen = (props) => {
     try {
       const res = await services.orderFoodWithBookTable(payload)
       if (res.data.status == 1) {
-
+        callback()
       }
     } catch (error) {
 
@@ -616,7 +616,7 @@ const LoginScreen = (props) => {
                     if (value.itemCard.item.quantity == 1) {
                       value.itemFood.itemfood.book_food.length == 1 && sheetSub.current.snapTo(1)
                       props.updateCart({ calculation: CALCULATION.SUBTRACTION, value, })
-                      setItemFocus({ itemfood: data.category_food[value.itemFood.index].food[value.itemFood.indexitemfood], index: value.itemFood.index, indexitemfood: value.itemFood.indexitemfood, type: value.type })
+                      !(value.itemFood.type == TYPE_UPDATE_CART.PROGRAM) && setItemFocus({ itemfood: data.category_food[value.itemFood.index].food[value.itemFood.indexitemfood], index: value.itemFood.index, indexitemfood: value.itemFood.indexitemfood, type: value.type })
                     }
 
                     handleSubBookFood({
