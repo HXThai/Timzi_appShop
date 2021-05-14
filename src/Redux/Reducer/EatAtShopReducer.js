@@ -115,20 +115,20 @@ export default function async(state = initialState, action) {
       if (action.payload.calculation == CALCULATION.SUBTRACTION) {
         state.data.category_food[action.payload.value.itemFood.index].food[
           action.payload.value.itemFood.indexitemfood
-        ].book_food[action.payload.value.itemCard.index].quantity > 0 &&
+        ].book_food[action.payload.value?.itemCard?.index].quantity > 0 &&
           state.data.category_food[action.payload.value.itemFood.index].food[
             action.payload.value.itemFood.indexitemfood
-          ].book_food[action.payload.value.itemCard.index].quantity--;
+          ].book_food[action.payload.value?.itemCard?.index].quantity--;
         state.data.category_food[action.payload.value.itemFood.index].food[
           action.payload.value.itemFood.indexitemfood
-        ].book_food[action.payload.value.itemCard.index].quantity == 0 &&
+        ].book_food[action.payload.value?.itemCard?.index].quantity == 0 &&
           state.data.category_food[action.payload.value.itemFood.index].food[
             action.payload.value.itemFood.indexitemfood
-          ].book_food.splice(action.payload.value.itemCard.index, 1);
+          ].book_food.splice(action.payload.value?.itemCard?.index, 1);
       } else {
         state.data.category_food[action.payload.value.itemFood.index].food[
           action.payload.value.itemFood.indexitemfood
-        ].book_food[action.payload.value.itemCard.index].quantity++;
+        ].book_food[action.payload.value?.itemCard?.index].quantity++;
       }
       return {
         ...state,

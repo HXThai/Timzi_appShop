@@ -3,6 +3,8 @@ import React from 'react';
 import { Text } from 'react-native';
 import { TouchableOpacity, TouchableWithoutFeedbackProps, ViewStyle, TextStyle } from 'react-native';
 import { connect } from 'react-redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Color from '../Theme/Color';
 type Props = {
   title?: string;
   backgroundColor?: string;
@@ -15,10 +17,10 @@ export const FiteButton = (props: Props) => {
   return (
     <TouchableOpacity
       disabled={props.disabled}
-      style={[{ backgroundColor: "red", alignItems: 'center' }, { ...props.style }]}
+      style={[{ alignItems: 'center' }, { ...props.style }]}
       onPress={() => (props.onPress ? props.onPress() : null)}
     >
-      <Text children={props.title} style={{ ...props.titleStyle }} />
+      <Text children={props.title} style={{ ...props.titleStyle, color: Color.white }} />
     </TouchableOpacity>
   );
 };

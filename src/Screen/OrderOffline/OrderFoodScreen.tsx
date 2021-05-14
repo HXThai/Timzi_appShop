@@ -206,7 +206,7 @@ const LoginScreen = (props) => {
 
     )
   }
-  if (isLoading) return <Text>dfsafsa</Text>
+  // if (isLoading) return <Text>dfsafsa</Text>
 
   return (
     <View style={styles.container}>
@@ -222,7 +222,7 @@ const LoginScreen = (props) => {
               justifyContent: 'space-between',
               height: '100%',
             }}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom: 100}}>
               {ComBoList()}
               {/* Chương trình */}
               <ShopDetailitem
@@ -611,7 +611,7 @@ const LoginScreen = (props) => {
                     data.total_price > 0 && sheet.current.snapTo(0)
                   }}
                   onPressSubCount={(value) => {
-                    if (value.itemCard.item.quantity <= 0) return
+                    if (value?.itemCard?.item?.quantity <= 0) return
                     setIsRequestBottomSub(true)
                     if (value.itemCard.item.quantity == 1) {
                       value.itemFood.itemfood.book_food.length == 1 && sheetSub.current.snapTo(1)
@@ -620,7 +620,7 @@ const LoginScreen = (props) => {
                     }
 
                     handleSubBookFood({
-                      "book_food_id": value.itemCard.item.id,
+                      "book_food_id": value.itemCard?.item?.id,
                       "quantity": --value.itemCard.item.quantity
                     }, () => { setIsRequestBottomSub(false) })
 
@@ -630,7 +630,7 @@ const LoginScreen = (props) => {
                     // setTimeout(() => {
                     setIsRequestBottomSub(true)
                     handleSubBookFood({
-                      "book_food_id": value.itemCard.item.id,
+                      "book_food_id": value.itemCard?.item?.id,
                       "quantity": ++value.itemCard.item.quantity
                     }, () => { setIsRequestBottomSub(false) })
                     // }, 10);
@@ -646,7 +646,7 @@ const LoginScreen = (props) => {
               snapPoints={[80, -100]}
               initialSnap={0}
               renderContent={() => (
-                <View style={{ backgroundColor: 'white', height: 80, alignItems: 'center', paddingHorizontal: 10, flexDirection: 'row' }}>
+                <View style={{borderRadius: 8 ,marginLeft: 20, backgroundColor: 'white', height: 80, alignItems: 'center', paddingHorizontal: 10, flexDirection: 'row' }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                     {/* <FstImage
                       source={R.images.ic_table}
@@ -682,7 +682,7 @@ const LoginScreen = (props) => {
 
                     }}
                     title='Thêm món'
-                    style={{ paddingVertical: 7, paddingHorizontal: 20, borderRadius: 10 }}
+                    style={{ paddingVertical: 8, paddingHorizontal: 20, borderRadius: 10, backgroundColor: Color.main, }}
                     titleStyle={{ fontSize: 15 }}
                   />
                 </View>

@@ -11,7 +11,8 @@ import { connect } from 'react-redux';
 import reactotron from 'reactotron-react-native';
 import BottomSheetBehavior from './FiteBottomSheet';
 import { FiteButton } from './FiteButton';
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Color from '../Theme/Color';
 import { formatNumber } from './ShopDetailitem';
 const dimension = Dimensions.get('window');
 const { width, height } = dimension;
@@ -41,11 +42,11 @@ export const BottomSheetShop = (props: BottomSheetShopProps) => {
       <View style={{ flexDirection: 'row', paddingVertical: 6, paddingHorizontal: 10 }}>
         <Image
           source={{ uri: props.infoDish.itemfood.image }}
-          style={{ width: 100, aspectRatio: 1 }}
-          resizeMode='contain'
+          style={{ width: 100, height: 70, borderRadius: 8}}
+          // resizeMode='contain'
         />
         <View style={{ marginLeft: 10, flex: 1 }}>
-          <Text children={props.infoDish.itemfood.name} style={{  fontSize: 24, color: "gray" }} numberOfLines={2} />
+          <Text children={props.infoDish.itemfood.name} style={{  fontSize: 20, color: "black" }} numberOfLines={2} />
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text children={formatNumber(moneydiscout)} style={{ fontSize:17, }} />
             {props.infoDish?.itemfood?.price_discount >= 0 && props.infoDish?.itemfood?.price_discount_with_program >= 0 && <View style={{ alignItems: 'center', marginLeft: 10 }}>
@@ -61,23 +62,22 @@ export const BottomSheetShop = (props: BottomSheetShopProps) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity
                 onPress={() => props.onPressSub ? props.onPressSub(props.infoDish) : null}
-                style={{ backgroundColor: "blue", padding: 10, marginHorizontal: 5, borderRadius: 5 }}>
-                <Image
-                  source={require("../Theme/img/ic_sub.png")}
-                  style={{ width: 10, aspectRatio: 1, }}
-                  resizeMode='contain'
-                  tintColor='black'
-                />
+                style={{ backgroundColor: Color.main, padding: 5, marginHorizontal: 5, borderRadius: 5 }}>
+                <MaterialIcons
+                        name={'remove'}
+                        size={20}
+                        color={Color.white}
+                      />
               </TouchableOpacity>
-              <Text children={props.infoDish?.itemfood?.count_temp.toString() || "Chưa cập nhật"} style={{ fontSize:15 }} />
+              <Text children={props.infoDish?.itemfood?.count_temp.toString() || "Chưa cập nhật"} style={{ fontSize:15, marginHorizontal: 5 }} />
               <TouchableOpacity
                 onPress={() => props.onPressAdd ? props.onPressAdd(props.infoDish) : null}
-                style={{ backgroundColor: "blue", padding: 10, marginHorizontal: 5, borderRadius: 5 }}>
-                <Image
-                  source={require("../Theme/img/ic_add.png")}
-                  style={{ width: 10, aspectRatio: 1, }}
-                  tintColor='black'
-                />
+                style={{ backgroundColor: Color.main, padding: 5, marginHorizontal: 5, borderRadius: 5 }}>
+                <MaterialIcons
+                        name={'add'}
+                        size={20}
+                        color={Color.white}
+                      />
               </TouchableOpacity>
             </View>
 
@@ -127,7 +127,7 @@ export const BottomSheetShop = (props: BottomSheetShopProps) => {
     const itemTopping = item
     return (
       <View style={{ marginTop: 10, }} >
-        <Text children={item.name} style={{ backgroundColor: "gray", fontSize:18, paddingHorizontal: 10, paddingVertical: 5 }} />
+        <Text children={item.name} style={{ backgroundColor: '#DDDDDD', fontSize:18, paddingHorizontal: 10, paddingVertical: 8 }} />
         <FlatList
           data={item.topping_food}
           renderItem={({ item, index }) => renderItemTopping({ item, index, indexTopping: indexTopping, itemTopping: itemTopping })}
@@ -163,15 +163,14 @@ export const BottomSheetShop = (props: BottomSheetShopProps) => {
           <TouchableOpacity
             onPress={() => props.onPressClose ? props.onPressClose(props.infoDish) : null}
           >
-            <Image
-              source={require("../Theme/img/ic_close1.png")}
-              style={{ width: 20, aspectRatio: 1 }}
-              tintColor={"gray"}
-              resizeMode='contain'
-            />
+            <MaterialIcons
+                        name={'close'}
+                        size={30}
+                        color={Color.main}
+                      />
           </TouchableOpacity>
 
-          <Text children='Thêm món mới' style={{ fontSize:18, color: "gray"}} />
+          <Text children='Thêm món mới' style={{ fontSize: 17, color: 'black'}} />
           <View
             // source={R.images.ic_close1}
             style={{ width: 20, aspectRatio: 1 }}
@@ -211,8 +210,8 @@ export const BottomSheetShop = (props: BottomSheetShopProps) => {
             <FiteButton
               onPress={() => props.OnPressFinal ? props.OnPressFinal(props.infoDish) : null}
               title='Thêm vào giỏ hàng'
-              style={{ backgroundColor: 'white', borderWidth: 1, marginHorizontal: 10, borderRadius: 20, paddingVertical: 8, borderColor: "blue" }}
-              titleStyle={{ color: "blue", fontSize:15 }}
+              style={{ backgroundColor: Color.main, borderWidth: 1, marginHorizontal: 10, borderRadius: 20, paddingVertical: 8, borderColor: Color.main}}
+              titleStyle={{ color: Color.main, fontSize:15 }}
             />
           </View>
         </View>

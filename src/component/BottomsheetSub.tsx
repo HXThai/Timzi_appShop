@@ -11,7 +11,8 @@ import { View } from 'react-native';
 import { connect } from 'react-redux';
 import reactotron from 'reactotron-react-native';
 import { CALCULATION } from '../Constants/Constant';
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Color from '../Theme/Color';
 
 const dimension = Dimensions.get('window');
 const { width, height } = dimension;
@@ -46,16 +47,24 @@ export const BottomsheetSub = (props: BottomsheetSubProps) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <TouchableOpacity
                         onPress={() => props.onPressSubCount ? props.onPressSubCount({ itemCard, itemFood: props.data, type: CALCULATION.SUBTRACTION }) : null}
-                        style={{ backgroundColor: "green", padding: 10, marginHorizontal: 5, borderRadius: 5 }}
+                        style={{ backgroundColor: Color.main, padding: 5, marginHorizontal: 5, borderRadius: 5 }}
                     >
-                        <Image source={require("../Theme/img/ic_sub.png")} style={{ width: 10, aspectRatio: 1 }} resizeMode='contain' tintColor='black' />
+                        <MaterialIcons
+                        name={'remove'}
+                        size={20}
+                        color={Color.white}
+                      />
                     </TouchableOpacity>
                     <Text children={item.quantity.toString() ||"Chưa cập nhật"} style={{ fontSize: 15 }} />
                     <TouchableOpacity
                         onPress={() => props.onPressAddCount ? props.onPressAddCount({ itemCard, itemFood: props.data, type: CALCULATION.ADD }) : null}
-                        style={{ backgroundColor: "green", padding: 10, marginHorizontal: 5, borderRadius: 5 }}
+                        style={{ backgroundColor:Color.main, padding: 5, marginHorizontal: 5, borderRadius: 5 }}
                     >
-                        <Image source={require("../Theme/img/ic_add.png")} style={{ width: 10, aspectRatio: 1 }} tintColor='black' />
+                        <MaterialIcons
+                        name={'add'}
+                        size={20}
+                        color={Color.white}
+                      />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -82,14 +91,19 @@ export const BottomsheetSub = (props: BottomsheetSubProps) => {
                     <TouchableOpacity
                         onPress={() => props.onPressClose ? props.onPressClose(props.data) : null}
                     >
-                        <Image
+                        {/* <Image
                             source={require("../Theme/img/ic_close1.png")}
                             style={{ width: 20, aspectRatio: 1 }}
                             resizeMode='contain'
                             tintColor='gray'
-                        />
+                        /> */}
+                        <MaterialIcons
+                        name={'close'}
+                        size={30}
+                        color={Color.main}
+                      />
                     </TouchableOpacity>
-                    <Text children='Chỉnh sửa số lượng' style={{ fontSize: 20, textAlign: 'center', flex: 1, }} />
+                    <Text children='Chỉnh sửa số lượng' style={{ fontSize: 17, textAlign: 'center', flex: 1, }} />
 
                     <View
                         style={{ width: 20, aspectRatio: 1 }}
@@ -97,7 +111,7 @@ export const BottomsheetSub = (props: BottomsheetSubProps) => {
                 </View>
                 <Modal transparent visible={props.isRequest}>
                     <View style={{ bottom: dimension.height * 0.2, left: 0, right: 0, position: 'absolute', flex: 1 }}>
-                        <ActivityIndicator color={"blue"} count={4} size={40} />
+                        <ActivityIndicator color={Color.main} count={4} size={40} />
                     </View>
 
                 </Modal>

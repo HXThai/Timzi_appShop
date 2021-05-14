@@ -8,6 +8,9 @@ import { View } from 'react-native'
 
 import { connect } from 'react-redux'
 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Color from '../Theme/Color';
+
 const dimension = Dimensions.get('window');
 const { width, height } = dimension;
 interface DishItemProps {
@@ -90,7 +93,7 @@ export const DishItem = (props: DishItemProps) => {
                                 backgroundColor: 'white',
                                 elevation: 5,
                             }}
-                            resizeMode='contain'
+                            // resizeMode='contain'
                         >
 
                         </Image>
@@ -116,8 +119,12 @@ export const DishItem = (props: DishItemProps) => {
                             // })
                             // props.onPressSubtract ? props.onPressSubtract(props.infoFood) : null
                         }}
-                        style={{ backgroundColor: "red", padding: 8, borderRadius: 4, justifyContent: 'center', alignItems: 'center', }}>
-                        <Image source={require("../Theme/img/ic_sub.png")} style={{ width: 10, aspectRatio: 1 }} resizeMode='contain' tintColor='black' />
+                        style={{ backgroundColor: Color.buttonColor, padding: 5, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
+                        <MaterialIcons
+                        name={'remove'}
+                        size={20}
+                        color={Color.white}
+                      />
                     </TouchableOpacity>
                     <Text children={props.count || 0} style={{ marginHorizontal: 10 }} />
                     <TouchableOpacity
@@ -128,8 +135,12 @@ export const DishItem = (props: DishItemProps) => {
                             // })
                             // props.onPressAdd ? props.onPressAdd(props.infoFood) : null
                         }}
-                        style={{ backgroundColor: "red", padding: 8, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require("../Theme/img/ic_add.png")} style={{ width: 10, aspectRatio: 1 }} tintColor='black' resizeMode='contain' />
+                        style={{ backgroundColor: Color.buttonColor, padding: 5, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
+                        <MaterialIcons
+                        name={'add'}
+                        size={20}
+                        color={Color.white}
+                      />
                     </TouchableOpacity>
                 </View>
 
