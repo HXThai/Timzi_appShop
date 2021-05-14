@@ -113,22 +113,33 @@ export default function async(state = initialState, action) {
     // }
     case UPDATE_CART: {
       if (action.payload.calculation == CALCULATION.SUBTRACTION) {
-        state.data.category_food[action.payload.value.itemFood.index].food[
-          action.payload.value.itemFood.indexitemfood
-        ].book_food[action.payload.value?.itemCard?.index].quantity > 0 &&
-          state.data.category_food[action.payload.value.itemFood.index].food[
-            action.payload.value.itemFood.indexitemfood
-          ].book_food[action.payload.value?.itemCard?.index].quantity--;
-        state.data.category_food[action.payload.value.itemFood.index].food[
-          action.payload.value.itemFood.indexitemfood
-        ].book_food[action.payload.value?.itemCard?.index].quantity == 0 &&
-          state.data.category_food[action.payload.value.itemFood.index].food[
-            action.payload.value.itemFood.indexitemfood
-          ].book_food.splice(action.payload.value?.itemCard?.index, 1);
+        state.data[switch6(action.payload.value.itemFood.type)][
+          action.payload.value.itemFood.index
+        ].food[action.payload.value.itemFood.indexitemfood].book_food[
+          action.payload.value.itemCard.index
+        ].quantity > 0 &&
+          state.data[switch6(action.payload.value.itemFood.type)][
+            action.payload.value.itemFood.index
+          ].food[action.payload.value.itemFood.indexitemfood].book_food[
+            action.payload.value.itemCard.index
+          ].quantity--;
+        state.data[switch6(action.payload.value.itemFood.type)][
+          action.payload.value.itemFood.index
+        ].food[action.payload.value.itemFood.indexitemfood].book_food[
+          action.payload.value.itemCard.index
+        ].quantity == 0 &&
+          state.data[switch6(action.payload.value.itemFood.type)][
+            action.payload.value.itemFood.index
+          ].food[action.payload.value.itemFood.indexitemfood].book_food.splice(
+            action.payload.value.itemCard.index,
+            1,
+          );
       } else {
-        state.data.category_food[action.payload.value.itemFood.index].food[
-          action.payload.value.itemFood.indexitemfood
-        ].book_food[action.payload.value?.itemCard?.index].quantity++;
+        state.data[switch6(action.payload.value.itemFood.type)][
+          action.payload.value.itemFood.index
+        ].food[action.payload.value.itemFood.indexitemfood].book_food[
+          action.payload.value.itemCard.index
+        ].quantity++;
       }
       return {
         ...state,
@@ -333,3 +344,11 @@ const spShopDetailReducer = async (data, check, callback) => {
   }
   callback(program_store);
 };
+export const switch6 = (type) =>
+  type == TYPE_UPDATE_CART.CATEGORY
+    ? 'category_food'
+    : type == TYPE_UPDATE_CART.PROGRAM
+    ? 'program_store'
+    : type == TYPE_UPDATE_CART.CATEGORY_STORE_FOOD
+    ? 'category_store_food'
+    : 'combo_food';
