@@ -190,7 +190,7 @@ const Home = (props) => {
                                           // console.log('thai mai', response);
                                           if (response.data.code === 200) {
                                             props.navigation.reset({
-                                              index: 0,
+                                              // index: 0,
                                               routes: [
                                                 {
                                                   name: 'AccountShipperScreen',

@@ -112,6 +112,12 @@ const API_BASE_URL = {
   RATE_OF_USER: ROOT_DOMAIN + '/order/list-evaluate-with-store',
   GET_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE:
     ROOT_DOMAIN + '/book-table/store-detail-with-book-table-in-store',
+  ORDER_FOOD_WITH_BOOK_TABLE_IN_STORE:
+    ROOT_DOMAIN + '/book-table/order-food-with-book-table-in-store',
+  SUBTRACT_QUANTITY_BOOK_FOOD_IN_STORE:
+    ROOT_DOMAIN + '/book-table/subtract-quantity-book-food-in-store',
+  COMBO_BOOK_TABLE_IN_STORE:
+    ROOT_DOMAIN + '/book-table/order-combo-with-book-table-in-store',
 
   GET_NOTIFICATION: ROOT_DOMAIN + '/notify/list-notify',
   CONFIRM_VIEW_NOTIFICATION: ROOT_DOMAIN + '/notify/confirm-view-notify',
@@ -120,6 +126,14 @@ const API_BASE_URL = {
   GET_LIST_DISCOUNT_STORE: ROOT_DOMAIN + '/store/list-discount-store',
   GET_LIST_DISCOUNT_THIS_MONTH_STORE:
     ROOT_DOMAIN + '/store/discount-this-month-store',
+
+  CONFIRM_OTP_REGISTER: ROOT_DOMAIN + '/check-otp-register',
+  CONFIRM_OTP_FORGOT_PASSWORD: ROOT_DOMAIN + '/check-otp-verify',
+  FORGOT_PASSWORD: ROOT_DOMAIN + '/forgot-password',
+  CONFIRM_FORGOT_PASSWORD: ROOT_DOMAIN + '/update-new-password',
+
+  GET_LIST_TABLE_EMPTY: ROOT_DOMAIN + '/store/list-table-empty',
+  MERGE_TABLE_WITH_OWNER: ROOT_DOMAIN + '/book-table/table-merge-with-owner',
 };
 
 export {API_BASE_URL};

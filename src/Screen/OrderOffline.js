@@ -53,8 +53,18 @@ const Home = (props) => {
   const [dataOrder, setDataOrder] = useState([]);
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
-  const [printers, setPrinters] = useState([]);
+
+  const [modalVisibleMergeTable, setModalVisibleMergeTable] = useState(false);
+
   const [page, setPage] = useState(1);
+
+  const [dataMergeTable, setDataMergeTable] = useState([]);
+
+  const [dataChooseTable, setDataChooseTable] = useState([]);
+
+  const [totalTableMerge, setTotalTableMerge] = useState([]);
+
+  const [bookTableId, setBookTableId] = useState([]);
 
   const handleLoadMore = () => {
     console.log('thai meo');
@@ -606,22 +616,63 @@ const Home = (props) => {
                   </TouchableOpacity>
                 </View>
               ) : tab === 2 && item.is_shop_book === 1 ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    props.navigation.navigate('OrderFoodScreen', {id: item.id});
-                  }}
-                  style={{
-                    height: 19,
-                    width: 65,
-                    borderRadius: 4,
-                    borderColor: Color.main,
-                    borderWidth: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: 5,
-                  }}>
-                  <Text style={{color: Color.main, fontSize: 12}}>Gọi món</Text>
-                </TouchableOpacity>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setBookTableId(item?.table_store?.id);
+                      services
+                        .getListTableEmpty(null, item?.table_store?.id)
+                        .then(function (response) {
+                          if (response) {
+                            if (response.data.code === 200) {
+                              setDataMergeTable(response.data.data);
+                              var data = [];
+                              response.data.data.forEach((element) => {
+                                data.push(0);
+                              });
+                              setDataChooseTable(data);
+                            }
+                          } else {
+                            return;
+                          }
+                        });
+                      setModalVisibleMergeTable(true);
+                    }}
+                    style={{
+                      height: 19,
+                      width: 65,
+                      borderRadius: 4,
+                      borderColor: Color.buttonColor,
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 5,
+                    }}>
+                    <Text style={{color: Color.buttonColor, fontSize: 12}}>
+                      Gộp bàn
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // props.navigation.navigate('OrderFoodScreen', {
+                      //   id: item.id,
+                      // });
+                    }}
+                    style={{
+                      height: 19,
+                      width: 65,
+                      borderRadius: 4,
+                      borderColor: Color.main,
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 5,
+                    }}>
+                    <Text style={{color: Color.main, fontSize: 12}}>
+                      Gọi món
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               ) : tab === 3 ? (
                 <TouchableOpacity
                   onPress={() => {
@@ -695,6 +746,139 @@ const Home = (props) => {
     );
   };
 
+  const renderTable = ({item, index}) => {
+    return (
+      <View
+        onPress={() => {}}
+        style={{
+          width: Dimensions.get('window').width * 0.4,
+          marginBottom: 15,
+        }}>
+        <View
+          style={{
+            width: '85%',
+            borderRadius: 8,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            // marginRight: 10,
+            marginTop: 15,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              width: '100%',
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 10,
+              }}>
+              <Image
+                source={
+                  item.status === 'Hết chỗ'
+                    ? Images.iconOrderOfflineGrey
+                    : Images.iconOrderOfflineYellow
+                }
+                style={{height: 64, width: 64}}
+              />
+              <Text style={{color: '#fff', position: 'absolute'}}>
+                {item.number_table}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: '700',
+                marginTop: 10,
+              }}>
+              Bàn số {item.number_table}
+            </Text>
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: '400',
+                marginTop: 5,
+              }}>
+              {item.number_people_min} - {item.number_people_max} chỗ ngồi
+            </Text>
+            <View
+              style={{
+                height: 35,
+                width: 128,
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                marginTop: 10,
+                borderTopWidth: 1,
+                borderTopColor: '#E0E0E0',
+                flexDirection: 'row',
+              }}>
+              {dataChooseTable[index] === 0 && item.is_merge === 0 ? (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  {/* <MaterialIcons
+                    style={{marginRight: 5}}
+                    name={'check-circle'}
+                    size={20}
+                    color={Color.buttonColor}
+                  /> */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      var data = [...dataChooseTable];
+                      var dataChoose = [...totalTableMerge];
+                      dataChoose.push(item.id);
+                      data[index] = 1;
+                      setTotalTableMerge(dataChoose);
+                      setDataChooseTable(data);
+                    }}
+                    style={{
+                      backgroundColor: Color.main,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 4,
+                      padding: 5,
+                    }}>
+                    <Text style={{fontSize: 11, color: Color.white}}>
+                      Gộp bàn
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <MaterialIcons
+                    style={{marginRight: 5}}
+                    name={'check-circle'}
+                    size={20}
+                    color={Color.buttonColor}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: Color.grey,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 4,
+                      padding: 5,
+                    }}>
+                    <Text style={{fontSize: 11, color: Color.white}}>
+                      Đã chọn
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -754,7 +938,7 @@ const Home = (props) => {
                                 setStoreName(item.name);
                                 storage.setItem('dataStore', item);
                                 props.navigation.reset({
-                                  index: 0,
+                                  // index: 0,
                                   routes: [{name: 'TabNav'}],
                                 });
                                 setModalVisible(false);
@@ -797,6 +981,113 @@ const Home = (props) => {
                         }}>
                         <Text style={[styles.text, {color: '#fff'}]}>Đóng</Text>
                       </View>
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
+                <Modal
+                  onBackdropPress={() => setModalVisibleMergeTable(false)}
+                  style={{alignItems: 'center', justifyContent: 'center'}}
+                  isVisible={modalVisibleMergeTable}>
+                  <View
+                    style={{
+                      height: '60%',
+                      width: '100%',
+                      backgroundColor: '#fff',
+                      borderRadius: 10,
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'space-around',
+                      backgroundColor: '#E8E8E8',
+                    }}>
+                    <FlatList
+                      showsVerticalScrollIndicator={false}
+                      contentContainerStyle={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-evenly',
+                        alignItems: 'center',
+                      }}
+                      style={{
+                        width: Dimensions.get('window').width - 10,
+                        marginTop: 5,
+                        marginLeft: 25,
+                        borderRadius: 5,
+                        marginBottom: 10,
+                        flex: 1,
+                        paddingLeft: 5,
+                        paddingRight: 5,
+                      }}
+                      data={dataMergeTable}
+                      renderItem={renderTable}
+                      keyExtractor={(item, index) => index.toString()}
+                      // onEndReached={handleLoadMore}
+                      // onEndReachedThreshold={0}
+                      // ListFooterComponent={renderFooter}
+                    />
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert(
+                          'Xác nhận gộp bàn',
+                          'Bạn chắc chắn muốn gộp những bàn này?',
+                          [
+                            {text: 'Hủy', onPress: () => {}},
+                            {
+                              text: 'Đồng ý',
+                              onPress: async () => {
+                                services
+                                  .mergeTableWithOwner({
+                                    book_table_id: bookTableId,
+                                    table_store_id: totalTableMerge,
+                                  })
+                                  .then(function (response) {
+                                    if (response) {
+                                      if (response.data.code === 200) {
+                                        Alert.alert(
+                                          'Thông báo',
+                                          response.data.message,
+                                          [
+                                            {
+                                              text: 'Đồng ý',
+                                              onPress: () => {
+                                                setDataMergeTable([]);
+                                                setBookTableId(null);
+                                                setModalVisibleMergeTable(
+                                                  false,
+                                                );
+                                              },
+                                            },
+                                          ],
+                                          {cancelable: false},
+                                        );
+                                      } else {
+                                        Alert.alert(
+                                          'Thông báo',
+                                          'Gộp bàn thất bại!',
+                                          [{text: 'Đồng ý', onPress: () => {}}],
+                                          {cancelable: false},
+                                        );
+                                      }
+                                    } else {
+                                      return;
+                                    }
+                                  });
+                              },
+                            },
+                          ],
+                          {cancelable: false},
+                        );
+                      }}
+                      style={{
+                        height: 45,
+                        width: '100%',
+                        backgroundColor: Color.main,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 8,
+                      }}>
+                      <Text style={{fontSize: 15, color: Color.white}}>
+                        Xác nhận
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </Modal>

@@ -6,6 +6,7 @@ import {
   View,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -23,10 +24,84 @@ import Swipeout from 'react-native-swipeout';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
+import OneSignal from 'react-native-onesignal';
+import services from '../../Redux/Service/LoginService';
+import Modal from 'react-native-modal';
+import * as actionsLogin from '../../Redux/Action/loginAction';
+import * as actionsGetListStore from '../../Redux/Action/orderOnlineAction';
 
 const LoginScreen = (props) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const onLogin = async () => {
+    const userId = await OneSignal.getDeviceState();
+
+    services
+      .login({
+        phone: props?.route?.params?.phone,
+        password: newPassword,
+        device_id: userId.userId,
+      })
+      .then(function (response) {
+        if (response) {
+          if (response?.data?.code === 200) {
+            setModalVisible(false);
+            // console.log(getUniqueId().toString());
+            // save session login
+            storage.setItem('dataLogin', {
+              phone: props?.route?.params?.phone,
+              password: newPassword,
+              device_id: userId.userId,
+            });
+            storage.setItem('userLogin', response?.data?.data?.user);
+            storage.setItem('Authorization', response?.data.data.token);
+            storage.setItem('role_id', response?.data?.data?.user?.role_id);
+            props.getUserInformation(null);
+            //set router home
+            if (response?.data?.data?.user?.role_id === 3) {
+              props.navigation.navigate('Staff');
+            } else {
+              props.onGetListStore({});
+              props.navigation.navigate('TabNav');
+              props.navigation.reset({
+                // index: 0,
+                routes: [{name: 'TabNav'}],
+              });
+            }
+          } else {
+            Alert.alert('Thông báo!', response?.data?.message, [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  setModalVisible(false);
+                },
+              },
+            ]);
+            return;
+          }
+        } else {
+          Alert.alert(
+            'Thông báo!',
+            'Số điện thoại hoặc mật khẩu của bạn không chính xác.',
+            [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  setModalVisible(false);
+                },
+              },
+            ],
+          );
+          return;
+        }
+      })
+      .then(function () {
+        // setIsLoadingMore(false);
+        // setModalVisible(false);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -35,6 +110,22 @@ const LoginScreen = (props) => {
           source={Images.background}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          <Modal
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            isVisible={modalVisible}>
+            <View
+              style={{
+                height: 70,
+                width: 70,
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size="large" color={Color.main} />
+            </View>
+          </Modal>
           <ScrollView>
             <View style={{alignItems: 'center', width: '100%'}}>
               {/* <View style={{marginTop: 50}}>
@@ -79,7 +170,7 @@ const LoginScreen = (props) => {
                 <TextInput
                   style={{
                     color: '#000000',
-                    
+
                     width: '87%',
                     height: 40,
                   }}
@@ -92,9 +183,50 @@ const LoginScreen = (props) => {
               <View style={{width: '80%', marginTop: 40}}>
                 <TouchableOpacity
                   onPress={() =>
-                    // props.navigation.navigate('ConfirmOTPRegisterScreen')
-                    // props.navigation.navigate('ConfirmForgotPasswordScreen')
-                    {}
+                    services
+                      .confirmForgotPassword({
+                        phone: props?.route?.params?.phone,
+                        password: newPassword,
+                        password_confirmation: confirmNewPassword,
+                      })
+                      .then(function (response) {
+                        if (response) {
+                          if (response?.data?.code === 200) {
+                            Alert.alert('Thông báo!', response?.data?.message, [
+                              {
+                                text: 'Đồng ý',
+                                onPress: () => {
+                                  onLogin();
+                                },
+                              },
+                            ]);
+                          } else {
+                            Alert.alert('Thông báo!', response?.data?.message, [
+                              {
+                                text: 'Đồng ý',
+                                onPress: () => {
+                                  props.navigation.navigate('LoginScreen');
+                                },
+                              },
+                            ]);
+                            return;
+                          }
+                        } else {
+                          Alert.alert('Thông báo!', 'Lỗi!', [
+                            {
+                              text: 'Đồng ý',
+                              onPress: () => {
+                                setModalVisible(false);
+                              },
+                            },
+                          ]);
+                          return;
+                        }
+                      })
+                      .then(function () {
+                        // setIsLoadingMore(false);
+                        // setModalVisible(false);
+                      })
                   }>
                   <View
                     style={{
@@ -126,13 +258,19 @@ const LoginScreen = (props) => {
 const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
-    data: state.loginReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onLogin: (params) => {
     dispatch(actionsLogin.login(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
+  },
+  onGetListStore: (params) => {
+    dispatch(actionsGetListStore.getListStore(params));
   },
 });
 

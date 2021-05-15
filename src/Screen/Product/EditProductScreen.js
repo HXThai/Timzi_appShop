@@ -390,7 +390,7 @@ const LoginScreen = (props) => {
                 text: 'Đồng ý',
                 onPress: async () => {
                   props.navigation.reset({
-                    index: 0,
+                    // index: 0,
                     routes: [
                       {
                         name: 'ListProductScreen',

@@ -20,40 +20,92 @@ import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
-import registerService from '../../Redux/Service/LoginService';
+import services from '../../Redux/Service/LoginService';
 
 const ConfirmOTPScreen = (props) => {
-  const [otp, setOtp] = useState('');
+  const [code, setCode] = useState('');
 
-  const handleConfirmOtp = () => {
-    // console.log(otp);
-    registerService
-      .confirmOtp({otp: otp})
-      .then(function (response) {
-        if (response) {
-          if (response?.data?.code === 200) {
-            Alert.alert('Thông báo!', response?.data?.message, [
-              {
-                text: 'Đồng ý',
-                onPress: () => {
-                  props.navigation.navigate('LoginScreen');
+  const handleConfirm = () => {
+    props?.route?.params?.type === 'register'
+      ? services
+          .confirmOTPRegister({otp: code})
+          .then(function (response) {
+            if (response) {
+              if (response?.data?.code === 200) {
+                Alert.alert('Thông báo!', response?.data?.message, [
+                  {
+                    text: 'Đồng ý',
+                    onPress: () => {
+                      props.navigation.navigate('LoginScreen');
+                    },
+                  },
+                ]);
+              } else {
+                Alert.alert('Thông báo!', response?.data?.message, [
+                  {
+                    text: 'Đồng ý',
+                    onPress: () => {
+                      props.navigation.navigate('LoginScreen');
+                    },
+                  },
+                ]);
+                return;
+              }
+            } else {
+              Alert.alert('Thông báo!', 'Lỗi!', [
+                {
+                  text: 'Đồng ý',
+                  onPress: () => {
+                    setModalVisible(false);
+                  },
                 },
-              },
-            ]);
-          } else {
-            Alert.alert('Thông báo!', response?.data?.message, [
-              {text: 'Đồng ý'},
-            ]);
-          }
-        } else {
-          Alert.alert('Thông báo!', 'Lỗi!', [{text: 'Đồng ý'}]);
-          return;
-        }
-      })
-      .then(function () {
-        // setIsLoadingMore(false);
-        // setIsLoading(false);
-      });
+              ]);
+              return;
+            }
+          })
+          .then(function () {
+            // setIsLoadingMore(false);
+            // setModalVisible(false);
+          })
+      : services
+          .confirmOTPForgotPassword({otp: code})
+          .then(function (response) {
+            if (response) {
+              if (response?.data?.code === 200) {
+                Alert.alert('Thông báo!', response?.data?.message, [
+                  {
+                    text: 'Đồng ý',
+                    onPress: () => {
+                      props.navigation.navigate('ConfirmForgotPasswordScreen', {
+                        phone: props?.route?.params?.phone,
+                      });
+                    },
+                  },
+                ]);
+              } else {
+                Alert.alert('Thông báo!', response?.data?.message, [
+                  {
+                    text: 'Đồng ý',
+                  },
+                ]);
+                return;
+              }
+            } else {
+              Alert.alert('Thông báo!', 'Lỗi!', [
+                {
+                  text: 'Đồng ý',
+                  onPress: () => {
+                    setModalVisible(false);
+                  },
+                },
+              ]);
+              return;
+            }
+          })
+          .then(function () {
+            // setIsLoadingMore(false);
+            // setModalVisible(false);
+          });
   };
 
   return (
@@ -73,20 +125,20 @@ const ConfirmOTPScreen = (props) => {
                 }}>
                 XÁC NHẬN OTP
               </Text>
-              <View
+              {/* <View
                 style={{
                   marginTop: 40,
                   justifyContent: 'flex-start',
                   flexDirection: 'row',
                   width: '80%',
                 }}>
-                {/* <Text style={{color: 'red'}}>Mã OTP không chính xác</Text>  */}
-              </View>
+                <Text style={{color: 'red'}}>Mã OTP không chính xác</Text>
+              </View> */}
               <View
-                style={{width: '80%', marginTop: 10, justifyContent: 'center'}}>
+                style={{width: '80%', marginTop: 50, justifyContent: 'center'}}>
                 <OtpInputs
-                  handleChange={(code) => setOtp(code)}
-                  numberOfInputs={6}
+                  handleChange={(code) => setCode(code)}
+                  numberOfInputs={4}
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -107,7 +159,7 @@ const ConfirmOTPScreen = (props) => {
                   }}
                 />
               </View>
-              <View
+              {/* <View
                 style={{
                   flexDirection: 'row',
                   marginTop: 25,
@@ -125,7 +177,7 @@ const ConfirmOTPScreen = (props) => {
                   }}>
                   <Text>Gửi lại</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
               {/* <View
                 style={{
                   flexDirection: 'row',
@@ -135,11 +187,10 @@ const ConfirmOTPScreen = (props) => {
                 <Text>Mã OTP sẽ được gửi lại sau: </Text>
                 <Text style={{fontWeight: 'bold'}}>30s</Text>
               </View> */}
-              <View style={{width: '80%', marginTop: 30}}>
+              <View style={{width: '80%', marginTop: 50}}>
                 <TouchableOpacity
                   onPress={() => {
-                    // props.navigation.navigate('ConfirmForgotPasswordScreen');
-                    handleConfirmOtp();
+                    handleConfirm();
                   }}>
                   <View
                     style={{

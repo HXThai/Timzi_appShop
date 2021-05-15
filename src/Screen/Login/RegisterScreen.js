@@ -44,7 +44,16 @@ const LoginScreen = (props) => {
       .then(function (response) {
         if (response) {
           if (response?.data?.code === 200) {
-            props.navigation.navigate('ConfirmOTPRegisterScreen');
+            Alert.alert('Thông báo!', response?.data?.message, [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  props.navigation.navigate('ConfirmOTPRegisterScreen', {
+                    type: 'register',
+                  });
+                },
+              },
+            ]);
           } else {
             Alert.alert('Thông báo!', response?.data?.message, [
               {text: 'Đồng ý'},

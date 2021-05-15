@@ -41,7 +41,10 @@ const SplashScreen = (props) => {
                   storage.setItem('Authorization', response?.data.data.token);
                   props.getUserInformation(null);
                   //set router home
-                  if (response?.data?.data?.user?.role_id === 3) {
+                  if (
+                    response?.data?.data?.user?.role_id === 3 &&
+                    response?.data?.data?.user?.status_staff === 0
+                  ) {
                     props.navigation.navigate('Staff');
                   } else {
                     props.navigation.navigate('TabNav');

@@ -62,7 +62,7 @@ const Home = (props) => {
   const [page, setPage] = useState(1);
 
   const handleLoadMore = () => {
-    console.log('thai meo');
+    // console.log('thai meo');
     dataOrder.length >= 12 ? setPage(page + 1) : null;
   };
 
@@ -498,7 +498,7 @@ const Home = (props) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-              ) : tab === 1 ? (
+              ) : tab === 1 && item.status === 9 ? (
                 <TouchableOpacity
                   onPress={() => {
                     Alert.alert(
@@ -631,7 +631,7 @@ const Home = (props) => {
                                 setStoreName(item.name);
                                 storage.setItem('dataStore', item);
                                 props.navigation.reset({
-                                  index: 0,
+                                  // index: 0,
                                   routes: [{name: 'TabNav'}],
                                 });
                                 setModalVisible(false);

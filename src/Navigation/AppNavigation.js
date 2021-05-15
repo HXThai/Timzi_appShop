@@ -353,8 +353,6 @@ function App() {
 }
 
 function StaffStack(props) {
-  const [modalVisible, setModalVisible] = useState(false);
-
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -533,7 +531,7 @@ function LoginStack(props) {
       <Stack.Screen
         name="ConfirmOTPRegisterScreen"
         component={ConfirmOTPRegisterScreen}
-        options={{
+        options={({route}) => ({
           headerTransparent: true,
           headerTitle: () => (
             <View style={{marginTop: 70, alignItems: 'center'}}>
@@ -544,7 +542,6 @@ function LoginStack(props) {
               />
             </View>
           ),
-          // headerTitleStyle: {alignSelf: 'center', color: '#333333'},
           headerStyle: {
             backgroundColor: Color.background,
             elevation: 0,
@@ -552,8 +549,9 @@ function LoginStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('RegisterScreen');
-                // console.log(props);
+                route.params.type === 'register'
+                  ? props.navigation.navigate('RegisterScreen')
+                  : props.navigation.navigate('ForgotPasswordScreen');
               }}>
               <View style={{marginLeft: 20}}>
                 <MaterialIcons
@@ -567,15 +565,13 @@ function LoginStack(props) {
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
-                // props.navigation.navigate('AirTicketScreen');
+                // props.navigation.navigate('LoginScreen');
                 // console.log(props);
               }}>
-              <View style={{marginLeft: 20}}>
-                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
-              </View>
+              <View style={{marginLeft: 20}}></View>
             </TouchableOpacity>
           ),
-        }}
+        })}
       />
       <Stack.Screen
         name="ForgotPasswordScreen"
@@ -662,9 +658,7 @@ function LoginStack(props) {
                 // props.navigation.navigate('AirTicketScreen');
                 // console.log(props);
               }}>
-              <View style={{marginLeft: 20}}>
-                <MaterialIcons name={'arrow-back-ios'} size={26} color={null} />
-              </View>
+              <View style={{marginLeft: 20}}></View>
             </TouchableOpacity>
           ),
         }}
