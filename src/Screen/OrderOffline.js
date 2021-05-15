@@ -1161,7 +1161,7 @@ const Home = (props) => {
                       flexDirection: 'row',
                       marginTop: 20,
                       // justifyContent: 'space-between',
-                      width: '100%',
+                      width: Dimensions.get('window').width - 20,
                       flexWrap: 'wrap',
                     }}>
                     {dataTab.map((item, index) => {

@@ -5,6 +5,7 @@ import {Alert, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import reactotron from 'reactotron-react-native';
 import api from '../Redux/Service/orderOfflineService';
+import Color from '../Theme/Color';
 export const OrderTableScreen = (props) => {
   const id = props.route.params.id;
   const [isRequest, setIsRequest] = useState(false);
@@ -52,31 +53,68 @@ export const OrderTableScreen = (props) => {
     }
   };
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: 10}}>
+      <Text style={{marginTop: 15}}>Tên người đặt</Text>
       <TextInput
         value={name}
-        style={{borderWidth: 1, marginTop: 10, height: 40}}
+        style={{
+          borderWidth: 1,
+          marginTop: 5,
+          height: 40,
+          padding: 5,
+          borderRadius: 6,
+        }}
         onChangeText={(txt) => setName(txt)}
       />
+      <Text style={{marginTop: 15}}>Số điện thoại</Text>
       <TextInput
         value={phone}
-        style={{borderWidth: 1, marginTop: 10, height: 40}}
+        style={{
+          borderWidth: 1,
+          marginTop: 5,
+          height: 40,
+          padding: 5,
+          borderRadius: 6,
+        }}
         onChangeText={(txt) => setPhone(txt)}
       />
+      <Text style={{marginTop: 15}}>Số người</Text>
       <TextInput
         value={numberPeople}
-        style={{borderWidth: 1, marginTop: 10, height: 40}}
+        style={{
+          borderWidth: 1,
+          marginTop: 5,
+          height: 40,
+          padding: 5,
+          borderRadius: 6,
+        }}
         onChangeText={(txt) => setNumberPeople(txt)}
       />
+      <Text style={{marginTop: 15}}>Ghi chú</Text>
       <TextInput
+        multiline={true}
         value={note}
-        style={{borderWidth: 1, marginTop: 10, height: 40}}
+        style={{
+          borderWidth: 1,
+          marginTop: 5,
+          height: 80,
+          padding: 5,
+          borderRadius: 6,
+        }}
         onChangeText={(txt) => setNote(txt)}
       />
       <TouchableOpacity
-        style={{alignItems: 'center'}}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 20,
+          borderRadius: 8,
+          backgroundColor: Color.main,
+          padding: 5,
+          height: 40,
+        }}
         onPress={handleBookTable}>
-        <Text>Đặt bàn</Text>
+        <Text style={{color: Color.white}}>Đặt bàn</Text>
       </TouchableOpacity>
     </View>
   );
