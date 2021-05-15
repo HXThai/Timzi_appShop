@@ -27,11 +27,11 @@ import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import services from '../../Redux/Service/orderOfflineService';
-import {
-  USBPrinter,
-  NetPrinter,
-  BLEPrinter,
-} from 'react-native-thermal-receipt-printer';
+// import {
+//   USBPrinter,
+//   NetPrinter,
+//   BLEPrinter,
+// } from 'react-native-thermal-receipt-printer';
 import reactotron from 'reactotron-react-native';
 
 const LoginScreen = (props) => {
@@ -118,68 +118,68 @@ const LoginScreen = (props) => {
     return hours + ':' + min + ':' + sec; //format: dd-mm-yyyy;
   };
 
-  const printBillTest = () => {
-    var dataPrint =
-      '<R>Timzi.vn</R>\n\n<C><D>' +
-      store.name +
-      '</D></C>\n<C>' +
-      store.address +
-      '</C>\n\n<C><B>Hoa don ban hang</B></C>\n\n\n<L>Ngay: </L>\t<L>' +
-      getCurrentDate() +
-      '</L>\t\t\t<L>So: 1243</L>\n\n<L>Nhan vien xuat: </L>\t<L>' +
-      'Chu shop</L>\n\n<L>In luc: </L>\t<L>' +
-      getCurrenTime() +
-      '</L>\n<C>-------------------------------------------</C>' +
-      '\n<L>Ten khach hang: </L>\t<L>' +
-      dataOrderOffline?.name +
-      '</L>\n\n<L>So dien thoai: </L>\t<L>' +
-      dataOrderOffline?.phone +
-      '</L>\n\n<L>So ban: </L>\t<L>' +
-      dataOrderOffline?.table_store?.number_table +
-      '</L>\t\t\t<L>So khach: </L><L>' +
-      dataOrderOffline?.number_people +
-      '</L>\n<C>------------------------------------------</C>';
+  // const printBillTest = () => {
+  //   var dataPrint =
+  //     '<R>Timzi.vn</R>\n\n<C><D>' +
+  //     store.name +
+  //     '</D></C>\n<C>' +
+  //     store.address +
+  //     '</C>\n\n<C><B>Hoa don ban hang</B></C>\n\n\n<L>Ngay: </L>\t<L>' +
+  //     getCurrentDate() +
+  //     '</L>\t\t\t<L>So: 1243</L>\n\n<L>Nhan vien xuat: </L>\t<L>' +
+  //     'Chu shop</L>\n\n<L>In luc: </L>\t<L>' +
+  //     getCurrenTime() +
+  //     '</L>\n<C>-------------------------------------------</C>' +
+  //     '\n<L>Ten khach hang: </L>\t<L>' +
+  //     dataOrderOffline?.name +
+  //     '</L>\n\n<L>So dien thoai: </L>\t<L>' +
+  //     dataOrderOffline?.phone +
+  //     '</L>\n\n<L>So ban: </L>\t<L>' +
+  //     dataOrderOffline?.table_store?.number_table +
+  //     '</L>\t\t\t<L>So khach: </L><L>' +
+  //     dataOrderOffline?.number_people +
+  //     '</L>\n<C>------------------------------------------</C>';
 
-    dataOrderOffline?.book_food?.forEach((element, index) => {
-      if (element?.food === null) {
-        dataPrint +=
-          '\n\n<L>' +
-          element?.combo_food?.name +
-          '</L>\t<L>\tx' +
-          element?.quantity +
-          '</L>\t<L>' +
-          element?.price +
-          '</L>';
-      } else {
-        dataPrint +=
-          '\n\n<L>' +
-          element?.food?.name +
-          '</L>\t<L>\tx' +
-          element?.quantity +
-          '</L>\t<L>' +
-          element?.price +
-          '</L>';
-      }
-    });
-    dataPrint +=
-      '\n<C>-------------------------------------------</C>\n\n<D>Thanh tien: </D><L>' +
-      dataOrderOffline?.total_money +
-      ' d</L>\n\n\n<C>     ***CAM ON QUY KHACH VA HEN GAP LAI***</C>' +
-      '<L>\n  Hotline: </L><L>' +
-      store.hotline +
-      '</L><L>   Website: Timzi.vn</L>' +
-      '<C>\n\n\n\n\n.</C>';
-    var newData = nonAccentVietnamese(dataPrint);
-    // console.log(newData);
-    // var name = 'Hoang Xuan Thai';
-    // var dataPrint =
-    //   '<C><B>Hoa don ban hang</B></C>\n\n<L>Ten khach hang: </L> \t<L>' +
-    //   name +
-    //   '</L>';
-    NetPrinter.printBill(newData);
-    // NetPrinter.printBill('\x1D\x56\x01');
-    NetPrinter.printBill('\x00');
-  };
+  //   dataOrderOffline?.book_food?.forEach((element, index) => {
+  //     if (element?.food === null) {
+  //       dataPrint +=
+  //         '\n\n<L>' +
+  //         element?.combo_food?.name +
+  //         '</L>\t<L>\tx' +
+  //         element?.quantity +
+  //         '</L>\t<L>' +
+  //         element?.price +
+  //         '</L>';
+  //     } else {
+  //       dataPrint +=
+  //         '\n\n<L>' +
+  //         element?.food?.name +
+  //         '</L>\t<L>\tx' +
+  //         element?.quantity +
+  //         '</L>\t<L>' +
+  //         element?.price +
+  //         '</L>';
+  //     }
+  //   });
+  //   dataPrint +=
+  //     '\n<C>-------------------------------------------</C>\n\n<D>Thanh tien: </D><L>' +
+  //     dataOrderOffline?.total_money +
+  //     ' d</L>\n\n\n<C>     ***CAM ON QUY KHACH VA HEN GAP LAI***</C>' +
+  //     '<L>\n  Hotline: </L><L>' +
+  //     store.hotline +
+  //     '</L><L>   Website: Timzi.vn</L>' +
+  //     '<C>\n\n\n\n\n.</C>';
+  //   var newData = nonAccentVietnamese(dataPrint);
+  //   // console.log(newData);
+  //   // var name = 'Hoang Xuan Thai';
+  //   // var dataPrint =
+  //   //   '<C><B>Hoa don ban hang</B></C>\n\n<L>Ten khach hang: </L> \t<L>' +
+  //   //   name +
+  //   //   '</L>';
+  //   NetPrinter.printBill(newData);
+  //   // NetPrinter.printBill('\x1D\x56\x01');
+  //   NetPrinter.printBill('\x00');
+  // };
 
   return (
     <View style={styles.container}>

@@ -29,11 +29,11 @@ import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
 import {connect} from 'react-redux';
 import services from '../Redux/Service/orderOfflineService';
 import reactotron from 'reactotron-react-native';
-import {
-  USBPrinter,
-  NetPrinter,
-  BLEPrinter,
-} from 'react-native-thermal-receipt-printer';
+// import {
+//   USBPrinter,
+//   NetPrinter,
+//   BLEPrinter,
+// } from 'react-native-thermal-receipt-printer';
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
