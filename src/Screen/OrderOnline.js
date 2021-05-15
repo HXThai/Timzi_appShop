@@ -36,7 +36,7 @@ const wait = (timeout) => {
 };
 
 const Home = (props) => {
-  const [tab, setTab] = useState(props?.route?.params?.tab ? 2 : 0);
+  const [tab, setTab] = useState(0);
   const [dataTab, setDataTab] = useState([
     {id: 0, name: 'Mới'},
     {id: 1, name: 'Đã nhận'},
@@ -113,10 +113,9 @@ const Home = (props) => {
     } else if (tab === 1) {
       props.navigation.navigate('OrderOnlineRecievedDetailScreen', {id: id});
     } else if (tab === 2) {
-      props.navigation.navigate('OrderOnlineRecievedDetailScreen', {id: id});
-      // props.navigation.navigate('OrderOnlineHasTakenDetailScreen', {id: id});
+      props.navigation.navigate('OrderOnlineHasTakenDetailScreen', {id: id});
     } else if (tab === 3) {
-      // props.navigation.navigate('OrderOnlineCancelledDetailScreen');
+      props.navigation.navigate('OrderOnlineSuccessedDetailScreen', {id: id});
     } else if (tab === 4) {
       props.navigation.navigate('OrderOnlineCancelledDetailScreen', {id: id});
     }
@@ -125,9 +124,15 @@ const Home = (props) => {
   useFocusEffect(
     useCallback(() => {
       if (props?.route?.params?.tab === 1) {
-        handleChangeTab(1);
+        setTab(0);
+      } else if (props?.route?.params?.tab === 2) {
+        setTab(1);
+      } else if (props?.route?.params?.tab === 3) {
+        setTab(2);
       } else if (props?.route?.params?.tab === 4) {
-        handleChangeTab(4);
+        setTab(3);
+      } else if (props?.route?.params?.tab === 4) {
+        setTab(4);
       }
     }, [props?.route?.params?.tab]),
   );
@@ -770,6 +775,7 @@ const Home = (props) => {
                       flexDirection: 'row',
                       marginTop: 20,
                       justifyContent: 'space-between',
+                      width: Dimensions.get('window').width - 20,
                     }}>
                     {dataTab.map((item, index) => {
                       return (

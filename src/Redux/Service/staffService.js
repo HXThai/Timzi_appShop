@@ -75,4 +75,9 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+  confirmViewOneNotification: async (params, id) => {
+    let url = `${API_BASE_URL.CONFIRM_VIEW_NOTIFICATION}?notify_id=${id}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };

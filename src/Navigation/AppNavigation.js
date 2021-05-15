@@ -44,6 +44,7 @@ import ForgotPasswordScreen from './../Screen/Login/ForgotPasswordScreen';
 import ConfirmForgotPasswordScreen from '../Screen/Login/ConfirmForgotPasswordScreen';
 import NewOrderOnlineDetailScreen from '../Screen/OrderOnline/NewOrderOnlineDetailScreen';
 import OrderOnlineRecievedDetailScreen from '../Screen/OrderOnline/OrderOnlineRecievedDetailScreen';
+import OrderOnlineSuccessedDetailScreen from '../Screen/OrderOnline/OrderOnlineSuccessedDetailScreen';
 import OrderOnlineHasTakenDetailScreen from '../Screen/OrderOnline/OrderOnlineHasTakenDetailScreen';
 import OrderOnlineCancelledDetailScreen from '../Screen/OrderOnline/OrderOnlineCancelledDetailScreen';
 import InformationRestaurantScreen from './../Screen/Product/InformationRestaurantScreen';
@@ -236,6 +237,13 @@ const getTabBarVisibility = (route) => {
   if (routename == 'DiscountScreen') {
     return false;
   }
+  if (routename == 'OrderOnlineSuccessedDetailScreen') {
+    return false;
+  }
+  if (routename == 'OrderTable') {
+    return false;
+  }
+
   return true;
 };
 export function isIPhoneX() {
@@ -491,9 +499,9 @@ function LoginStack(props) {
           headerTitle: () => (
             <View style={{marginTop: 70, alignItems: 'center'}}>
               <Image
-                source={Images.logoNoLine}
+                source={Images.logo}
                 resizeMode="cover"
-                style={{width: 120, height: 115}}
+                style={{width: 140, height: 120}}
               />
             </View>
           ),
@@ -538,7 +546,7 @@ function LoginStack(props) {
               <Image
                 source={Images.logo}
                 resizeMode="cover"
-                style={{width: 308, height: 109}}
+                style={{width: 140, height: 120}}
               />
             </View>
           ),
@@ -581,9 +589,9 @@ function LoginStack(props) {
           headerTitle: () => (
             <View style={{marginTop: 70, alignItems: 'center'}}>
               <Image
-                source={Images.logoNoLine}
+                source={Images.logo}
                 resizeMode="cover"
-                style={{width: 120, height: 115}}
+                style={{width: 140, height: 120}}
               />
             </View>
           ),
@@ -628,7 +636,7 @@ function LoginStack(props) {
               <Image
                 source={Images.logo}
                 resizeMode="cover"
-                style={{width: 308, height: 109}}
+                style={{width: 140, height: 120}}
               />
             </View>
           ),
@@ -1015,7 +1023,7 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home');
+                props.navigation.navigate('Home', {tab: 1});
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
@@ -1054,8 +1062,46 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home');
-                // props.navigation.goBack()
+                props.navigation.navigate('Home', {tab: 2});
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // props.navigation.navigate('LoginScreen');
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                {/* <MaterialIcons name={'arrow-back-ios'} size={26} color={null} /> */}
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="OrderOnlineSuccessedDetailScreen"
+        component={OrderOnlineSuccessedDetailScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'Chi tiết đơn đã hoàn thành',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('Home', {tab: 4});
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
@@ -1094,7 +1140,7 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home');
+                props.navigation.navigate('Home', {tab: 3});
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
@@ -1133,7 +1179,7 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home');
+                props.navigation.navigate('Home', {tab: 5});
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>

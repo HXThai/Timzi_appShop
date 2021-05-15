@@ -683,7 +683,7 @@ const Home = (props) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                {dataCateWithStore?.map((item, index) => {
+                {data?.category_food?.map((item, index) => {
                   return (
                     <View key={index}>
                       <View
@@ -920,7 +920,7 @@ const Home = (props) => {
                     </View>
                   );
                 })}
-                {dataCateStoreFood?.map((item, index) => {
+                {data?.category_store_food?.map((item, index) => {
                   return (
                     <View key={index}>
                       <View

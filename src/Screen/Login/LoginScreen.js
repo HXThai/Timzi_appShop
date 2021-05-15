@@ -148,9 +148,9 @@ const LoginScreen = (props) => {
             <View style={{alignItems: 'center', width: '100%'}}>
               <View style={{marginTop: 50}}>
                 <Image
-                  source={Images.logoNoLine}
+                  source={Images.logo}
                   resizeMode="cover"
-                  style={{width: 120, height: 115}}
+                  style={{width: 140, height: 120}}
                 />
               </View>
               <Text
