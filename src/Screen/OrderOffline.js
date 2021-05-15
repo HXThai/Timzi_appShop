@@ -654,9 +654,9 @@ const Home = (props) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      // props.navigation.navigate('OrderFoodScreen', {
-                      //   id: item.id,
-                      // });
+                      props.navigation.navigate('OrderFoodScreen', {
+                        id: item.id,
+                      });
                     }}
                     style={{
                       height: 19,

@@ -214,6 +214,12 @@ const LoginScreen = (props) => {
                           return;
                         }
                       });
+                  } else if (item.type === 3) {
+                    //1: 0
+                    //2: 1
+                    //3: 2 5
+                    //4: 3
+                    //5: 4 6 7
                   }
 
                   // if (item.type === 2) {
