@@ -33,6 +33,7 @@ import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 // import {USBPrinter, NetPrinter, BLEPrinter} from 'react-native-printer';
 import services from '../../Redux/Service/staffService';
 import servicesOnline from '../../Redux/Service/orderOnlineService';
+import servicesOffline from '../../Redux/Service/orderOfflineService';
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -165,6 +166,7 @@ const LoginScreen = (props) => {
                       .then(function (response2) {
                         if (response2) {
                           if (response2.data.code === 200) {
+                            // console.log(res)
                             if (response2.data.data.status === 1) {
                               props.navigation.navigate('Personal');
                               props.navigation.navigate(
@@ -187,7 +189,7 @@ const LoginScreen = (props) => {
                             ) {
                               props.navigation.navigate('Personal');
                               props.navigation.navigate(
-                                'OrderOnlineRecievedDetailScreen',
+                                'OrderOnlineHasTakenDetailScreen',
                                 {id: item.object_id},
                               );
                             } else if (response2.data.data.status === 4) {
@@ -215,6 +217,54 @@ const LoginScreen = (props) => {
                         }
                       });
                   } else if (item.type === 3) {
+                    services
+                      .orderOfflineDetail(null, item.object_id)
+                      .then(function (response2) {
+                        if (response2) {
+                          if (response2.data.code === 200) {
+                            if (response2.data.data.status === 0) {
+                              props.navigation.navigate('Personal');
+                              props.navigation.navigate(
+                                'NewOrderOfflineDetailScreen',
+                                {id: item.object_id},
+                              );
+                            } else if (response2.data.data.status === 1) {
+                              props.navigation.navigate('Personal');
+                              props.navigation.navigate(
+                                'OrderOfflineServedDetailScreen',
+                                {id: item.object_id},
+                              );
+                            } else if (
+                              response2.data.data.status === 2 ||
+                              response2.data.data.status === 5
+                            ) {
+                              props.navigation.navigate('Personal');
+                              props.navigation.navigate(
+                                'OrderOfflineServingDetailScreen',
+                                {id: item.object_id},
+                              );
+                            } else if (response2.data.data.status === 3) {
+                              props.navigation.navigate('Personal');
+                              props.navigation.navigate(
+                                'OrderOfflineServedDetailScreen',
+                                {id: item.object_id},
+                              );
+                            } else if (
+                              response2.data.data.status === 4 ||
+                              response2.data.data.status === 6 ||
+                              response2.data.data.status === 7
+                            ) {
+                              props.navigation.navigate('Personal');
+                              props.navigation.navigate(
+                                'OrderOfflineCancelledDetailScreen',
+                                {id: item.object_id},
+                              );
+                            }
+                          }
+                        } else {
+                          return;
+                        }
+                      });
                     //1: 0
                     //2: 1
                     //3: 2 5

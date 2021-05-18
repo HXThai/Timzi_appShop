@@ -78,4 +78,9 @@ export default homeService = {
     let response = callApiService.post(url, params);
     return response;
   },
+  submitOrderFood: async (params, id) => {
+    let url = `${API_BASE_URL.SUBMIT_ORDER_FOOD}/${id}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };

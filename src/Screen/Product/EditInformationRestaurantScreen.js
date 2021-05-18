@@ -310,6 +310,7 @@ const LoginScreen = (props) => {
         setFilePath(response);
         setImage(response.uri);
         setImageName(response.fileName);
+        setModalVisible(false);
       });
     }
   };
@@ -347,6 +348,7 @@ const LoginScreen = (props) => {
       setFilePath(response);
       setImage(response.uri);
       setImageName(response.fileName);
+      setModalVisible(false);
     });
   };
 
@@ -464,7 +466,6 @@ const LoginScreen = (props) => {
               <View>
                 <TouchableOpacity
                   onPress={() => {
-                    setModalVisible(false);
                     captureImage('photo');
                   }}
                   style={{
@@ -485,7 +486,6 @@ const LoginScreen = (props) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    setModalVisible(false);
                     chooseFile('photo');
                   }}
                   style={{

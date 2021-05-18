@@ -626,8 +626,49 @@ const LoginScreen = (props) => {
                 </View>
                 <TouchableOpacity
                   onPress={() => {
-                    printBillTest();
-                    props.navigation.navigate('Utilities', {tab: 4});
+                    // printBillTest();
+                    Alert.alert(
+                      'Xác nhận thanh toán',
+                      'Bạn chắc chắn muốn thanh toán bàn này?',
+                      [
+                        {text: 'Hủy', onPress: () => {}},
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {
+                            services
+                              .confirmPaymentBookfood(
+                                null,
+                                props?.route?.params?.id,
+                              )
+                              .then(function (response) {
+                                if (response) {
+                                  if (response.data.code === 200) {
+                                    props.navigation.navigate('Utilities', {
+                                      tab: 4,
+                                    });
+                                  } else {
+                                    Alert.alert(
+                                      'Thông báo',
+                                      response.data.message,
+                                      [{text: 'Đồng ý', onPress: () => {}}],
+                                      {cancelable: false},
+                                    );
+                                  }
+                                } else {
+                                  Alert.alert(
+                                    'Thông báo',
+                                    'Khách hàng chưa xác nhận thanh toán!',
+                                    [{text: 'Đồng ý', onPress: () => {}}],
+                                    {cancelable: false},
+                                  );
+                                  return;
+                                }
+                              });
+                          },
+                        },
+                      ],
+                      {cancelable: false},
+                    );
                   }}
                   style={{
                     height: 44,

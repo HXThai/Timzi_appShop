@@ -158,6 +158,7 @@ const LoginScreen = (props) => {
         setFilePath(response);
         setImage(response.uri);
         setImageName(response.fileName);
+        setModalVisible(false);
       });
     }
   };

@@ -1877,7 +1877,7 @@ function PersonalStack(props) {
               <Image
                 source={Images.logo}
                 resizeMode="cover"
-                style={{width: 308, height: 109}}
+                style={{width: 140, height: 120}}
               />
             </View>
           ),
@@ -1924,7 +1924,7 @@ function PersonalStack(props) {
               <Image
                 source={Images.logo}
                 resizeMode="cover"
-                style={{width: 308, height: 109}}
+                style={{width: 140, height: 120}}
               />
             </View>
           ),

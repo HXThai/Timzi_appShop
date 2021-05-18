@@ -43,7 +43,7 @@ const Home = (props) => {
   const [tab, setTab] = useState(0);
   const [dataTab, setDataTab] = useState([
     {id: 0, name: 'Danh sách bàn'},
-    {id: 1, name: 'Mới'},
+    // {id: 1, name: 'Mới'},
     {id: 2, name: 'Đã nhận'},
     {id: 3, name: 'Đang phục vụ'},
     {id: 4, name: 'Đã thanh toán'},
@@ -126,8 +126,10 @@ const Home = (props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (props?.route?.params?.tab) {
+      if (props?.route?.params?.tab === 4) {
         setTab(4);
+      } else if (props?.route?.params?.tab === 3) {
+        setTab(3);
       }
     }, [props?.route?.params?.tab]),
   );
@@ -285,8 +287,27 @@ const Home = (props) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          onClickDetail(item.id);
-          reactotron.log('day ne');
+          // console.log(item.status);
+          if (tab === 0) {
+            if (item.status === 1) {
+              onClickDetail(item.id);
+            } else {
+              Alert.alert(
+                'Thông báo!',
+                'Bàn đã hết chỗ, vui lòng chọn bàn khác!',
+                [
+                  {
+                    text: 'Đồng ý',
+                  },
+                ],
+                {cancelable: false},
+              );
+            }
+          } else {
+            onClickDetail(item.id);
+          }
+
+          // reactotron.log('day ne');
         }}
         style={{
           height: 100,
@@ -619,9 +640,10 @@ const Home = (props) => {
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TouchableOpacity
                     onPress={() => {
-                      setBookTableId(item?.table_store?.id);
+                      setBookTableId(item?.id);
+                      reactotron.log(item);
                       services
-                        .getListTableEmpty(null, item?.table_store?.id)
+                        .getListTableEmpty(null, item?.id)
                         .then(function (response) {
                           if (response) {
                             if (response.data.code === 200) {
@@ -700,6 +722,12 @@ const Home = (props) => {
                                     );
                                   }
                                 } else {
+                                  Alert.alert(
+                                    'Thông báo',
+                                    'Khách hàng chưa xác nhận thanh toán!',
+                                    [{text: 'Đồng ý', onPress: () => {}}],
+                                    {cancelable: false},
+                                  );
                                   return;
                                 }
                               });
@@ -726,18 +754,39 @@ const Home = (props) => {
               ) : null}
               <TouchableOpacity
                 onPress={() => {
-                  onClickDetail(item.id);
+                  // onClickDetail(item.id);
+                  if (tab === 0) {
+                    if (item.status === 1) {
+                      onClickDetail(item.id);
+                    } else {
+                      Alert.alert(
+                        'Thông báo!',
+                        'Bàn đã hết chỗ, vui lòng chọn bàn khác!',
+                        [
+                          {
+                            text: 'Đồng ý',
+                          },
+                        ],
+                        {cancelable: false},
+                      );
+                    }
+                  } else {
+                    onClickDetail(item.id);
+                  }
                 }}
                 style={{
-                  height: 19,
-                  width: 60,
+                  // height: 19,
+                  // width: 60,
+                  padding: 3,
                   borderRadius: 4,
                   borderColor: Color.main,
                   borderWidth: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text style={{color: Color.main, fontSize: 12}}>Chi tiết</Text>
+                <Text style={{color: Color.main, fontSize: 12}}>
+                  {tab === 0 ? 'Đặt bàn' : 'Chi tiết'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -819,12 +868,6 @@ const Home = (props) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  {/* <MaterialIcons
-                    style={{marginRight: 5}}
-                    name={'check-circle'}
-                    size={20}
-                    color={Color.buttonColor}
-                  /> */}
                   <TouchableOpacity
                     onPress={() => {
                       var data = [...dataChooseTable];

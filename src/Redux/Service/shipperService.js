@@ -22,6 +22,11 @@ export default homeService = {
     let response = callApiService.delete(url, params);
     return response;
   },
+  searchShipper: async (params) => {
+    let url = `${API_BASE_URL.GET_LIST_SHIPPER}?name=${params}`;
+    let response = callApiService.get(url);
+    return response;
+  },
 
   searchStore: async (params, name, province_id) => {
     let url = `${API_BASE_URL.SEARCH_STORE}?name=${name}&province_id=${province_id}`;

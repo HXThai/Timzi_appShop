@@ -34,7 +34,7 @@ const LoginScreen = (props) => {
       title: 'Trần Văn Tét',
       foodCore: 'Thời gian đặt',
       option1: 'Số lần đặt',
-      option2: 'Thời gian phục vụ',
+      option2: 'Số điện thoại',
       priceFoodCore: '08:00, 12/12/2021',
       priceOption1: 3,
       priceOption2: '18:00 thứ 7 ngày 12/12/2021',
@@ -373,6 +373,11 @@ const LoginScreen = (props) => {
                 })}
               </ScrollView>
               <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('OrderFoodScreen', {
+                    id: props?.route?.params?.id,
+                  });
+                }}
                 style={{
                   height: 45,
                   width: '100%',
@@ -385,7 +390,7 @@ const LoginScreen = (props) => {
                   marginBottom: 10,
                   backgroundColor: Color.main,
                 }}>
-                <Text style={{fontSize: 15, color: 'white'}}>Xác nhận</Text>
+                <Text style={{fontSize: 15, color: 'white'}}>Gọi món</Text>
               </TouchableOpacity>
             </View>
           ) : null}

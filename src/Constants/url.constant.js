@@ -134,6 +134,8 @@ const API_BASE_URL = {
 
   GET_LIST_TABLE_EMPTY: ROOT_DOMAIN + '/store/list-table-empty',
   MERGE_TABLE_WITH_OWNER: ROOT_DOMAIN + '/book-table/table-merge-with-owner',
+
+  SUBMIT_ORDER_FOOD: ROOT_DOMAIN + '/book-table/submit-order-food-with-staff',
 };
 
 export {API_BASE_URL};

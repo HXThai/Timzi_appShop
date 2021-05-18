@@ -38,11 +38,41 @@ const LoginScreen = (props) => {
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
+  const [page, setPage] = useState(1);
+
+  const [dataStore, setDataStore] = useState('');
+
+  const handleLoadMore = () => {
+    // console.log('thai meo');
+    dataRate.length >= 12 ? setPage(page + 1) : null;
+  };
+
+  useEffect(() => {
+    getData();
+    return () => {};
+  }, [page]);
+
+  const getData = () => {
+    services
+      .getListRateOfUser(null, dataStore.id, page)
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            setDataRate((prev) => [...prev, ...response?.data?.data?.data]);
+            setModalVisibleLoading(false);
+          }
+        } else {
+          return;
+        }
+      });
+  };
+
   useEffect(() => {
     setModalVisibleLoading(true);
     storage.getItem('dataStore').then((data) => {
       if (data) {
-        services.getListRateOfUser(null, data.id).then(function (response) {
+        setDataStore(data);
+        services.getListRateOfUser(null, data.id, 1).then(function (response) {
           if (response) {
             if (response.data.code === 200) {
               setDataRate(response?.data?.data?.data);
@@ -75,7 +105,11 @@ const LoginScreen = (props) => {
           }}>
           <Image
             source={{uri: item?.user?.avatar}}
-            style={{width: 80, height: 80, borderRadius: 6}}
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: 6,
+            }}
           />
           <View
             style={{
@@ -123,7 +157,7 @@ const LoginScreen = (props) => {
         <View
           style={{
             padding: 10,
-            borderWidth: 1,
+            borderWidth: 0.5,
             borderColor: 'grey',
             borderRadius: 10,
             marginTop: 5,
@@ -187,7 +221,7 @@ const LoginScreen = (props) => {
               renderItem={renderProduct}
               keyExtractor={(item, index) => index.toString()}
               // extraData={dataOrder}
-              // onEndReached={handleLoadMore}
+              onEndReached={handleLoadMore}
               onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
               // ListFooterComponent={renderFooter}
             />

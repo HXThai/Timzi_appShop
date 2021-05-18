@@ -37,6 +37,7 @@ import { BottomSheetShop } from '../../component/BottomSheetShop';
 import { DishItem } from '../../component/DishItem';
 import { BottomsheetSub } from '../../component/BottomsheetSub';
 import { FiteButton } from '../../component/FiteButton';
+
 const dimension = Dimensions.get('window');
 const { width, height } = dimension;
 const LoginScreen = (props) => {
@@ -662,6 +663,7 @@ const LoginScreen = (props) => {
                   </View>
                   <FiteButton
                     onPress={() => {
+                      // reactotron.log(data)
                       if (!data.book_table) {
                         Alert.alert(
                           'Thông báo',
@@ -673,11 +675,41 @@ const LoginScreen = (props) => {
                             //   style: 'cancel',
                             // },
                             { text: 'Hủy', onPress: () => { } },
-
                           ],
                           { cancelable: false },
                         )
                         return
+                      } else {
+                        services
+                          .submitOrderFood(null, data.book_table.id)
+                            .then(function (response) {
+                              if (response) {
+                                if (response.data.code === 200) {
+                                  Alert.alert(
+                                    'Thông báo',
+                                    response.data.message,
+                                    [
+                                     {
+                                        text: 'Đồng ý',
+                                          onPress: () => {   
+                                            props.navigation.navigate('Utilities', {tab: 3});                                            
+                                              },
+                                            },
+                                          ],
+                                          {cancelable: false},
+                                        );
+                                      } else {
+                                        Alert.alert(
+                                          'Thông báo',
+                                          response.data.message,
+                                          [{text: 'Đồng ý', onPress: () => {}}],
+                                          {cancelable: false},
+                                        );
+                                      }
+                                    } else {
+                                      return;
+                                    }
+                                  });
                       }
 
                     }}

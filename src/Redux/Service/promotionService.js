@@ -71,8 +71,8 @@ export default homeService = {
     return response;
   },
 
-  getListRateOfUser: async (params, store_id) => {
-    let url = `${API_BASE_URL.RATE_OF_USER}/${store_id}`;
+  getListRateOfUser: async (params, store_id, page) => {
+    let url = `${API_BASE_URL.RATE_OF_USER}/${store_id}?page=${page}`;
     let response = callApiService.get(url);
     return response;
   },
