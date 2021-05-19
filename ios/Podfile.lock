@@ -193,6 +193,8 @@ PODS:
     - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (3.1.8):
     - React-Core
+  - react-native-thermal-receipt-printer (1.1.5):
+    - React
   - React-RCTActionSheet (0.63.3):
     - React-Core/RCTActionSheetHeaders (= 0.63.3)
   - React-RCTAnimation (0.63.3):
@@ -297,6 +299,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-thermal-receipt-printer (from `../node_modules/react-native-thermal-receipt-printer`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -361,6 +364,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-onesignal"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-thermal-receipt-printer:
+    :path: "../node_modules/react-native-thermal-receipt-printer"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -425,6 +430,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: b42940647478bf106ad3c491d6f5d9d40916d865
   react-native-onesignal: b4b93d774fd626e90c5a5abafa342f9af21c66dc
   react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
+  react-native-thermal-receipt-printer: dc8a238195d2516f9e881ff736a5da6bc08d98ae
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
   React-RCTBlob: 0b284339cbe4b15705a05e2313a51c6d8b51fa40
@@ -447,6 +453,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
-PODFILE CHECKSUM: 5ab5ea657b065e211fc6fb2171c176784e57c29a
+PODFILE CHECKSUM: f08066d44332139c2517fb3bef75cfcdc3f16d96
 
 COCOAPODS: 1.10.1

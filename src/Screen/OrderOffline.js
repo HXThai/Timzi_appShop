@@ -43,7 +43,7 @@ const Home = (props) => {
   const [tab, setTab] = useState(0);
   const [dataTab, setDataTab] = useState([
     {id: 0, name: 'Danh sách bàn'},
-    // {id: 1, name: 'Mới'},
+    {id: 1, name: 'Mới'},
     {id: 2, name: 'Đã nhận'},
     {id: 3, name: 'Đang phục vụ'},
     {id: 4, name: 'Đã thanh toán'},

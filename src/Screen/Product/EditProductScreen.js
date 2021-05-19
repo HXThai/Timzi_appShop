@@ -633,7 +633,7 @@ const LoginScreen = (props) => {
               isVisible={modalVisibleStoreFood}>
               <View
                 style={{
-                  height: '25%',
+                  height: '20%',
                   width: '80%',
                   backgroundColor: '#fff',
                   borderRadius: 10,

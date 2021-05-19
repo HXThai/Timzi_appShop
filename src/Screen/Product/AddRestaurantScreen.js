@@ -161,26 +161,24 @@ const LoginScreen = (props) => {
       }
     });
 
-    services
-      .getListCategory(null, dataLocation?.lat, dataLocation?.lng)
-      .then(function (response) {
-        if (response) {
-          if (response.data.code === 200) {
-            // setDataCategory(response?.data?.data);
-            // console.log(response?.data?.data);
-            reactotron.log(response?.data?.data?.list_category);
-            var data = [];
-            response?.data?.data?.list_category?.forEach((element, index) => {
-              // reactotron.log(index);
-              element.isCheck = 0;
-              data.push(element);
-            });
-            setDataCategory(data);
-          }
-        } else {
-          return;
+    services.getListCategory(null, '1.0', '1.0').then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          // setDataCategory(response?.data?.data);
+          // console.log(response?.data?.data);
+          reactotron.log(response?.data?.data?.list_category);
+          var data = [];
+          response?.data?.data?.list_category?.forEach((element, index) => {
+            // reactotron.log(index);
+            element.isCheck = 0;
+            data.push(element);
+          });
+          setDataCategory(data);
         }
-      });
+      } else {
+        return;
+      }
+    });
   }, []);
 
   const [isDatePickerOpenVisible, setDatePickerOpenVisibility] = useState(

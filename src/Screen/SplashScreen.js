@@ -65,7 +65,7 @@ const SplashScreen = (props) => {
           props.navigation.navigate('Login');
         }
       });
-    }, 3000);
+    }, 2500);
   }, []);
 
   return (

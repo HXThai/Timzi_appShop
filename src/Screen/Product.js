@@ -27,6 +27,7 @@ import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
 import {connect} from 'react-redux';
 import storage from './asyncStorage/Storage';
 import services from '../Redux/Service/productService';
+import ImageModal from 'react-native-image-modal';
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -50,6 +51,8 @@ const Home = (props) => {
   const [dataCateStoreFood, setDataCateStoreFood] = useState([]);
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
+  const [modalVisibleShowImage, setModalVisibleShowImage] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -740,7 +743,7 @@ const Home = (props) => {
                         style={{marginTop: 20, marginBottom: 10}}>
                         {data?.category_food[index]?.food.map((item, index) => {
                           return (
-                            <TouchableOpacity
+                            <View
                               key={index}
                               style={{
                                 width: 130,
@@ -767,14 +770,32 @@ const Home = (props) => {
                                   // marginTop: 10,
                                   position: 'absolute',
                                 }}>
-                                <Image
-                                  source={{uri: item.image}}
-                                  style={{
-                                    height: 97,
-                                    width: 97,
-                                    borderRadius: 50,
-                                  }}
-                                />
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    return (
+                                      <ImageModal
+                                        resizeMode="contain"
+                                        imageBackgroundColor="#000000"
+                                        style={{
+                                          width: 250,
+                                          height: 250,
+                                        }}
+                                        source={{
+                                          uri:
+                                            'https://cdn.pixabay.com/photo/2019/07/25/18/58/church-4363258_960_720.jpg',
+                                        }}
+                                      />
+                                    );
+                                  }}>
+                                  <Image
+                                    source={{uri: item.image}}
+                                    style={{
+                                      height: 97,
+                                      width: 97,
+                                      borderRadius: 50,
+                                    }}
+                                  />
+                                </TouchableOpacity>
                                 <View
                                   style={{
                                     width: '100%',
@@ -913,7 +934,7 @@ const Home = (props) => {
                                   </TouchableOpacity>
                                 </View>
                               </View>
-                            </TouchableOpacity>
+                            </View>
                           );
                         })}
                       </ScrollView>

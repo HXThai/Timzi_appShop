@@ -10,6 +10,7 @@ import {
   Dimensions,
   Alert,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -36,9 +37,77 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 import storage from './asyncStorage/Storage';
+import Modal from 'react-native-modal';
+import {
+  USBPrinter,
+  NetPrinter,
+  BLEPrinter,
+} from 'react-native-thermal-receipt-printer';
 
 const Home = (props) => {
   const [storeId, setStoreId] = useState(null);
+
+  // useEffect(() => {
+  //   NetPrinter.init().then(() => {
+  //     setPrinters([{host: '192.168.2.222', port: 9100}]);
+  //     // console.log('success');
+  //     NetPrinter.connectPrinter('192.168.2.222', 9100).then(
+  //       (value) => {
+  //         console.log('test');
+  //         setCurrentPrinter(value);
+  //       },
+  //       (error) => console.log(error),
+  //     );
+  //   });
+  // }, []);
+
+  const handleConnectPrinter = () => {
+    setModalVisibleLoading(true);
+    NetPrinter.init().then(() => {
+      // setPrinters([{host: ipAđdress, port: 9100}]);
+      // console.log('success');
+      NetPrinter.connectPrinter(ipAđdress, 9100).then(
+        (value) => {
+          console.log('test');
+
+          Alert.alert(
+            'Thông báo!',
+            'Kết nối máy in thành công!',
+            [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  setModalVisibleLoading(false);
+                  setModalVisible(false);
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        },
+        (error) => {
+          console.log(error);
+
+          Alert.alert(
+            'Thông báo!',
+            'Kết nối máy in thất bại, vui lòng kiểm tra lại thông tin!',
+            [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  setModalVisibleLoading(false);
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        },
+      );
+    });
+    // setTimeout(() => {
+    //   console.log('thai');
+    // }, 3000);
+  };
 
   useEffect(() => {
     storage.getItem('dataStore').then((data) => {
@@ -50,18 +119,17 @@ const Home = (props) => {
     });
   }, [props.data.responseListStore]);
 
-  const [dataUser, setDataUser] = useState({
-    image: Images.avatar,
-    name: 'HOÀNG XUÂN THÁI',
-    role: 'Quản lý',
-    restaurant: 'Tokkio - BBQ Nhật Bản',
-    phone: '0986868686',
-    date: '12/12/2021',
-  });
+  const [dataUser, setDataUser] = useState({});
 
   const [phone, setPhone] = useState('0901945179');
 
   const [roleId, setRoleId] = useState('');
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
+  const [ipAđdress, setIpAddress] = useState('192.168.2.222');
 
   useEffect(() => {
     storage.getItem('role_id').then((data) => {
@@ -123,11 +191,6 @@ const Home = (props) => {
         'Đăng xuất',
         'Bạn chắc chắn muốn đăng xuất?',
         [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => {},
-          //   style: 'cancel',
-          // },
           {text: 'Hủy', onPress: () => {}},
           {
             text: 'Đồng ý',
@@ -193,6 +256,68 @@ const Home = (props) => {
           <SafeAreaView style={{flex: 1}}>
             <View style={{padding: 10}}>
               <ScrollView showsVerticalScrollIndicator={false}>
+                <Modal
+                  onBackdropPress={() => setModalVisible(false)}
+                  style={{alignItems: 'center', justifyContent: 'center'}}
+                  isVisible={modalVisible}>
+                  <Modal
+                    style={{alignItems: 'center', justifyContent: 'center'}}
+                    isVisible={modalVisibleLoading}>
+                    <View
+                      style={{
+                        height: 70,
+                        width: 70,
+                        backgroundColor: '#fff',
+                        borderRadius: 10,
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <ActivityIndicator size="large" color={Color.main} />
+                    </View>
+                  </Modal>
+                  <View
+                    style={{
+                      height: Dimensions.get('window').height * 0.22,
+                      width: '100%',
+                      backgroundColor: '#fff',
+                      borderRadius: 10,
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'space-around',
+                    }}>
+                    <View>
+                      <Text>Địa chỉ Ip máy in</Text>
+                      <TextInput
+                        style={{
+                          height: 40,
+                          borderBottomWidth: 0.8,
+                          borderBottomColor: '#333333',
+                          width: Dimensions.get('window').width * 0.7,
+                        }}
+                        placeholder="Địa chỉ ip máy in"
+                        placeholderTextColor="#9C9C9C"
+                        onChangeText={(text) => setIpAddress(text)}
+                        defaultValue={ipAđdress}
+                      />
+                      <TouchableOpacity
+                        onPress={() => {
+                          handleConnectPrinter();
+                        }}
+                        style={{
+                          width: Dimensions.get('window').width * 0.7,
+                          marginTop: 20,
+                          height: 40,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: Color.buttonColor,
+                          borderRadius: 8,
+                        }}>
+                        <Text>Kết nối máy in</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Modal>
                 <View
                   style={{
                     padding: 10,
@@ -224,7 +349,35 @@ const Home = (props) => {
                       }}>
                       <MaterialIcons
                         name={'notifications'}
-                        size={26}
+                        size={28}
+                        color={Color.main}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      width: Dimensions.get('window').width - 100,
+                      position: 'absolute',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setModalVisible(true);
+                      }}
+                      style={{
+                        height: 50,
+                        width: 50,
+                        borderRadius: 50,
+                        borderColor: Color.main,
+                        borderWidth: 0.5,
+                        position: 'absolute',
+                        alignSelf: 'flex-end',
+                        marginTop: 10,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <MaterialIcons
+                        name={'print'}
+                        size={28}
                         color={Color.main}
                       />
                     </TouchableOpacity>
@@ -241,10 +394,10 @@ const Home = (props) => {
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Địa chỉ: {dataUser?.address}
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Email: {dataUser?.email}
-                    </Text>
+                    </Text> */}
                     <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Số điện thoại: {dataUser?.phone}
