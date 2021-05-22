@@ -66,7 +66,7 @@ const Home = (props) => {
   };
 
   useEffect(() => {
-    getData();
+    page > 1 ? getData() : null;
     return () => {};
   }, [page]);
 
