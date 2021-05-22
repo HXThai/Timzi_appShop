@@ -396,12 +396,8 @@ const Home = (props) => {
                     </Text>
                     {/* <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
-                      Email: {dataUser?.email}
-                    </Text> */}
-                    <Text
-                      style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Số điện thoại: {dataUser?.phone}
-                    </Text>
+                    </Text> */}
                     {/* <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Ngày tham gia: {dataUser.date}

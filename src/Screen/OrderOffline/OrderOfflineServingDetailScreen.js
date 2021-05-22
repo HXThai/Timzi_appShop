@@ -136,7 +136,9 @@ const LoginScreen = (props) => {
     //   dataOrderOffline?.phone +
     //   '</L>\n\n<L>So ban: </L>\t<L>' +
     //   dataOrderOffline?.table_store?.number_table +
-    //   '</L>\t\t\t<L>So khach: </L><L>' +
+    //   '</L>\t\t\t' +
+    //   '   ' +
+    //   '<L>So khach: </L><L>' +
     //   dataOrderOffline?.number_people +
     //   '</L>\n<C>------------------------------------------</C>';
 
@@ -145,7 +147,7 @@ const LoginScreen = (props) => {
     //     dataPrint +=
     //       '\n\n<L>' +
     //       element?.combo_food?.name +
-    //       '</L>\t<L>\tx' +
+    //       '</L>\t\t<L>\tx' +
     //       element?.quantity +
     //       '</L>\t<L>' +
     //       element?.price +
@@ -170,21 +172,25 @@ const LoginScreen = (props) => {
     //   '</L><L>   Website: Timzi.vn</L>' +
     //   '<C>\n\n\n\n\n.</C>';
 
-    //-----------------
+    // // -----------------
     // var newData = nonAccentVietnamese(dataPrint);
-    // console.log(newData);
-    // var name = 'Hoang Xuan Thai';
-    // var dataPrint =
-    //   '<C><B>Hoa don ban hang</B></C>\n\n<L>Ten khach hang: </L> \t<L>' +
-    //   name +
-    //   '</L>';
-    //------------------
+    // // console.log(newData);
+    // // var name = 'Hoang Xuan Thai';
+    // // var dataPrint =
+    // //   '<C><B>Hoa don ban hang</B></C>\n\n<L>Ten khach hang: </L> \t<L>' +
+    // //   name +
+    // //   '</L>';
+    // //------------------
 
-    var dataPrint = '<M>Con mèo ngu ngốc</M>';
+    // // var dataPrint = '<C>Con mèo ngu ngốc</C>';
 
-    NetPrinter.printBill(dataPrint, {encoding: 'UTF-8'});
+    // NetPrinter.printBill(newData, {encoding: 'UTF-8'});
     // NetPrinter.printBill('\x1D\x56\x01');
-    // NetPrinter.printBill('\x00');
+
+    const newData = '<L>Thai meo</L>\n<L>x3\t\t\t\t230000</L>';
+
+    NetPrinter.printBill(newData, {encoding: 'UTF-8'});
+    NetPrinter.printBill('\x00');
   };
 
   return (

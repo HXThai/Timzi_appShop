@@ -27,7 +27,7 @@ import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
 import {connect} from 'react-redux';
 import storage from './asyncStorage/Storage';
 import services from '../Redux/Service/productService';
-import ImageModal from 'react-native-image-modal';
+// import ImageModal from 'react-native-image-modal';
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -772,20 +772,20 @@ const Home = (props) => {
                                 }}>
                                 <TouchableOpacity
                                   onPress={() => {
-                                    return (
-                                      <ImageModal
-                                        resizeMode="contain"
-                                        imageBackgroundColor="#000000"
-                                        style={{
-                                          width: 250,
-                                          height: 250,
-                                        }}
-                                        source={{
-                                          uri:
-                                            'https://cdn.pixabay.com/photo/2019/07/25/18/58/church-4363258_960_720.jpg',
-                                        }}
-                                      />
-                                    );
+                                    // return (
+                                    //   <ImageModal
+                                    //     resizeMode="contain"
+                                    //     imageBackgroundColor="#000000"
+                                    //     style={{
+                                    //       width: 250,
+                                    //       height: 250,
+                                    //     }}
+                                    //     source={{
+                                    //       uri:
+                                    //         'https://cdn.pixabay.com/photo/2019/07/25/18/58/church-4363258_960_720.jpg',
+                                    //     }}
+                                    //   />
+                                    // );
                                   }}>
                                   <Image
                                     source={{uri: item.image}}
