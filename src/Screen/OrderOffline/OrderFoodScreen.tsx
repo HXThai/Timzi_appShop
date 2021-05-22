@@ -692,7 +692,10 @@ const LoginScreen = (props) => {
                                      {
                                         text: 'Đồng ý',
                                           onPress: () => {   
-                                            props.navigation.navigate('Utilities', {tab: 3});                                            
+                                            props.navigation.reset({
+                                              routes: [{name: 'Utilities'}],
+                                            });
+                                            props.navigation.navigate('Utilities');                                            
                                               },
                                             },
                                           ],

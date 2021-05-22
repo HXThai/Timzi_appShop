@@ -42,31 +42,6 @@ const LoginScreen = (props) => {
     },
   ]);
 
-  const [dataFood, setDataFood] = useState([
-    {
-      title: 'Trần Văn Tét',
-      foodCore: 'Ngan sào',
-      option1: 'Vịt hấp',
-      option2: 'Bò tái',
-      priceFoodCore: 1,
-      priceOption1: 1,
-      priceOption2: 1,
-      discount: 1,
-      price: 30000,
-      status: 'Đang phục vụ',
-    },
-  ]);
-
-  const [dataNewOrder, setDataNewOrder] = useState({
-    status: 'Chờ xử lý',
-    name: 'Bàn số 1',
-    code: 'TZ001 - 12122021',
-    location: 'Tầng 1',
-    service: 'Tất cả',
-    numberCustommer: '2 - 8',
-    numberTable: 1,
-  });
-
   const [dataOrderOffline, setDataOrderOffline] = useState([]);
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
@@ -469,7 +444,7 @@ const LoginScreen = (props) => {
                   />
                   <Text
                     style={{fontSize: 17, fontWeight: '700', marginLeft: 10}}>
-                    {styles.dynamicSort(186000)} đ
+                    {styles.dynamicSort(dataOrderOffline.total_money)} đ
                   </Text>
                 </View>
                 <View

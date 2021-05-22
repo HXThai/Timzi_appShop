@@ -29,6 +29,7 @@ import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
 import {connect} from 'react-redux';
 import services from '../Redux/Service/orderOfflineService';
 import reactotron from 'reactotron-react-native';
+import {get} from 'react-native/Libraries/Utilities/PixelRatio';
 // import {
 //   USBPrinter,
 //   NetPrinter,
@@ -67,7 +68,7 @@ const Home = (props) => {
   const [bookTableId, setBookTableId] = useState([]);
 
   const handleLoadMore = () => {
-    console.log('thai meo');
+    // console.log('thai meo');
     dataOrder.length >= 12 ? setPage(page + 1) : null;
   };
 
@@ -77,7 +78,7 @@ const Home = (props) => {
   }, [page]);
 
   const getData = () => {
-    console.log('page', page);
+    // console.log('page', page);
     if (tab === 0) {
       services
         .getListTableOrderOffline(null, storeId, page)
@@ -108,7 +109,6 @@ const Home = (props) => {
   };
 
   const onClickDetail = (id) => {
-    reactotron.log('tab', tab);
     if (tab === 1) {
       props.navigation.navigate('NewOrderOfflineDetailScreen', {id: id});
     } else if (tab === 2) {
@@ -125,12 +125,15 @@ const Home = (props) => {
   };
 
   useFocusEffect(
-    React.useCallback(() => {
-      if (props?.route?.params?.tab === 4) {
-        setTab(4);
-      } else if (props?.route?.params?.tab === 3) {
-        setTab(3);
-      }
+    useCallback(() => {
+      // console.log(props?.route?.params?.tab);
+      // if (props?.route?.params?.tab === 4) {
+      //   setTab(4);
+      // } else if (props?.route?.params?.tab === 3) {
+      //   setTab(3);
+      // } else if (props?.route?.params?.tab === 2) {
+      //   setTab(2);
+      // }
     }, [props?.route?.params?.tab]),
   );
 
@@ -147,6 +150,8 @@ const Home = (props) => {
   const [currentPrinter, setCurrentPrinter] = useState();
 
   const onRefresh = useCallback(() => {
+    // console.log(tab);
+    // setDataOrder([]);
     setRefreshing(true);
     if (tab === 0) {
       services
@@ -234,23 +239,8 @@ const Home = (props) => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   NetPrinter.init().then(() => {
-  //     setPrinters([{host: '192.168.2.222', port: 9100}]);
-  //     // console.log('success');
-  //     NetPrinter.connectPrinter('192.168.2.222', 9100).then(
-  //       (value) => {
-  //         console.log('test');
-  //         setCurrentPrinter(value);
-  //       },
-  //       (error) => console.log(error),
-  //     );
-  //   });
-  // }, []);
-
-  const handleChangeTab = (index) => {
-    console.log(index);
-    setDataOrder([]);
+  const handleChangeTab = async (index) => {
+    await setDataOrder([]);
     setTab(index);
     setPage(1);
     setModalVisibleLoading(true);
@@ -1231,7 +1221,7 @@ const Home = (props) => {
                       flexWrap: 'wrap',
                     }}>
                     {dataTab.map((item, index) => {
-                      return (
+                      return index === 1 ? null : (
                         <TouchableOpacity
                           key={index}
                           onPress={() => {

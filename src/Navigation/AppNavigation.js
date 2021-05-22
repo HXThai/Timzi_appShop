@@ -1062,7 +1062,7 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home', {tab: 2});
+                props.navigation.navigate('Home');
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
@@ -1101,7 +1101,7 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home', {tab: 4});
+                props.navigation.navigate('Home');
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
@@ -1140,7 +1140,7 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home', {tab: 3});
+                props.navigation.navigate('Home');
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
@@ -1179,7 +1179,7 @@ function HomeStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate('Home', {tab: 5});
+                props.navigation.navigate('Home');
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>

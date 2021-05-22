@@ -80,8 +80,11 @@ const API_BASE_URL = {
   GET_LIST_TABLE_ORDER_OFFLINE: ROOT_DOMAIN + '/book-table/list-table-store',
   CONFIRM_FOOD_ON_THE_TABLE:
     ROOT_DOMAIN + '/book-table/confirm-food-on-the-table',
+  RETURN_BOOK_FOOD: ROOT_DOMAIN + '/book-table/return-book-food',
   CONFIRM_PAYMENT_BOOKFOOD:
     ROOT_DOMAIN + '/book-table/confirm-payment-book-food-with-owner',
+  CONFIRM_PAYMENT_BOOKFOOD_WITH_STAFF:
+    ROOT_DOMAIN + '/book-table/payment-book-food-with-staff',
 
   GET_LOCATION_SUGGEST: 'https://rsapi.goong.io/Place/AutoComplete',
   GET_LOCATION_DETAIL: 'https://rsapi.goong.io/Place/Detail',

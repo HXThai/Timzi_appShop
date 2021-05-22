@@ -68,8 +68,8 @@ const Home = (props) => {
       // console.log('success');
       NetPrinter.connectPrinter(ipAđdress, 9100).then(
         (value) => {
+          // console.log(value);
           console.log('test');
-
           Alert.alert(
             'Thông báo!',
             'Kết nối máy in thành công!',
@@ -87,7 +87,6 @@ const Home = (props) => {
         },
         (error) => {
           console.log(error);
-
           Alert.alert(
             'Thông báo!',
             'Kết nối máy in thất bại, vui lòng kiểm tra lại thông tin!',
@@ -394,18 +393,10 @@ const Home = (props) => {
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Địa chỉ: {dataUser?.address}
                     </Text>
-                    {/* <Text
-                      style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
-                      Email: {dataUser?.email}
-                    </Text> */}
                     <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Số điện thoại: {dataUser?.phone}
                     </Text>
-                    {/* <Text
-                      style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
-                      Ngày tham gia: {dataUser.date}
-                    </Text> */}
                     <View style={{flexDirection: 'row', marginTop: 10}}>
                       <TouchableOpacity
                         style={{

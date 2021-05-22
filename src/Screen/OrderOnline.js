@@ -36,10 +36,10 @@ const wait = (timeout) => {
 };
 
 const Home = (props) => {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(1);
   const [dataTab, setDataTab] = useState([
     {id: 0, name: 'Mới'},
-    {id: 1, name: 'Đã nhận'},
+    {id: 1, name: 'Mới'},
     {id: 2, name: 'Đã lấy'},
     {id: 3, name: 'Hoàn thành'},
     {id: 4, name: 'Đã hủy'},
@@ -62,7 +62,6 @@ const Home = (props) => {
   const [page, setPage] = useState(1);
 
   const handleLoadMore = () => {
-    // console.log('thai meo');
     dataOrder.length >= 12 ? setPage(page + 1) : null;
   };
 
@@ -108,6 +107,7 @@ const Home = (props) => {
 
   const onClickDetail = (id) => {
     // console.log(tab);
+    // setModalVisibleLoading(true);
     if (tab === 0) {
       props.navigation.navigate('NewOrderOnlineDetailScreen', {id: id});
     } else if (tab === 1) {
@@ -131,7 +131,7 @@ const Home = (props) => {
         setTab(2);
       } else if (props?.route?.params?.tab === 4) {
         setTab(3);
-      } else if (props?.route?.params?.tab === 4) {
+      } else if (props?.route?.params?.tab === 5) {
         setTab(4);
       }
     }, [props?.route?.params?.tab]),
@@ -148,7 +148,7 @@ const Home = (props) => {
         setStoreName(data.name);
         setStoreId(data.id);
         services
-          .getListOrderOnline(null, data?.id, 1, 1)
+          .getListOrderOnline(null, data?.id, 2, 1)
           .then(function (response) {
             if (response) {
               if (response.data.code === 200) {
@@ -166,7 +166,7 @@ const Home = (props) => {
             setStoreId(element.id);
             storage.setItem('dataStore', element);
             services
-              .getListOrderOnline(null, element.id, 1, 1)
+              .getListOrderOnline(null, element.id, 2, 1)
               .then(function (response) {
                 if (response) {
                   if (response?.data?.code === 200) {
@@ -228,7 +228,7 @@ const Home = (props) => {
               setStoreName(data?.name);
               setStoreId(data?.id);
               services
-                .getListOrderOnline(null, data?.id, 1, 1)
+                .getListOrderOnline(null, data?.id, 2, 1)
                 .then(function (response) {
                   if (response) {
                     if (response.data.code === 200) {
@@ -246,7 +246,7 @@ const Home = (props) => {
                   setStoreId(element.id);
                   storage.setItem('dataStore', element);
                   services
-                    .getListOrderOnline(null, element.id, 1, 1)
+                    .getListOrderOnline(null, element.id, 2, 1)
                     .then(function (response) {
                       if (response) {
                         if (response?.data?.code === 200) {
@@ -267,8 +267,8 @@ const Home = (props) => {
     });
   }, [props.dataLogin.responseUserInformation]);
 
-  const handleChangeTab = (index) => {
-    setDataOrder([]);
+  const handleChangeTab = async (index) => {
+    await setDataOrder([]);
     setTab(index);
     setPage(1);
     setModalVisibleLoading(true);
@@ -778,7 +778,7 @@ const Home = (props) => {
                       width: Dimensions.get('window').width - 20,
                     }}>
                     {dataTab.map((item, index) => {
-                      return (
+                      return index === 0 ? null : (
                         <TouchableOpacity
                           onPress={() => {
                             handleChangeTab(index);
@@ -786,7 +786,7 @@ const Home = (props) => {
                           key={index}
                           style={{
                             height: 32,
-                            width: '19%',
+                            width: '23%',
                             alignItems: 'center',
                             justifyContent: 'center',
                             borderWidth: 1,

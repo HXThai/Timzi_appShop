@@ -50,6 +50,20 @@ const LoginScreen = (props) => {
           if (response) {
             if (response.data.code === 200) {
               setDataStaff(response.data.data);
+            } else {
+              Alert.alert(
+                'Thông báo',
+                response.data.message,
+                [
+                  {
+                    text: 'Đồng ý',
+                    onPress: async () => {
+                      props.navigation.goBack();
+                    },
+                  },
+                ],
+                {cancelable: false},
+              );
             }
           } else {
             return;

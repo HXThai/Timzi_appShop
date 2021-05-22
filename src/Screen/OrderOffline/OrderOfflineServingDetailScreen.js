@@ -33,6 +33,7 @@ import {
   BLEPrinter,
 } from 'react-native-thermal-receipt-printer';
 import reactotron from 'reactotron-react-native';
+import Modal from 'react-native-modal';
 
 const LoginScreen = (props) => {
   const [dataMenu, setDataMenu] = useState([
@@ -53,6 +54,16 @@ const LoginScreen = (props) => {
   const [store, setStore] = useState('');
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
+  const [totalMoneyWithStaffLocal, setTotalMoneyWithStaffLocal] = useState(0);
+
+  const [modalVisibleReturn, setModalVisibleReturn] = useState(false);
+
+  const [quantityReturn, setQuantityReturn] = useState('');
+
+  const [idFoodReturn, setIdFoodReturn] = useState('');
+
+  const [moneyReturn, setMoneyReturn] = useState('');
 
   useEffect(() => {
     setModalVisibleLoading(true);
@@ -75,6 +86,101 @@ const LoginScreen = (props) => {
         }
       });
   }, []);
+
+  const handleReturnFood = () => {
+    // console.log(idFoodReturn);
+    Alert.alert(
+      'Hoàn trả món ăn',
+      'Bạn chắc chắn muốn hoàn trả món ăn?',
+      [
+        {text: 'Hủy', onPress: () => {}},
+        {
+          text: 'Đồng ý',
+          onPress: async () => {
+            var moneyOld = totalMoneyWithStaffLocal;
+            moneyOld -= moneyReturn;
+            setTotalMoneyWithStaffLocal(moneyOld);
+            var body = {
+              book_food_id: idFoodReturn,
+              quantity: quantityReturn,
+            };
+            console.log(body);
+            services.returnBookFood(body).then(function (response) {
+              if (response) {
+                if (response.data.code === 200) {
+                  services
+                    .orderOfflineDetail(null, props?.route?.params?.id)
+                    .then(function (response) {
+                      if (response) {
+                        if (response.data.code === 200) {
+                          setModalVisibleReturn(false);
+                          setDataOrderOffline(response.data.data);
+                        }
+                      } else {
+                        return;
+                      }
+                    });
+                } else {
+                  Alert.alert(
+                    'Thông báo!',
+                    response.data.message,
+                    [
+                      {
+                        text: 'Đồng ý',
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                }
+              } else {
+                return;
+              }
+            });
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const staffPayment = () => {
+    var totalPriceBill = 0;
+    dataOrderOffline.book_food.forEach((element) => {
+      if (element.status === 3) {
+        totalPriceBill += element.price;
+      }
+    });
+    // console.log(totalPriceBill);
+    var body = {
+      book_table_id: props?.route?.params?.id,
+      total_money: totalPriceBill,
+      payment_method_id: '2',
+    };
+    services.confirmPaymentBookfoodWithStaff(body).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          props.navigation.navigate('Utilities', {
+            tab: 4,
+          });
+        } else {
+          Alert.alert(
+            'Thông báo',
+            response.data.message,
+            [{text: 'Đồng ý', onPress: () => {}}],
+            {cancelable: false},
+          );
+        }
+      } else {
+        Alert.alert(
+          'Thông báo',
+          'Lỗi hệ thống!',
+          [{text: 'Đồng ý', onPress: () => {}}],
+          {cancelable: false},
+        );
+        return;
+      }
+    });
+  };
 
   function nonAccentVietnamese(str) {
     str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, 'A');
@@ -180,9 +286,9 @@ const LoginScreen = (props) => {
     //   '</L>';
     //------------------
 
-    var dataPrint = '<M>Con mèo ngu ngốc</M>';
+    var dataPrint = '<C>Con mèo ngu ngốc</C>';
 
-    NetPrinter.printBill(dataPrint, {encoding: 'UTF-8'});
+    NetPrinter.printBill(dataPrint);
     // NetPrinter.printBill('\x1D\x56\x01');
     // NetPrinter.printBill('\x00');
   };
@@ -209,6 +315,54 @@ const LoginScreen = (props) => {
               <ActivityIndicator size="large" color={Color.main} />
             </View>
           ) : null}
+          <Modal
+            onBackdropPress={() => setModalVisibleReturn(false)}
+            style={{alignItems: 'center', justifyContent: 'center'}}
+            isVisible={modalVisibleReturn}>
+            <View
+              style={{
+                height: Dimensions.get('window').height * 0.2,
+                width: '100%',
+                backgroundColor: '#fff',
+                borderRadius: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                // justifyContent: 'space-around',
+              }}>
+              <Text style={{marginTop: 15, fontSize: 15}}>
+                Số lượng hoàn trả
+              </Text>
+              <TextInput
+                style={{
+                  width: Dimensions.get('window').width * 0.7,
+                  height: 40,
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: '#333333',
+                  marginTop: 10,
+                }}
+                placeholder="Số lượng hoàn trả"
+                placeholderTextColor="#9C9C9C"
+                onChangeText={(text) => setQuantityReturn(text)}
+                defaultValue={quantityReturn}
+                keyboardType={'number-pad'}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  handleReturnFood();
+                }}
+                style={{
+                  height: 40,
+                  marginTop: 20,
+                  width: Dimensions.get('window').width * 0.7,
+                  backgroundColor: Color.main,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                }}>
+                <Text style={{color: Color.white, fontSize: 15}}>Hoàn trả</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
           {modalVisibleLoading === false ? (
             <View
               style={{
@@ -224,7 +378,6 @@ const LoginScreen = (props) => {
                       height: 100,
                       backgroundColor: '#fff',
                       borderRadius: 8,
-                      // marginTop: 10,
                       flexDirection: 'row',
                       padding: 8,
                     }}>
@@ -458,7 +611,6 @@ const LoginScreen = (props) => {
                               fontWeight: '600',
                               fontSize: 12,
                               color: 'black',
-                              // color: Color.main,
                             }}>
                             {dataOrderOffline?.note}
                           </Text>
@@ -475,7 +627,6 @@ const LoginScreen = (props) => {
                     borderRadius: 8,
                     flexDirection: 'column',
                     justifyContent: 'space-around',
-                    // height: 166,
                   }}>
                   <Text style={{fontSize: 12, fontWeight: '700'}}>
                     Danh sách món ăn
@@ -513,79 +664,118 @@ const LoginScreen = (props) => {
                             x {item.quantity}
                           </Text>
                         </View>
-                        <TouchableOpacity
-                          onPress={() => {
-                            {
-                              item.status === 2
-                                ? Alert.alert(
-                                    'Xác nhận món ăn',
-                                    'Bạn chắc chắn muốn xác nhận món ăn đã lên bàn?',
-                                    [
-                                      {text: 'Hủy', onPress: () => {}},
-                                      {
-                                        text: 'Đồng ý',
-                                        onPress: async () => {
-                                          services
-                                            .confirmFoodOnTheTable(
-                                              null,
-                                              item.id,
-                                            )
-                                            .then(function (response) {
-                                              if (response) {
-                                                if (
-                                                  response.data.code === 200
-                                                ) {
-                                                  services
-                                                    .orderOfflineDetail(
-                                                      null,
-                                                      props?.route?.params?.id,
-                                                    )
-                                                    .then(function (response) {
-                                                      if (response) {
-                                                        if (
-                                                          response.data.code ===
-                                                          200
-                                                        ) {
-                                                          setDataOrderOffline(
-                                                            response.data.data,
-                                                          );
+                        <View style={{flexDirection: 'column'}}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              {
+                                item.status === 2
+                                  ? Alert.alert(
+                                      'Xác nhận món ăn',
+                                      'Bạn chắc chắn muốn xác nhận món ăn đã lên bàn?',
+                                      [
+                                        {text: 'Hủy', onPress: () => {}},
+                                        {
+                                          text: 'Đồng ý',
+                                          onPress: async () => {
+                                            var moneyOld = totalMoneyWithStaffLocal;
+                                            moneyOld += item.price;
+                                            setTotalMoneyWithStaffLocal(
+                                              moneyOld,
+                                            );
+                                            services
+                                              .confirmFoodOnTheTable(
+                                                null,
+                                                item.id,
+                                              )
+                                              .then(function (response) {
+                                                if (response) {
+                                                  if (
+                                                    response.data.code === 200
+                                                  ) {
+                                                    services
+                                                      .orderOfflineDetail(
+                                                        null,
+                                                        props?.route?.params
+                                                          ?.id,
+                                                      )
+                                                      .then(function (
+                                                        response,
+                                                      ) {
+                                                        if (response) {
+                                                          if (
+                                                            response.data
+                                                              .code === 200
+                                                          ) {
+                                                            setDataOrderOffline(
+                                                              response.data
+                                                                .data,
+                                                            );
+                                                          }
+                                                        } else {
+                                                          return;
                                                         }
-                                                      } else {
-                                                        return;
-                                                      }
-                                                    });
+                                                      });
+                                                  }
+                                                } else {
+                                                  return;
                                                 }
-                                              } else {
-                                                return;
-                                              }
-                                            });
+                                              });
+                                          },
                                         },
-                                      },
-                                    ],
-                                    {cancelable: false},
-                                  )
-                                : null;
-                            }
-                          }}
-                          style={{
-                            height: 20,
-                            width: 80,
-                            borderRadius: 4,
-                            borderWidth: 1,
-                            borderColor: Color.main,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: Dimensions.get('window').width * 0.2,
-                            justifyContent: 'center',
-                          }}>
-                          <Text style={{fontSize: 11, color: Color.main}}>
-                            {item.status === 1
-                              ? 'Chờ gọi món'
-                              : item.status === 2
-                              ? 'Chờ lên bàn'
-                              : 'Đã lên bàn'}
-                          </Text>
-                        </TouchableOpacity>
+                                      ],
+                                      {cancelable: false},
+                                    )
+                                  : null;
+                              }
+                            }}
+                            style={{
+                              height: 20,
+                              width: 80,
+                              // padding: 5,
+                              borderRadius: 4,
+                              borderWidth: 1,
+                              borderColor: Color.main,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: Dimensions.get('window').width * 0.2,
+                              justifyContent: 'center',
+                            }}>
+                            <Text style={{fontSize: 11, color: Color.main}}>
+                              {item.status === 1
+                                ? 'Chờ gọi món'
+                                : item.status === 2
+                                ? 'Chờ lên bàn'
+                                : 'Đã lên bàn'}
+                            </Text>
+                          </TouchableOpacity>
+                          {item.status === 3 ? (
+                            <TouchableOpacity
+                              onPress={() => {
+                                {
+                                  setModalVisibleReturn(true);
+                                  setIdFoodReturn(item.id);
+                                  setMoneyReturn(item.price);
+                                }
+                              }}
+                              style={{
+                                height: 20,
+                                width: 80,
+                                // padding: 5,
+                                borderRadius: 4,
+                                borderWidth: 1,
+                                borderColor: Color.main,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: Dimensions.get('window').width * 0.2,
+                                justifyContent: 'center',
+                                marginTop: 5,
+                              }}>
+                              <Text style={{fontSize: 11, color: Color.main}}>
+                                Hoàn trả
+                              </Text>
+                            </TouchableOpacity>
+                          ) : null}
+                        </View>
                         <View
                           style={{
                             width: Dimensions.get('window').width * 0.2,
@@ -611,8 +801,6 @@ const LoginScreen = (props) => {
                   height: 80,
                   width: '100%',
                   alignItems: 'center',
-                  // justifyContent: 'center',
-                  // borderRadius: 50,
                   backgroundColor: Color.white,
                   marginTop: 10,
                   borderTopLeftRadius: 20,
@@ -627,7 +815,12 @@ const LoginScreen = (props) => {
                   />
                   <Text
                     style={{fontSize: 17, fontWeight: '700', marginLeft: 10}}>
-                    {styles.dynamicSort(dataOrderOffline?.total_money)} đ
+                    {styles.dynamicSort(
+                      dataOrderOffline.is_shop_book === 1
+                        ? totalMoneyWithStaffLocal
+                        : dataOrderOffline?.total_money,
+                    )}{' '}
+                    đ
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -641,35 +834,38 @@ const LoginScreen = (props) => {
                         {
                           text: 'Đồng ý',
                           onPress: async () => {
-                            services
-                              .confirmPaymentBookfood(
-                                null,
-                                props?.route?.params?.id,
-                              )
-                              .then(function (response) {
-                                if (response) {
-                                  if (response.data.code === 200) {
-                                    props.navigation.navigate('Utilities', {
-                                      tab: 4,
-                                    });
-                                  } else {
-                                    Alert.alert(
-                                      'Thông báo',
-                                      response.data.message,
-                                      [{text: 'Đồng ý', onPress: () => {}}],
-                                      {cancelable: false},
-                                    );
-                                  }
-                                } else {
-                                  Alert.alert(
-                                    'Thông báo',
-                                    'Khách hàng chưa xác nhận thanh toán!',
-                                    [{text: 'Đồng ý', onPress: () => {}}],
-                                    {cancelable: false},
-                                  );
-                                  return;
-                                }
-                              });
+                            dataOrderOffline.is_shop_book === 0
+                              ? services
+                                  .confirmPaymentBookfood(
+                                    null,
+                                    props?.route?.params?.id,
+                                  )
+                                  .then(function (response) {
+                                    if (response) {
+                                      if (response.data.code === 200) {
+                                        props.navigation.reset({
+                                          routes: [{name: 'Utilities'}],
+                                        });
+                                        props.navigation.navigate('Utilities');
+                                      } else {
+                                        Alert.alert(
+                                          'Thông báo',
+                                          response.data.message,
+                                          [{text: 'Đồng ý', onPress: () => {}}],
+                                          {cancelable: false},
+                                        );
+                                      }
+                                    } else {
+                                      Alert.alert(
+                                        'Thông báo',
+                                        'Khách hàng chưa xác nhận thanh toán!',
+                                        [{text: 'Đồng ý', onPress: () => {}}],
+                                        {cancelable: false},
+                                      );
+                                      return;
+                                    }
+                                  })
+                              : staffPayment();
                           },
                         },
                       ],
