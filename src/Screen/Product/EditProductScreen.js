@@ -49,7 +49,7 @@ const LoginScreen = (props) => {
   const [priceTopping, setPriceTopping] = useState('');
   const [description, setDescription] = useState('');
   const [numberFoodGroup, setNumberFoodGroup] = useState(
-    props?.route?.params?.productDetail?.quantity_food.toString(),
+    props?.route?.params?.productDetail?.quantity_food.toString() || 0,
   );
   const [currentCategoryTopping, setCurrentCategoryTopping] = useState();
   const [currentCategoryToppingId, setCurrentCategoryToppingId] = useState();
@@ -310,21 +310,22 @@ const LoginScreen = (props) => {
                 {
                   text: 'Đồng ý',
                   onPress: async () => {
+                    props.navigation.goBack();
                     props.navigation.reset({
                       routes: [
                         {
-                          name: 'ListProductScreen',
-                          params: {
-                            category_food_id: category_food_id,
-                            store_id: store_id,
-                          },
+                          name: 'EarnCoin',
+                          // params: {
+                          //   category_food_id: category_food_id,
+                          //   store_id: store_id,
+                          // },
                         },
                       ],
                     });
-                    props.navigation.navigate('ListProductScreen', {
-                      category_food_id: category_food_id,
-                      store_id: store_id,
-                    });
+                    // props.navigation.navigate('ListProductScreen', {
+                    //   category_food_id: category_food_id,
+                    //   store_id: store_id,
+                    // });
                   },
                 },
               ],
