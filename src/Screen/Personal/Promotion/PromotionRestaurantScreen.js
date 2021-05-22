@@ -38,39 +38,58 @@ const LoginScreen = (props) => {
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
   const [dataPromotion, setDataPromotion] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    // console.log(props.data.responseListStore?.code);
+    setModalVisibleLoading(true);
     storage.getItem('dataStore').then((data) => {
-      // console.log(data);
       if (data) {
         // setStoreName(data.name);
         setStoreId(data.id);
-        getData(data.id);
+        services
+          .getListStorePromotion({store_id: data.id})
+          .then(function (response) {
+            if (response) {
+              if (response.data.code === 200) {
+                setDataPromotion(response?.data?.data?.data);
+                setModalVisibleLoading(false);
+              }
+            } else {
+              return;
+            }
+          });
       } else {
       }
     });
   }, []);
 
   const getData = (id) => {
-    setModalVisibleLoading(true);
-    services.getListStorePromotion({store_id: id}).then(function (response) {
-      // props.onGetList(response?.data);
-      if (response) {
-        // console.log('thai mai', response);
-        if (response.data.code === 200) {
-          setDataPromotion(response?.data?.data?.data);
-          setModalVisibleLoading(false);
+    services
+      .getListStorePromotion({store_id: storeId})
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            setDataPromotion((prev) => [
+              ...prev,
+              ...response?.data?.data?.data,
+            ]);
+            setModalVisibleLoading(false);
+          }
+        } else {
+          return;
         }
-      } else {
-        return;
-      }
-    });
+      });
   };
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getData();
+    return () => {};
+  }, [page]);
+
+  const handleLoadMore = () => {
+    console.log('thai meo');
+    dataPromotion.length >= 12 ? setPage(page + 1) : null;
+  };
 
   const renderProduct = ({item}) => {
     return (
@@ -269,8 +288,8 @@ const LoginScreen = (props) => {
               data={dataPromotion}
               renderItem={renderProduct}
               keyExtractor={(item, index) => index.toString()}
-              // onEndReached={handleLoadMore}
-              // onEndReachedThreshold={0}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
               // ListFooterComponent={renderFooter}
             />
           </View>

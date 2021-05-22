@@ -905,8 +905,8 @@ const LoginScreen = (props) => {
                     <MaterialIcons
                       name={
                         item.isCheck === 0
-                          ? 'radio-button-unchecked'
-                          : 'radio-button-checked'
+                          ? 'check-box-outline-blank'
+                          : 'check-box'
                       }
                       size={26}
                       color={Color.main}

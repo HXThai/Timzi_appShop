@@ -28,15 +28,20 @@ export const OrderTableScreen = (props) => {
     try {
       const res = await api.bookTableWithStaff(payload);
       if (res.data.status == 1) {
+        reactotron.log(res);
         Alert.alert(
           'Thông báo',
-          res.message,
+          res.data.message,
           [
             {text: 'Hủy', onPress: () => {}},
             {
               text: 'Đồng ý',
               onPress: async () => {
-                props.navigation.goBack();
+                // props.navigation.goBack();
+                props.navigation.reset({
+                  routes: [{name: 'Utilities'}],
+                });
+                props.navigation.navigate('Utilities');
               },
             },
           ],

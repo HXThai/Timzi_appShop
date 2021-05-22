@@ -68,8 +68,8 @@ const Home = (props) => {
       // console.log('success');
       NetPrinter.connectPrinter(ipAđdress, 9100).then(
         (value) => {
+          // console.log(value);
           console.log('test');
-
           Alert.alert(
             'Thông báo!',
             'Kết nối máy in thành công!',
@@ -87,7 +87,6 @@ const Home = (props) => {
         },
         (error) => {
           console.log(error);
-
           Alert.alert(
             'Thông báo!',
             'Kết nối máy in thất bại, vui lòng kiểm tra lại thông tin!',

@@ -42,9 +42,19 @@ export default homeService = {
     let response = callApiService.put(url);
     return response;
   },
+  returnBookFood: async (params) => {
+    let url = `${API_BASE_URL.RETURN_BOOK_FOOD}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
   confirmPaymentBookfood: async (params, id) => {
     let url = `${API_BASE_URL.CONFIRM_PAYMENT_BOOKFOOD}/${id}`;
     let response = callApiService.put(url);
+    return response;
+  },
+  confirmPaymentBookfoodWithStaff: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_PAYMENT_BOOKFOOD_WITH_STAFF}`;
+    let response = callApiService.put(url, params);
     return response;
   },
   bookTableWithStaff: async (params, id) => {

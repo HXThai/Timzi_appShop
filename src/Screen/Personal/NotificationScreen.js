@@ -311,6 +311,7 @@ const LoginScreen = (props) => {
             backgroundColor: item.is_view === 0 ? '#DDDDDD' : Color.white,
             borderRadius: 8,
             height: 90,
+            // padding: 10,
             flexDirection: 'row',
             alignItems: 'center',
           }}>
@@ -325,6 +326,8 @@ const LoginScreen = (props) => {
             style={{
               marginLeft: 5,
               width: Dimensions.get('window').width - 80,
+              height: 70,
+              justifyContent: 'space-between',
             }}>
             <Text numberOfLines={3} style={{fontSize: 14}}>
               {item?.content}

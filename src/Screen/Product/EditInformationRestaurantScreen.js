@@ -110,7 +110,6 @@ const LoginScreen = (props) => {
                 .getListDistrict(null, element.id)
                 .then(function (responseD) {
                   if (responseD) {
-                    console.log('thai mai', responseD.data?.data);
                     if (responseD.data.code === 200) {
                       setDataDistrict(responseD?.data?.data);
                       responseD?.data?.data?.forEach((elementD) => {
@@ -164,7 +163,6 @@ const LoginScreen = (props) => {
           if (response) {
             setIsSearchAddress(true);
             setDataLocationSuggest(response.data.predictions);
-            // console.log(response.data.predictions);
           } else {
             return;
           }
@@ -181,7 +179,6 @@ const LoginScreen = (props) => {
     setAddress(item?.description);
     services.getLocationDetail(null, item.place_id).then(function (response) {
       if (response) {
-        console.log('thai', response.data.result.geometry.location);
         setDataLocation(response.data.result.geometry.location);
       } else {
         return;
@@ -353,8 +350,6 @@ const LoginScreen = (props) => {
   };
 
   const handleEdit = () => {
-    // console.log(dataLocation.longitude);
-    // console.log(props?.route?.params?.dataStore);
     var body = new FormData();
     // // body.append('store_id', store_id.toString());
     body.append('name', name);

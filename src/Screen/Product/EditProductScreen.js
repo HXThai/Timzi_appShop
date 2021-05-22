@@ -32,6 +32,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'react-native-modal';
 import services from '../../Redux/Service/productService';
+import reactotron from 'reactotron-react-native';
 
 const LoginScreen = (props) => {
   const [name, setName] = useState(props?.route?.params?.name?.toString());
@@ -47,15 +48,16 @@ const LoginScreen = (props) => {
   const [toppingDetail, setToppingDetail] = useState('');
   const [priceTopping, setPriceTopping] = useState('');
   const [description, setDescription] = useState('');
+  const [numberFoodGroup, setNumberFoodGroup] = useState(
+    props?.route?.params?.productDetail?.quantity_food.toString(),
+  );
   const [currentCategoryTopping, setCurrentCategoryTopping] = useState();
   const [currentCategoryToppingId, setCurrentCategoryToppingId] = useState();
   const [data, setData] = useState([]);
   const [dataToppingDetail, setDataToppingDetail] = useState([{}]);
-  // const test = props?.route?.params?.status;
-  // console.log('thai', test);
   const statusFood = props.route.params.status;
   const [filePath, setFilePath] = useState({});
-
+  // reactotron.log(props.route.params.productDetail);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const [modalVisibleSize, setModalVisibleSize] = useState(false);
@@ -218,6 +220,10 @@ const LoginScreen = (props) => {
 
   const [storeFood, setStoreFood] = useState({});
 
+  const [isCheckGroupFood, setIsCheckGroupFood] = useState(
+    props?.route?.params?.productDetail?.is_group_food,
+  );
+
   useEffect(() => {
     setName(props?.route?.params?.name?.toString());
     setPrice(props?.route?.params?.price?.toString());
@@ -286,6 +292,13 @@ const LoginScreen = (props) => {
       body.append('is_out_of_food', dataIsStatusFood[2].status);
       body.append('category_store_food_id', storeFood.id);
       body.append('description', description);
+      if (isCheckGroupFood === 1) {
+        body.append('is_group_food', 1);
+        body.append('quantity_food', numberFoodGroup);
+      } else {
+        body.append('is_group_food', 0);
+        body.append('quantity_food', numberFoodGroup);
+      }
 
       services.addFood(body).then(function (response) {
         if (response) {
@@ -377,7 +390,14 @@ const LoginScreen = (props) => {
     body.append('is_out_of_food', dataIsStatusFood[2].status);
     body.append('category_store_food_id', storeFood.id);
     body.append('description', description);
-    console.log(body);
+    if (isCheckGroupFood === 1) {
+      body.append('is_group_food', 1);
+      body.append('quantity_food', numberFoodGroup);
+    } else {
+      body.append('is_group_food', 0);
+      body.append('quantity_food', numberFoodGroup);
+    }
+    // console.log(body);
     services.editFood(body, id).then(function (response) {
       // props.onGetList(response?.data);
       if (response) {
@@ -1297,7 +1317,53 @@ const LoginScreen = (props) => {
                 }}>
                 <Text>{storeFood.name}</Text>
               </TouchableOpacity>
-
+              <TouchableOpacity
+                onPress={() => {
+                  if (isCheckGroupFood === 0) {
+                    setIsCheckGroupFood(1);
+                  } else {
+                    setIsCheckGroupFood(0);
+                  }
+                }}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 5,
+                }}>
+                <MaterialIcons
+                  name={
+                    isCheckGroupFood === 1
+                      ? 'check-box'
+                      : 'check-box-outline-blank'
+                  }
+                  size={26}
+                  color={Color.main}
+                  style={{marginRight: 10}}
+                />
+                <Text>Món ăn kiểu nhóm</Text>
+              </TouchableOpacity>
+              {isCheckGroupFood === 1 ? (
+                <View
+                  style={{
+                    width: Dimensions.get('window').width - 60,
+                    marginBottom: 20,
+                    justifyContent: 'center',
+                    marginLeft: 35,
+                  }}>
+                  <TextInput
+                    style={{
+                      height: 40,
+                      borderBottomWidth: 0.8,
+                      borderBottomColor: '#333333',
+                    }}
+                    placeholder="Số lượng "
+                    placeholderTextColor={Color.grey}
+                    onChangeText={(text) => setNumberFoodGroup(text)}
+                    defaultValue={numberFoodGroup}
+                    keyboardType={'number-pad'}
+                  />
+                </View>
+              ) : null}
               <View style={{marginTop: 10}}>
                 <Text style={{fontSize: 12}}>Trạng thái món ăn</Text>
               </View>
@@ -1317,8 +1383,8 @@ const LoginScreen = (props) => {
                     <MaterialIcons
                       name={
                         item.status === 1
-                          ? 'radio-button-checked'
-                          : 'radio-button-unchecked'
+                          ? 'check-box'
+                          : 'check-box-outline-blank'
                       }
                       size={26}
                       color={Color.main}
