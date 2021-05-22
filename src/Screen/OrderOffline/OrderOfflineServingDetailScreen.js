@@ -79,6 +79,13 @@ const LoginScreen = (props) => {
         if (response) {
           if (response.data.code === 200) {
             setDataOrderOffline(response.data.data);
+            var oldMoney = 0;
+            response.data.data.book_food?.forEach((element) => {
+              if (element.status === 3) {
+                oldMoney += element.price;
+              }
+            });
+            setTotalMoneyWithStaffLocal(oldMoney);
             setModalVisibleLoading(false);
           }
         } else {
@@ -97,9 +104,9 @@ const LoginScreen = (props) => {
         {
           text: 'Đồng ý',
           onPress: async () => {
-            var moneyOld = totalMoneyWithStaffLocal;
-            moneyOld -= moneyReturn;
-            setTotalMoneyWithStaffLocal(moneyOld);
+            // var moneyOld = totalMoneyWithStaffLocal;
+            // moneyOld -= moneyReturn;
+            // setTotalMoneyWithStaffLocal(moneyOld);
             var body = {
               book_food_id: idFoodReturn,
               quantity: quantityReturn,
@@ -113,8 +120,15 @@ const LoginScreen = (props) => {
                     .then(function (response) {
                       if (response) {
                         if (response.data.code === 200) {
-                          setModalVisibleReturn(false);
                           setDataOrderOffline(response.data.data);
+                          var oldMoney = 0;
+                          response.data.data.book_food?.forEach((element) => {
+                            if (element.status === 3) {
+                              oldMoney += element.price;
+                            }
+                          });
+                          setTotalMoneyWithStaffLocal(oldMoney);
+                          setModalVisibleReturn(false);
                         }
                       } else {
                         return;
@@ -683,11 +697,11 @@ const LoginScreen = (props) => {
                                         {
                                           text: 'Đồng ý',
                                           onPress: async () => {
-                                            var moneyOld = totalMoneyWithStaffLocal;
-                                            moneyOld += item.price;
-                                            setTotalMoneyWithStaffLocal(
-                                              moneyOld,
-                                            );
+                                            // var moneyOld = totalMoneyWithStaffLocal;
+                                            // moneyOld += item.price;
+                                            // setTotalMoneyWithStaffLocal(
+                                            //   moneyOld,
+                                            // );
                                             services
                                               .confirmFoodOnTheTable(
                                                 null,
@@ -715,6 +729,21 @@ const LoginScreen = (props) => {
                                                             setDataOrderOffline(
                                                               response.data
                                                                 .data,
+                                                            );
+                                                            var oldMoney = 0;
+                                                            response.data.data.book_food?.forEach(
+                                                              (element) => {
+                                                                if (
+                                                                  element.status ===
+                                                                  3
+                                                                ) {
+                                                                  oldMoney +=
+                                                                    element.price;
+                                                                }
+                                                              },
+                                                            );
+                                                            setTotalMoneyWithStaffLocal(
+                                                              oldMoney,
                                                             );
                                                           }
                                                         } else {
