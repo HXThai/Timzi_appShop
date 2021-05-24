@@ -825,13 +825,16 @@ const LoginScreen = (props) => {
                           key={index}
                           style={{
                             padding: 5,
-                            backgroundColor: '#C0C0C0',
+                            // backgroundColor: '#C0C0C0',
                             height: 50,
                             justifyContent: 'center',
                             borderBottomWidth: 0.5,
                             borderBottomColor: 'grey',
                           }}>
-                          <Text>{item?.description}</Text>
+                          <Text style={{fontWeight: '700', marginBottom: 5}}>
+                            {item.structured_formatting.main_text}
+                          </Text>
+                          <Text numberOfLines={1}>{item?.description}</Text>
                         </TouchableOpacity>
                       );
                     })}

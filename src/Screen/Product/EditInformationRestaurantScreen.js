@@ -32,6 +32,7 @@ import GetLocation from 'react-native-get-location';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import services from '../../Redux/Service/productService';
+import reactotron from 'reactotron-react-native';
 
 const LoginScreen = (props) => {
   const [dataRestaurant, setDataRestaurant] = useState({
@@ -769,6 +770,7 @@ const LoginScreen = (props) => {
                   }}>
                   <ScrollView>
                     {dataLocationSuggest.map((item, index) => {
+                      reactotron.log(dataLocationSuggest);
                       return (
                         <TouchableOpacity
                           onPress={() => {
@@ -777,12 +779,15 @@ const LoginScreen = (props) => {
                           key={index}
                           style={{
                             padding: 5,
-                            backgroundColor: '#C0C0C0',
+                            // backgroundColor: '#C0C0C0',
                             height: 50,
                             justifyContent: 'center',
                             borderBottomWidth: 0.5,
                             borderBottomColor: 'grey',
                           }}>
+                          <Text style={{fontWeight: '700', marginBottom: 5}}>
+                            {item.structured_formatting.main_text}
+                          </Text>
                           <Text>{item?.description}</Text>
                         </TouchableOpacity>
                       );
