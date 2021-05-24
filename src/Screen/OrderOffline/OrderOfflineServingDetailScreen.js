@@ -844,12 +844,12 @@ const LoginScreen = (props) => {
                   />
                   <Text
                     style={{fontSize: 17, fontWeight: '700', marginLeft: 10}}>
-                    {styles.dynamicSort(
+                    {/* {styles.dynamicSort(
                       dataOrderOffline.is_shop_book === 1
                         ? totalMoneyWithStaffLocal
                         : dataOrderOffline?.total_money,
-                    )}{' '}
-                    đ
+                    )}{' '} */}
+                    {styles.dynamicSort(totalMoneyWithStaffLocal)} đ
                   </Text>
                 </View>
                 <TouchableOpacity

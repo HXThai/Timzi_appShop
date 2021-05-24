@@ -135,9 +135,11 @@ const LoginScreen = (props) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
+              width: Dimensions.get('window').width - 150,
             }}>
             <MaterialIcons name={'location-on'} size={18} color={'black'} />
             <Text
+              numberOfLines={1}
               style={{
                 fontSize: 12,
                 fontWeight: '400',
