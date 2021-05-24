@@ -145,6 +145,7 @@ const Home = (props) => {
   useEffect(() => {
     storage.getItem('dataStore').then((data) => {
       if (data) {
+        reactotron.log(data);
         setStoreName(data.name);
         setStoreId(data.id);
         services
@@ -154,6 +155,8 @@ const Home = (props) => {
               if (response.data.code === 200) {
                 setDataOrder(response?.data?.data?.data);
                 setModalVisibleLoading(false);
+              } else {
+                reactotron.log('Thaiiiiiiitest4');
               }
             } else {
               return;
@@ -161,6 +164,7 @@ const Home = (props) => {
           });
       } else {
         props.data.responseListStore?.data.forEach((element, index) => {
+          reactotron.log(props.data.responseListStore);
           if (element.status === 1) {
             setStoreName(element.name);
             setStoreId(element.id);
@@ -172,6 +176,8 @@ const Home = (props) => {
                   if (response?.data?.code === 200) {
                     setDataOrder(response?.data?.data?.data);
                     setModalVisibleLoading(false);
+                  } else {
+                    reactotron.log('Thaiiiiiiitest3');
                   }
                 } else {
                   return;
@@ -217,6 +223,8 @@ const Home = (props) => {
                       ?.id,
                   );
                   setModalVisibleLoading(false);
+                } else {
+                  reactotron.log('Thaiiiiiii');
                 }
               } else {
                 return;
@@ -234,6 +242,8 @@ const Home = (props) => {
                     if (response.data.code === 200) {
                       setDataOrder(response?.data?.data?.data);
                       setModalVisibleLoading(false);
+                    } else {
+                      reactotron.log('Thaiiiiiiitest1');
                     }
                   } else {
                     return;
@@ -252,6 +262,8 @@ const Home = (props) => {
                         if (response?.data?.code === 200) {
                           setDataOrder(response?.data?.data?.data);
                           setModalVisibleLoading(false);
+                        } else {
+                          reactotron.log('Thaiiiiiiitest2');
                         }
                       } else {
                         return;

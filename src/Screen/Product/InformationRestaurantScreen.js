@@ -117,7 +117,11 @@ const LoginScreen = (props) => {
                     marginLeft: 5,
                   }}>
                   <Text style={{fontSize: 11, color: Color.main}}>Địa chỉ</Text>
-                  <Text style={{fontSize: 15}}>{data.address}</Text>
+                  <View style={{width: Dimensions.get('window').width - 70}}>
+                    <Text numberOfLines={1} style={{fontSize: 15}}>
+                      {data.address}
+                    </Text>
+                  </View>
                 </View>
               </View>
               <View

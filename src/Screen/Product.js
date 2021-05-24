@@ -419,9 +419,16 @@ const Home = (props) => {
                             marginTop: 5,
                             alignItems: 'center',
                           }}>
-                          <Text style={{fontSize: 13, fontWeight: '400'}}>
-                            {data?.store?.address}
-                          </Text>
+                          <View
+                            style={{
+                              width: Dimensions.get('window').width - 120,
+                            }}>
+                            <Text
+                              numberOfLines={1}
+                              style={{fontSize: 13, fontWeight: '400'}}>
+                              {data?.store?.address}
+                            </Text>
+                          </View>
                           <View
                             style={{
                               flexDirection: 'row',
@@ -1000,7 +1007,7 @@ const Home = (props) => {
                         {data?.category_store_food[index]?.food.map(
                           (item, index) => {
                             return (
-                              <TouchableOpacity
+                              <View
                                 key={index}
                                 style={{
                                   width: 130,
@@ -1027,14 +1034,16 @@ const Home = (props) => {
                                     // marginTop: 10,
                                     position: 'absolute',
                                   }}>
-                                  <Image
-                                    source={{uri: item.image}}
-                                    style={{
-                                      height: 97,
-                                      width: 97,
-                                      borderRadius: 50,
-                                    }}
-                                  />
+                                  <TouchableOpacity>
+                                    <Image
+                                      source={{uri: item.image}}
+                                      style={{
+                                        height: 97,
+                                        width: 97,
+                                        borderRadius: 50,
+                                      }}
+                                    />
+                                  </TouchableOpacity>
                                   <View
                                     style={{
                                       width: '100%',
@@ -1174,7 +1183,7 @@ const Home = (props) => {
                                     </TouchableOpacity>
                                   </View>
                                 </View>
-                              </TouchableOpacity>
+                              </View>
                             );
                           },
                         )}
