@@ -186,6 +186,14 @@ PODS:
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
   - React-jsinspector (0.63.3)
+  - react-native-camera (3.43.9):
+    - React-Core
+    - react-native-camera/RCT (= 3.43.9)
+    - react-native-camera/RN (= 3.43.9)
+  - react-native-camera/RCT (3.43.9):
+    - React-Core
+  - react-native-camera/RN (3.43.9):
+    - React-Core
   - react-native-image-picker (3.3.2):
     - React-Core
   - react-native-onesignal (4.0.6):
@@ -296,6 +304,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -358,6 +367,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-camera:
+    :path: "../node_modules/react-native-camera"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-onesignal:
@@ -427,6 +438,7 @@ SPEC CHECKSUMS:
   React-jsi: df07aa95b39c5be3e41199921509bfa929ed2b9d
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
+  react-native-camera: bf312a2c11c4150fd4f850e78778e23170d78c5b
   react-native-image-picker: b42940647478bf106ad3c491d6f5d9d40916d865
   react-native-onesignal: b4b93d774fd626e90c5a5abafa342f9af21c66dc
   react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
@@ -453,6 +465,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
-PODFILE CHECKSUM: f08066d44332139c2517fb3bef75cfcdc3f16d96
+PODFILE CHECKSUM: adcae041a2a66afe83ade81018f4fdb122191dfb
 
 COCOAPODS: 1.10.1

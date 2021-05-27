@@ -19,6 +19,7 @@ import {
   Dimensions,
   Platform,
   Alert,
+  PermissionsAndroid
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
@@ -90,6 +91,7 @@ import OrderOfflineCancelledDetailScreen from '../Screen/OrderOffline/OrderOffli
 import ChooseRestaurantScreen from '../Screen/Staff/ChooseRestaurantScreen';
 import FindRestaurantScreen from '../Screen/Staff/FindRestaurantScreen';
 import OrderTableScreen from '../Screen/OrderTableScreen';
+import { QrCodeScreen } from '../Screen/QrCodeScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -2732,6 +2734,76 @@ function UtilitiesStack(props) {
           ),
           headerRight: () => (
             <TouchableOpacity
+              onPress={async() => {
+                try {
+                  const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.CAMERA,
+                    {
+                      title: "Cool Photo App Camera Permission",
+                      message:
+                        "Cool Photo App needs access to your camera " +
+                        "so you can take awesome pictures.",
+                      buttonNeutral: "Ask Me Later",
+                      buttonNegative: "Cancel",
+                      buttonPositive: "OK"
+                    }
+                  );
+                  if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    console.log("You can use the camera");
+                  } else {
+                    console.log("Camera permission denied");
+                  }
+                } catch (err) {
+                  console.warn(err);
+                }
+                // props.navigation.navigate('LoginScreen');
+                props.navigation.navigate("qrcode")
+              }}>
+              <View
+                style={{
+                  // marginLeft: 20,
+                  marginRight: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 4,
+                  backgroundColor: null,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Text>qrcode</Text>
+                </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="qrcode"
+        component={QrCodeScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: 'QrCode',
+          headerTitleStyle: {alignSelf: 'center', color: '#fff'},
+          headerStyle: {
+            backgroundColor: Color.main,
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate("OrderTable");
+                // console.log(props);
+              }}>
+              <View style={{marginLeft: 20}}>
+                <MaterialIcons
+                  name={'arrow-back-ios'}
+                  size={26}
+                  color={'#fff'}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
               onPress={() => {
                 // props.navigation.navigate('LoginScreen');
                 // console.log(props);
@@ -2746,7 +2818,8 @@ function UtilitiesStack(props) {
                   backgroundColor: null,
                   alignItems: 'center',
                   justifyContent: 'center',
-                }}></View>
+                }}>
+                </View>
             </TouchableOpacity>
           ),
         }}
