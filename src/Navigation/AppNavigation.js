@@ -11,6 +11,7 @@ import EarnCoin from '../Screen/Product';
 import Personal from '../Screen/Personal';
 import Utilities from '../Screen/OrderOffline';
 import Images from '../Theme/Images';
+import { check, openSettings, PERMISSIONS, requestMultiple, RESULTS } from 'react-native-permissions';
 import {
   Image,
   View,
@@ -92,6 +93,7 @@ import ChooseRestaurantScreen from '../Screen/Staff/ChooseRestaurantScreen';
 import FindRestaurantScreen from '../Screen/Staff/FindRestaurantScreen';
 import OrderTableScreen from '../Screen/OrderTableScreen';
 import { QrCodeScreen } from '../Screen/QrCodeScreen';
+import { checkCam } from '../utils/Utilities';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -2735,29 +2737,9 @@ function UtilitiesStack(props) {
           headerRight: () => (
             <TouchableOpacity
               onPress={async() => {
-                try {
-                  const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.CAMERA,
-                    {
-                      title: "Cool Photo App Camera Permission",
-                      message:
-                        "Cool Photo App needs access to your camera " +
-                        "so you can take awesome pictures.",
-                      buttonNeutral: "Ask Me Later",
-                      buttonNegative: "Cancel",
-                      buttonPositive: "OK"
-                    }
-                  );
-                  if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    console.log("You can use the camera");
-                  } else {
-                    console.log("Camera permission denied");
-                  }
-                } catch (err) {
-                  console.warn(err);
-                }
+                checkCam(props)
                 // props.navigation.navigate('LoginScreen');
-                props.navigation.navigate("qrcode")
+                
               }}>
               <View
                 style={{

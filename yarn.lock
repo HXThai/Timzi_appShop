@@ -6430,6 +6430,11 @@ react-native-otp-inputs@^6.0.0:
   resolved "https://registry.yarnpkg.com/react-native-otp-inputs/-/react-native-otp-inputs-6.0.0.tgz#93a58a8230dc6d5b160ffecde2d1ddfcf8efa626"
   integrity sha512-XqmF6HOyTkReTPF+l+Ne8KaYXCbmREYdEAd5a461FKXUNUH+Gew7I7BWMZUegK5X8n4u5HMXT++qGSoRbm7Jdg==
 
+react-native-permissions@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.0.4.tgz#7771d28899d7d2b75fd2a70cd3f86d44c90397ec"
+  integrity sha512-GMd0l0TA/qupidGFfKAVNaboewQkJSW+l3ndwv1cu+tBGI+TRfJdMjg8Q714wn9roZlXsZ3z407qT2xPdQmGdg==
+
 react-native-qrcode-svg@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/react-native-qrcode-svg/-/react-native-qrcode-svg-6.1.1.tgz#19dd15545b1cbcfc1b2738af170e9fd0f1d4d8a0"

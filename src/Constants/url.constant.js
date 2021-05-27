@@ -141,6 +141,8 @@ const API_BASE_URL = {
   MERGE_TABLE_WITH_OWNER: ROOT_DOMAIN + '/book-table/table-merge-with-owner',
 
   SUBMIT_ORDER_FOOD: ROOT_DOMAIN + '/book-table/submit-order-food-with-staff',
+  QR_CODE: ROOT_DOMAIN + '/book-table/book-table-qr-code-with-staff ',
+  
 };
 
 export {API_BASE_URL};
