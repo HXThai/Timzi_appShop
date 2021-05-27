@@ -173,9 +173,14 @@ const LoginScreen = (props) => {
     services.confirmPaymentBookfoodWithStaff(body).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
-          props.navigation.navigate('Utilities', {
-            tab: 4,
-          });
+          // props.navigation.reset({
+          //   routes: [
+          //     {
+          //       name: 'Utilities',
+          //     },
+          //   ],
+          // });
+          props.navigation.navigate('Utilities');
         } else {
           Alert.alert(
             'Thông báo',

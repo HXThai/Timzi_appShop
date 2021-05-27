@@ -162,6 +162,7 @@ const LoginScreen = (props) => {
       if (address != '' && isCheckChangeAdress == false) {
         services.getLocationSuggest(null, address).then(function (response) {
           if (response) {
+            reactotron.log(response);
             setIsSearchAddress(true);
             setDataLocationSuggest(response.data.predictions);
           } else {
@@ -170,7 +171,6 @@ const LoginScreen = (props) => {
         });
       }
     }, 1500);
-
     return () => clearTimeout(delayDebounceFn);
   }, [address]);
 
@@ -770,7 +770,7 @@ const LoginScreen = (props) => {
                   }}>
                   <ScrollView>
                     {dataLocationSuggest.map((item, index) => {
-                      reactotron.log(dataLocationSuggest);
+                      // reactotron.log(dataLocationSuggest);
                       return (
                         <TouchableOpacity
                           onPress={() => {
@@ -780,7 +780,7 @@ const LoginScreen = (props) => {
                           style={{
                             padding: 5,
                             // backgroundColor: '#C0C0C0',
-                            height: 50,
+                            // height: 50,
                             justifyContent: 'center',
                             borderBottomWidth: 0.5,
                             borderBottomColor: 'grey',

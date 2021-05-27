@@ -318,7 +318,7 @@ const LoginScreen = (props) => {
     servicesPromotion.addComboStore(body).then(function (response) {
       // props.onGetList(response?.data);
       if (response) {
-        console.log('thai', response);
+        // console.log('thai', response);
         if (response.data.code === 200) {
           Alert.alert(
             'Thông báo!',

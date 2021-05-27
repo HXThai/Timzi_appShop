@@ -104,12 +104,16 @@ export default homeService = {
   },
 
   getLocationSuggest: async (params, suggest) => {
-    let url = `${API_BASE_URL.GET_LOCATION_SUGGEST}?input=${suggest}&api_key=JCVWJnabFfQ7QF7Fts2FBKCBSWvpmB7MGBYEE5lS`;
+    let url = `${
+      API_BASE_URL.GET_LOCATION_SUGGEST
+    }?input=${suggest}&language=${'vi'}&components=${'country:vn'}&key=AIzaSyAgxaD412H4b24diNaw4rmum-qQBnfDxhU`;
     let response = callApiService.get(url);
     return response;
   },
   getLocationDetail: async (params, place_id) => {
-    let url = `${API_BASE_URL.GET_LOCATION_DETAIL}?place_id=${place_id}&api_key=JCVWJnabFfQ7QF7Fts2FBKCBSWvpmB7MGBYEE5lS`;
+    let url = `${
+      API_BASE_URL.GET_LOCATION_DETAIL
+    }?placeid=${place_id}&language=${'vi'}&key=AIzaSyAgxaD412H4b24diNaw4rmum-qQBnfDxhU`;
     let response = callApiService.get(url);
     return response;
   },
@@ -118,8 +122,8 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
-  getListCategoryStoreFood: async (params) => {
-    let url = `${API_BASE_URL.GET_LIST_CATEGORY_STORE_FOOD}`;
+  getListCategoryStoreFood: async (params, storeId) => {
+    let url = `${API_BASE_URL.GET_LIST_CATEGORY_STORE_FOOD}?store_id=${storeId}`;
     let response = callApiService.get(url);
     return response;
   },

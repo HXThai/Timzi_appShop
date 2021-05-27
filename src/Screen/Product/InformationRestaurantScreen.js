@@ -26,8 +26,19 @@ import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import productService from '../../Redux/Service/productService';
+import ImageView from 'react-native-image-viewing';
 
 const LoginScreen = (props) => {
+  const [imageView, setImageView] = useState([{}]);
+
+  const [visible, setIsVisible] = useState(false);
+
+  const onShowImage = (uriImage) => {
+    var img = [{uri: uriImage}];
+    setImageView(img);
+    setIsVisible(true);
+  };
+
   const [dataRestaurant, setDataRestaurant] = useState({
     name: 'Hoàng Xuân Thái',
     address: 'Kim Chung - Hoài Đức - Hà Nội',
@@ -56,6 +67,12 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          <ImageView
+            images={imageView}
+            imageIndex={0}
+            visible={visible}
+            onRequestClose={() => setIsVisible(false)}
+          />
           <View
             style={{
               padding: 10,
@@ -64,10 +81,16 @@ const LoginScreen = (props) => {
               height: '100%',
             }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              <Image
-                source={{uri: data?.image}}
-                style={{height: 140, width: '100%', borderRadius: 8}}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  onShowImage(data?.image);
+                }}>
+                <Image
+                  source={{uri: data?.image}}
+                  style={{height: 200, width: '100%', borderRadius: 8}}
+                  resizeMode={'center'}
+                />
+              </TouchableOpacity>
               <View
                 style={{
                   flexDirection: 'row',

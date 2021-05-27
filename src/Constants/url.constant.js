@@ -86,8 +86,10 @@ const API_BASE_URL = {
   CONFIRM_PAYMENT_BOOKFOOD_WITH_STAFF:
     ROOT_DOMAIN + '/book-table/payment-book-food-with-staff',
 
-  GET_LOCATION_SUGGEST: 'https://rsapi.goong.io/Place/AutoComplete',
-  GET_LOCATION_DETAIL: 'https://rsapi.goong.io/Place/Detail',
+  GET_LOCATION_SUGGEST:
+    'https://maps.googleapis.com/maps/api/place/autocomplete/json',
+  GET_LOCATION_DETAIL:
+    'https://maps.googleapis.com/maps/api/place/details/json',
 
   GET_LIST_CATEGORY_WITH_STORE: ROOT_DOMAIN + '/list-category-with-store',
   GET_LIST_CATEGORY_STORE_FOOD:

@@ -28,6 +28,7 @@ import {connect} from 'react-redux';
 import storage from './asyncStorage/Storage';
 import services from '../Redux/Service/productService';
 import ImageModal from 'react-native-image-modal';
+import ImageView from 'react-native-image-viewing';
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -53,6 +54,10 @@ const Home = (props) => {
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
   const [modalVisibleShowImage, setModalVisibleShowImage] = useState(false);
+
+  const [imageView, setImageView] = useState([{}]);
+
+  const [visible, setIsVisible] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -82,7 +87,7 @@ const Home = (props) => {
         return;
       }
     });
-    services.getListCategoryStoreFood(null).then(function (response) {
+    services.getListCategoryStoreFood(null, storeId).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
           setDataCateStoreFood(response.data.data);
@@ -150,7 +155,7 @@ const Home = (props) => {
         return;
       }
     });
-    services.getListCategoryStoreFood(null).then(function (response) {
+    services.getListCategoryStoreFood(null, storeId).then(function (response) {
       if (response) {
         // console.log('thai', response);
         if (response.data.code === 200) {
@@ -163,6 +168,12 @@ const Home = (props) => {
     });
   }, []);
 
+  const onShowImage = (uriImage) => {
+    var img = [{uri: uriImage}];
+    setImageView(img);
+    setIsVisible(true);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -170,6 +181,12 @@ const Home = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          <ImageView
+            images={imageView}
+            imageIndex={0}
+            visible={visible}
+            onRequestClose={() => setIsVisible(false)}
+          />
           {modalVisibleLoading === true ? (
             <View
               style={{
@@ -366,7 +383,7 @@ const Home = (props) => {
                     }}>
                     <Image
                       source={{uri: data?.store?.image}}
-                      style={{height: 140, width: '100%', borderRadius: 8}}
+                      style={{height: 200, width: '100%', borderRadius: 8}}
                     />
                     <View
                       style={{
@@ -779,20 +796,7 @@ const Home = (props) => {
                                 }}>
                                 <TouchableOpacity
                                   onPress={() => {
-                                    return (
-                                      <ImageModal
-                                        resizeMode="contain"
-                                        imageBackgroundColor="#000000"
-                                        style={{
-                                          width: 250,
-                                          height: 250,
-                                        }}
-                                        source={{
-                                          uri:
-                                            'https://cdn.pixabay.com/photo/2019/07/25/18/58/church-4363258_960_720.jpg',
-                                        }}
-                                      />
-                                    );
+                                    onShowImage(item.image);
                                   }}>
                                   <Image
                                     source={{uri: item.image}}
@@ -1034,7 +1038,10 @@ const Home = (props) => {
                                     // marginTop: 10,
                                     position: 'absolute',
                                   }}>
-                                  <TouchableOpacity>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      onShowImage(item.image);
+                                    }}>
                                     <Image
                                       source={{uri: item.image}}
                                       style={{

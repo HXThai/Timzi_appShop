@@ -256,20 +256,22 @@ const LoginScreen = (props) => {
         return;
       }
     });
-    services.getListCategoryStoreFood(null).then(function (response) {
-      if (response) {
-        if (response.data.code === 200) {
-          setDataCateStoreFood(response.data.data);
-          response.data.data.forEach((element) => {
-            if (element.id == props?.route?.params?.category_store_food) {
-              setStoreFood(element);
-            }
-          });
+    services
+      .getListCategoryStoreFood(null, props?.route?.params?.store_id)
+      .then(function (response) {
+        if (response) {
+          if (response.data.code === 200) {
+            setDataCateStoreFood(response.data.data);
+            response.data.data.forEach((element) => {
+              if (element.id == props?.route?.params?.category_store_food) {
+                setStoreFood(element);
+              }
+            });
+          }
+        } else {
+          return;
         }
-      } else {
-        return;
-      }
-    });
+      });
   }, []);
 
   const handleAddFood = () => {
