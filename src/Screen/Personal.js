@@ -120,7 +120,7 @@ const Home = (props) => {
 
   const [dataUser, setDataUser] = useState({});
 
-  const [phone, setPhone] = useState('0901945179');
+  // const [phone, setPhone] = useState('0901945179');
 
   const [roleId, setRoleId] = useState('');
 
@@ -224,7 +224,7 @@ const Home = (props) => {
       props.navigation.navigate('ChangePasswordScreen');
     } else if (index === 6) {
       // props.navigation.navigate('ChangePasswordScreen');
-      Linking.openURL(`tel:${phone}`);
+      // Linking.openURL(`tel:${phone}`);
     } else {
       Alert.alert(
         'Đăng xuất',
