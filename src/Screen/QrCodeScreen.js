@@ -13,7 +13,6 @@ export const QrCodeScreen = (props) => {
     }, [])
     const onSuccess =async (e) => {
         if (!isEnableScan) return
-        alert(JSON.stringify(e))
         // sheet.current.snapTo(0)
         setisShowScanBar(false)
         // handleOrderTable(e.data)
