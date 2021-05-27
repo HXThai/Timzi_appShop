@@ -413,7 +413,9 @@ const Home = (props) => {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-              }}></View>
+              }}>
+              <Text style={{fontSize: 12}}>{item.date_time}</Text>
+            </View>
             <View
               style={{
                 flexDirection: 'row',

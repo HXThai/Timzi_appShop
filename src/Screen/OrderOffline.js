@@ -476,21 +476,23 @@ const Home = (props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Image
+              {/* <Image
                 source={Images.iconPersonal}
                 style={{height: 10, width: 10, opacity: 0}}
-              />
+              /> */}
               <Text
                 style={{
                   fontWeight: '400',
                   fontSize: 12,
-                  marginLeft: 5,
+                  // marginLeft: 5,
                 }}>
                 {item?.code}
               </Text>
             </View>
             <View>
-              <Text style={{fontSize: 12, color: '#828282'}}></Text>
+              <Text style={{fontSize: 12, color: '#828282'}}>
+                {item?.time_booking}
+              </Text>
             </View>
           </View>
           <View

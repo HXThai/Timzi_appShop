@@ -173,9 +173,14 @@ const LoginScreen = (props) => {
     services.confirmPaymentBookfoodWithStaff(body).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
-          props.navigation.navigate('Utilities', {
-            tab: 4,
-          });
+          // props.navigation.reset({
+          //   routes: [
+          //     {
+          //       name: 'Utilities',
+          //     },
+          //   ],
+          // });
+          props.navigation.navigate('Utilities');
         } else {
           Alert.alert(
             'Thông báo',
@@ -764,7 +769,7 @@ const LoginScreen = (props) => {
                               }
                             }}
                             style={{
-                              height: 20,
+                              height: 22,
                               width: 80,
                               // padding: 5,
                               borderRadius: 4,
@@ -793,7 +798,7 @@ const LoginScreen = (props) => {
                                 }
                               }}
                               style={{
-                                height: 20,
+                                height: 22,
                                 width: 80,
                                 // padding: 5,
                                 borderRadius: 4,
@@ -803,7 +808,7 @@ const LoginScreen = (props) => {
                                 justifyContent: 'center',
                                 width: Dimensions.get('window').width * 0.2,
                                 justifyContent: 'center',
-                                marginTop: 5,
+                                marginTop: 8,
                               }}>
                               <Text style={{fontSize: 11, color: Color.main}}>
                                 Hoàn trả
@@ -850,12 +855,12 @@ const LoginScreen = (props) => {
                   />
                   <Text
                     style={{fontSize: 17, fontWeight: '700', marginLeft: 10}}>
-                    {styles.dynamicSort(
+                    {/* {styles.dynamicSort(
                       dataOrderOffline.is_shop_book === 1
                         ? totalMoneyWithStaffLocal
                         : dataOrderOffline?.total_money,
-                    )}{' '}
-                    đ
+                    )}{' '} */}
+                    {styles.dynamicSort(totalMoneyWithStaffLocal)} đ
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -869,38 +874,7 @@ const LoginScreen = (props) => {
                         {
                           text: 'Đồng ý',
                           onPress: async () => {
-                            dataOrderOffline.is_shop_book === 0
-                              ? services
-                                  .confirmPaymentBookfood(
-                                    null,
-                                    props?.route?.params?.id,
-                                  )
-                                  .then(function (response) {
-                                    if (response) {
-                                      if (response.data.code === 200) {
-                                        props.navigation.reset({
-                                          routes: [{name: 'Utilities'}],
-                                        });
-                                        props.navigation.navigate('Utilities');
-                                      } else {
-                                        Alert.alert(
-                                          'Thông báo',
-                                          response.data.message,
-                                          [{text: 'Đồng ý', onPress: () => {}}],
-                                          {cancelable: false},
-                                        );
-                                      }
-                                    } else {
-                                      Alert.alert(
-                                        'Thông báo',
-                                        'Khách hàng chưa xác nhận thanh toán!',
-                                        [{text: 'Đồng ý', onPress: () => {}}],
-                                        {cancelable: false},
-                                      );
-                                      return;
-                                    }
-                                  })
-                              : staffPayment();
+                            staffPayment();
                           },
                         },
                       ],

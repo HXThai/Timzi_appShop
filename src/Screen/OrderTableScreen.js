@@ -9,7 +9,7 @@ import Color from '../Theme/Color';
 export const OrderTableScreen = (props) => {
   const id = props.route.params.id;
   const [isRequest, setIsRequest] = useState(false);
-  const [name, setName] = useState('');
+  const [name, setName] = useState('Khách vãng lai');
   const [phone, setPhone] = useState('');
   const [numberPeople, setNumberPeople] = useState('');
   const [note, setNote] = useState('');
@@ -59,7 +59,7 @@ export const OrderTableScreen = (props) => {
   };
   return (
     <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: 10}}>
-      <Text style={{marginTop: 15}}>Tên người đặt</Text>
+      <Text style={{marginTop: 15}}>Tên người đặt (Bắt buộc)</Text>
       <TextInput
         value={name}
         style={{
@@ -108,6 +108,7 @@ export const OrderTableScreen = (props) => {
         }}
         onChangeText={(txt) => setNote(txt)}
       />
+      <Text></Text>
       <TouchableOpacity
         style={{
           alignItems: 'center',

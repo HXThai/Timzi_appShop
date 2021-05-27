@@ -29,6 +29,7 @@ import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import services from '../../Redux/Service/productService';
+import ImageView from 'react-native-image-viewing';
 
 const LoginScreen = (props) => {
   const [dataFood, setDataFood] = useState([]);
@@ -38,6 +39,10 @@ const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+
+  const [imageView, setImageView] = useState([{}]);
+
+  const [visible, setIsVisible] = useState(false);
 
   // console.log(category_food_id, store_id);
 
@@ -84,6 +89,12 @@ const LoginScreen = (props) => {
     getData();
   }, []);
 
+  const onShowImage = (uriImage) => {
+    var img = [{uri: uriImage}];
+    setImageView(img);
+    setIsVisible(true);
+  };
+
   const renderProduct = ({item}) => {
     return (
       <View
@@ -118,14 +129,20 @@ const LoginScreen = (props) => {
               // marginTop: 10,
               position: 'absolute',
             }}>
-            <Image
-              source={{uri: item?.image}}
-              style={{
-                height: 97,
-                width: 97,
-                borderRadius: 50,
-              }}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                onShowImage(item.image);
+              }}>
+              <Image
+                source={{uri: item?.image}}
+                style={{
+                  height: 97,
+                  width: 97,
+                  borderRadius: 50,
+                  // resizeMode: 'stretch',
+                }}
+              />
+            </TouchableOpacity>
             <View
               style={{
                 width: '100%',
@@ -274,6 +291,12 @@ const LoginScreen = (props) => {
           source={Images.backgroundHome}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}>
+          <ImageView
+            images={imageView}
+            imageIndex={0}
+            visible={visible}
+            onRequestClose={() => setIsVisible(false)}
+          />
           {modalVisibleLoading === true ? (
             <View
               style={{

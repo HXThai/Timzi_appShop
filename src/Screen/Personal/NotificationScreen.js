@@ -217,7 +217,7 @@ const LoginScreen = (props) => {
                         }
                       });
                   } else if (item.type === 3) {
-                    services
+                    servicesOffline
                       .orderOfflineDetail(null, item.object_id)
                       .then(function (response2) {
                         if (response2) {
