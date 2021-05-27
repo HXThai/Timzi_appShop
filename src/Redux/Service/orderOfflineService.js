@@ -93,4 +93,9 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+  requestQrCode: async (params) => {
+    let url = `${API_BASE_URL.QR_CODE}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
 };
