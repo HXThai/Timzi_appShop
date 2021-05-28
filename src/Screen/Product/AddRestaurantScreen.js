@@ -123,28 +123,28 @@ const LoginScreen = (props) => {
       if (response) {
         if (response.data.code === 200) {
           setDataProvince(response?.data?.data);
-          setCurrentProvince(response?.data?.data[0].name);
-          setCurrentProvinceId(response?.data?.data[0].id);
+          setCurrentProvince(response?.data?.data[35].name);
+          setCurrentProvinceId(response?.data?.data[35].id);
           services
-            .getListDistrict(null, response?.data?.data[0].id)
+            .getListDistrict(null, response?.data?.data[35].id)
             .then(function (responseDT) {
               if (responseDT) {
                 if (responseDT.data.code === 200) {
                   setDataDistrict(responseDT?.data?.data);
-                  setCurrentDistrict(responseDT?.data?.data[0].name);
-                  setCurrentDistrictId(responseDT?.data?.data[0].id);
+                  setCurrentDistrict(responseDT?.data?.data[1].name);
+                  setCurrentDistrictId(responseDT?.data?.data[1].id);
                   services
                     .getListWard(
                       null,
-                      response?.data?.data[0].id,
-                      responseDT?.data?.data[0].id,
+                      response?.data?.data[35].id,
+                      responseDT?.data?.data[1].id,
                     )
                     .then(function (responseW) {
                       if (responseW) {
                         if (responseW.data.code === 200) {
                           setDataWard(responseW?.data?.data);
-                          setCurrentWard(responseW?.data?.data[0].name);
-                          setCurrentWardId(responseW?.data?.data[0].id);
+                          setCurrentWard(responseW?.data?.data[24].name);
+                          setCurrentWardId(responseW?.data?.data[24].id);
                         }
                       } else {
                         return;
@@ -164,12 +164,8 @@ const LoginScreen = (props) => {
     services.getListCategory(null, '1.0', '1.0').then(function (response) {
       if (response) {
         if (response.data.code === 200) {
-          // setDataCategory(response?.data?.data);
-          // console.log(response?.data?.data);
-          reactotron.log(response?.data?.data?.list_category);
           var data = [];
           response?.data?.data?.list_category?.forEach((element, index) => {
-            // reactotron.log(index);
             element.isCheck = 0;
             data.push(element);
           });
