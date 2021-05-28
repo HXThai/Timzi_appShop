@@ -48,8 +48,8 @@ const Home = (props) => {
   const [isVisibleTime2, setIsVisibleTime2] = useState(false)
   const [selectTime, setSelectTime] = useState(false)
   const [date1, setDate1] = useState(moment((new Date)).utcOffset(7).format("DD/MM/YYYY"))
-  const [timestamp1, setTimeStamp1] = useState("")
-  const [timestamp2, setTimeStamp2] = useState("")
+  const [timestamp1, setTimeStamp1] = useState(new Date(Date.now()))
+  const [timestamp2, setTimeStamp2] = useState(new Date(Date.now()))
   const [date2, setDate2] = useState(moment((new Date)).utcOffset(7).format("DD/MM/YYYY"))
   const [tab, setTab] = useState(0);
   const refDateEnd = useRef("refDateEnd");
@@ -185,7 +185,7 @@ const Home = (props) => {
         });
     } else {
       services
-        .getListOrderOffline(null, storeId, tab, 1)
+        .getListOrderOffline(null, storeId, tab, 1, moment(timestamp1).utcOffset(7).format("YYYY-MM-DD"), moment(timestamp2).utcOffset(7).format("YYYY-MM-DD"))
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
@@ -276,7 +276,7 @@ const Home = (props) => {
         });
     } else {
       services
-        .getListOrderOffline(null, storeId, index, 1)
+        .getListOrderOffline(null, storeId, index, 1, moment(timestamp1).utcOffset(7).format("YYYY-MM-DD"), moment(timestamp2).utcOffset(7).format("YYYY-MM-DD"))
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {

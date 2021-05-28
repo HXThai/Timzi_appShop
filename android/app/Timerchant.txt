@@ -1,0 +1,3 @@
+KeyAlias: timerchant_alias
+keyStore password: timerchant2021
+keyAlias Password: timerchant2021
