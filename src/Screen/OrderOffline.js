@@ -1173,7 +1173,7 @@ const Home = (props) => {
                     onPress = {() => {setIsVisibleTime(true)}}
                     style ={{flexDirection:'row'}} >
                       <Text children = {date1||'212-111'}/>
-                      <Text children = '-'/>
+                      <Text children = ' - '/>
                       <Text children = {date2 ||'212-111'}/>
                     </TouchableOpacity>
                   </View>
