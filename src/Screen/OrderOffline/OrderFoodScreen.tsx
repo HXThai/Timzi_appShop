@@ -218,7 +218,7 @@ const LoginScreen = (props) => {
           style={{ width: '100%', height: '100%' }}>
           <View
             style={{
-              padding: 10,
+              // padding: 10,
               flexDirection: 'column',
               justifyContent: 'space-between',
               height: '100%',
