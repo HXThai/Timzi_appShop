@@ -1,9 +1,9 @@
-import {API_BASE_URL} from '../../Constants/url.constant';
+import { API_BASE_URL } from '../../Constants/url.constant';
 import callApiService from '../../utils/callAPI.service';
 
 export default homeService = {
-  getListOrderOffline: async (params, store_id, status, page) => {
-    let url = `${API_BASE_URL.GET_LIST_ORDER_OFFLINE}?store_id=${store_id}&status=${status}&page=${page}`;
+  getListOrderOffline: async (params, store_id, status, page, from_date, to_date) => {
+    let url = `${API_BASE_URL.GET_LIST_ORDER_OFFLINE}?store_id=${store_id}&status=${status}&page=${page}&from_date=${from_date}&to_date=${to_date}`;
     let response = callApiService.get(url);
     return response;
   },
@@ -32,7 +32,7 @@ export default homeService = {
     let response = callApiService.put(url);
     return response;
   },
-  getListTableOrderOffline: async (params, id, page) => {
+  getListTableOrderOffline: async (params, id, page,) => {
     let url = `${API_BASE_URL.GET_LIST_TABLE_ORDER_OFFLINE}/${id}?page=${page}`;
     let response = callApiService.get(url);
     return response;

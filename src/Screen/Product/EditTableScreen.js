@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   ImageBackground,
@@ -18,13 +18,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import services from '../../Redux/Service/productService';
 
 const LoginScreen = (props) => {
@@ -39,6 +39,9 @@ const LoginScreen = (props) => {
   );
   const [location, setLocation] = useState(
     props?.route?.params?.dataTable?.number_floor?.toString(),
+  );
+  const [passWifi, setPasswifi] = useState(
+    props?.route?.params?.dataTable?.pass_wifi?.toString(),
   );
   const idTable = props?.route?.params?.dataTable?.id;
   const [service, setService] = useState('');
@@ -64,6 +67,7 @@ const LoginScreen = (props) => {
       number_people_min: minNumberPerson,
       number_people_max: maxNumberPerson,
       number_floor: location,
+      pass_wifi: passWifi
     };
     services.addTable(body).then(function (response) {
       // props.onGetList(response?.data);
@@ -94,7 +98,7 @@ const LoginScreen = (props) => {
                 },
               },
             ],
-            {cancelable: false},
+            { cancelable: false },
           );
         }
       } else {
@@ -104,10 +108,10 @@ const LoginScreen = (props) => {
           [
             {
               text: 'Đồng ý',
-              onPress: async () => {},
+              onPress: async () => { },
             },
           ],
-          {cancelable: false},
+          { cancelable: false },
         );
         return;
       }
@@ -151,7 +155,7 @@ const LoginScreen = (props) => {
                 },
               },
             ],
-            {cancelable: false},
+            { cancelable: false },
           );
         }
       } else {
@@ -161,10 +165,10 @@ const LoginScreen = (props) => {
           [
             {
               text: 'Đồng ý',
-              onPress: async () => {},
+              onPress: async () => { },
             },
           ],
-          {cancelable: false},
+          { cancelable: false },
         );
         return;
       }
@@ -177,7 +181,7 @@ const LoginScreen = (props) => {
         <ImageBackground
           source={Images.backgroundHome}
           resizeMode="cover"
-          style={{width: '100%', height: '100%'}}>
+          style={{ width: '100%', height: '100%' }}>
           <View
             style={{
               padding: 10,
@@ -186,9 +190,9 @@ const LoginScreen = (props) => {
               height: '100%',
             }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View
-                  style={{width: '100%', alignItems: 'center', marginTop: 10}}>
+                  style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
                   <ImageBackground
                     source={Images.iconOrderOfflineYellow}
                     style={{
@@ -198,7 +202,7 @@ const LoginScreen = (props) => {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    <Text style={{color: Color.white, fontWeight: '700'}}>
+                    <Text style={{ color: Color.white, fontWeight: '700' }}>
                       {numberTable}
                     </Text>
                   </ImageBackground>
@@ -206,7 +210,7 @@ const LoginScreen = (props) => {
               </View>
               {status === 'edit' ? (
                 <View style={{}}>
-                  <Text style={{fontSize: 12}}>Số bàn</Text>
+                  <Text style={{ fontSize: 12 }}>Số bàn</Text>
                 </View>
               ) : null}
               <View
@@ -230,7 +234,7 @@ const LoginScreen = (props) => {
               </View>
               {status === 'edit' ? (
                 <View style={{}}>
-                  <Text style={{fontSize: 12}}>Số người tối thiểu</Text>
+                  <Text style={{ fontSize: 12 }}>Số người tối thiểu</Text>
                 </View>
               ) : null}
               <View
@@ -254,7 +258,7 @@ const LoginScreen = (props) => {
               </View>
               {status === 'edit' ? (
                 <View style={{}}>
-                  <Text style={{fontSize: 12}}>Số người tối đa</Text>
+                  <Text style={{ fontSize: 12 }}>Số người tối đa</Text>
                 </View>
               ) : null}
               <View
@@ -278,7 +282,7 @@ const LoginScreen = (props) => {
               </View>
               {status === 'edit' ? (
                 <View style={{}}>
-                  <Text style={{fontSize: 12}}>Vị trí tầng</Text>
+                  <Text style={{ fontSize: 12 }}>Vị trí tầng</Text>
                 </View>
               ) : null}
               <View
@@ -297,6 +301,30 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setLocation(text)}
                   defaultValue={location}
+                  keyboardType={'number-pad'}
+                />
+              </View>
+              {status === 'edit' ? (
+                <View style={{}}>
+                  <Text style={{ fontSize: 12 }}>Mật khẩu wifi</Text>
+                </View>
+              ) : null}
+              <View
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  marginBottom: 25,
+                }}>
+                <TextInput
+                  style={{
+                    height: 40,
+                    borderBottomWidth: 0.8,
+                    borderBottomColor: '#333333',
+                  }}
+                  placeholder="Mật khẩu wifi"
+                  placeholderTextColor="#333333"
+                  onChangeText={(text) => setPasswifi(text)}
+                  defaultValue={passWifi}
                   keyboardType={'number-pad'}
                 />
               </View>
@@ -320,7 +348,7 @@ const LoginScreen = (props) => {
                     marginBottom: 10,
                   }}>
                   <Text
-                    style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
+                    style={{ fontWeight: '700', fontSize: 15, color: '#fff' }}>
                     Sửa bàn
                   </Text>
                 </TouchableOpacity>
@@ -338,7 +366,7 @@ const LoginScreen = (props) => {
                     marginBottom: 10,
                   }}>
                   <Text
-                    style={{fontWeight: '700', fontSize: 15, color: '#fff'}}>
+                    style={{ fontWeight: '700', fontSize: 15, color: '#fff' }}>
                     Thêm bàn
                   </Text>
                 </TouchableOpacity>

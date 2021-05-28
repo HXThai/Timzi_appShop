@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -31,6 +31,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import services from '../../Redux/Service/productService';
 import QRCode from 'react-native-qrcode-svg';
+import reactotron from 'reactotron-react-native';
 
 const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
@@ -38,6 +39,7 @@ const LoginScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
+  const refSvg = useRef("refSvg")
 
   const getData = () => {
     setModalVisibleLoading(true);
@@ -60,13 +62,28 @@ const LoginScreen = (props) => {
   const [dataOrderTable, setDataOrderTable] = useState([]);
 
   const [chooseTable, setChooseTable] = useState({});
+   const saveQRCode = () => {
+    refSvg.current.toDataURL(callback);
+  };
 
+
+
+  const callback = (dataURL)=> {
+    reactotron.log(dataURL)
+    let shareImageBase64 = {
+      title: 'React Native',
+      url: `data:image/png;base64,${dataURL}`,
+      subject: 'Share Link', //  for email
+    };
+    // reactotron.log(shareImageBase64);
+    // Share.open(shareImageBase64).catch(error => console.log(error));
+  }
   const renderProduct = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          setChooseTable(item);
-          setModalVisible(true);
+          // setChooseTable(item);
+          // setModalVisible(true);
         }}
         style={{
           width: Dimensions.get('window').width * 0.45,
@@ -241,7 +258,10 @@ const LoginScreen = (props) => {
               <Text style={{fontSize: 16, fontWeight: '700'}}>
                 QR code bàn số {chooseTable.number_table}
               </Text>
-              <QRCode value={chooseTable.code} />
+              <QRCode value={chooseTable.code}
+              size = {250}
+              getRef={refSvg }
+              />
               <TouchableOpacity
                 style={{
                   height: 40,
@@ -252,6 +272,11 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                 }}>
                 <Text
+                onPress = {() => {
+                  console.log("ne");
+                //  console.log(this.svg.toDataURL()); 
+                saveQRCode()
+                }}
                   style={{color: Color.white, fontSize: 16, fontWeight: '700'}}>
                   Tải xuống
                 </Text>
