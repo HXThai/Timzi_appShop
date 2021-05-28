@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   Image,
   Text,
@@ -15,6 +15,7 @@ import {
   Platform,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Color from '../Theme/Color';
 import Images from '../Theme/Images';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -30,6 +31,7 @@ import {connect} from 'react-redux';
 import services from '../Redux/Service/orderOfflineService';
 import reactotron from 'reactotron-react-native';
 import {get} from 'react-native/Libraries/Utilities/PixelRatio';
+import moment from 'moment';
 // import {
 //   USBPrinter,
 //   NetPrinter,
@@ -41,7 +43,13 @@ const wait = (timeout) => {
 };
 
 const Home = (props) => {
+  const [isVisibleTime, setIsVisibleTime] = useState(false)
+  const [minimumDate, setMinimumDate] = useState(false)
+  const [isVisibleTime2, setIsVisibleTime2] = useState(false)
+  const [date1, setDate1] = useState(moment((new Date)).utcOffset(7).format("DD/MM/YYYY"))
+  const [date2, setDate2] = useState(moment((new Date)).utcOffset(7).format("DD/MM/YYYY"))
   const [tab, setTab] = useState(0);
+  const refDateEnd = useRef("refDateEnd");
   const [dataTab, setDataTab] = useState([
     {id: 0, name: 'Danh sách bàn'},
     {id: 1, name: 'Mới'},
@@ -1159,7 +1167,17 @@ const Home = (props) => {
                       />
                     </TouchableOpacity>
                   ) : null}
-                  <View
+                  <View style = {{flexDirection:'row', justifyContent:'space-between'}}>
+                    <Text children = 'Lọc theo thời gian' style= {{fontSize:15, fontWeight:'500'}} />
+                    <TouchableOpacity 
+                    onPress = {() => {setIsVisibleTime(true)}}
+                    style ={{flexDirection:'row'}} >
+                      <Text children = {date1||'212-111'}/>
+                      <Text children = '-'/>
+                      <Text children = {date2 ||'212-111'}/>
+                    </TouchableOpacity>
+                  </View>
+                  {/* <View
                     style={{
                       // marginTop: 20,
                       alignItems: 'center',
@@ -1213,7 +1231,7 @@ const Home = (props) => {
                         />
                       </TouchableOpacity>
                     </View>
-                  </View>
+                  </View> */}
                   <View
                     style={{
                       flexDirection: 'row',
@@ -1270,6 +1288,38 @@ const Home = (props) => {
                 </View>
               </View>
             </ScrollView>
+            <DateTimePickerModal
+          headerTextIOS= 'Chọn ngày bắt đầu' 
+          // minimumDate={new Date(Date.now())}
+          maximumDate={new Date(Date.now())}
+          isVisible={isVisibleTime}
+          mode="date"
+          onConfirm={(date) => {
+            console.log(date);
+            setMinimumDate(date)
+            setDate1(moment(date).utcOffset(7).format("DD/MM/YYYY"))
+            setIsVisibleTime(false)
+            setTimeout(() => {
+              setIsVisibleTime2(true)
+            },400)
+            // setIsVisibleTime2(true)
+          }}
+          onCancel={() => setIsVisibleTime(false)}
+        />
+            <DateTimePickerModal
+            // ref = {refDateEnd}
+          headerTextIOS= 'Chọn ngày kết thúc' 
+          minimumDate={new Date(minimumDate)}
+          maximumDate={new Date(Date.now())}
+          isVisible={isVisibleTime2}
+          mode="date"
+          onConfirm={(date) => {
+            console.log(date);
+            setDate2(moment(date).utcOffset(7).format("DD/MM/YYYY"))
+            setIsVisibleTime2(false)
+          }}
+          onCancel={() => setIsVisibleTime2(false)}
+        />
           </SafeAreaView>
         </ImageBackground>
       </View>
