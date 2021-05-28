@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Image,
   ImageBackground,
@@ -21,13 +21,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import services from '../../Redux/Service/productService';
 import QRCode from 'react-native-qrcode-svg';
@@ -37,7 +37,7 @@ const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
 
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [urlImage, setUrlImage] = useState("")
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
   const refSvg = useRef("refSvg")
 
@@ -62,13 +62,13 @@ const LoginScreen = (props) => {
   const [dataOrderTable, setDataOrderTable] = useState([]);
 
   const [chooseTable, setChooseTable] = useState({});
-   const saveQRCode = () => {
+  const saveQRCode = () => {
     refSvg.current.toDataURL(callback);
   };
 
 
 
-  const callback = (dataURL)=> {
+  const callback = (dataURL) => {
     reactotron.log(dataURL)
     let shareImageBase64 = {
       title: 'React Native',
@@ -78,12 +78,30 @@ const LoginScreen = (props) => {
     // reactotron.log(shareImageBase64);
     // Share.open(shareImageBase64).catch(error => console.log(error));
   }
-  const renderProduct = ({item}) => {
+  const handleItem = (item) => {
+    const payload = {
+      table_store_id: item.id
+    }
+    services.genQrCode(payload).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          // console.log(response?.data.data);
+          setUrlImage(response?.data.data)
+          // setDataOrderTable(response?.data?.data?.store?.table_store);
+          // setModalVisibleLoading(false);
+        }
+      } else {
+        return;
+      }
+    });
+  }
+  const renderProduct = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
+          handleItem(item)
           // setChooseTable(item);
-          // setModalVisible(true);
+          setModalVisible(true);
         }}
         style={{
           width: Dimensions.get('window').width * 0.45,
@@ -111,13 +129,13 @@ const LoginScreen = (props) => {
               }}>
               <Image
                 source={
-                  item.status === 'Hết chỗ'
+                  item.status === 2
                     ? Images.iconOrderOfflineGrey
                     : Images.iconOrderOfflineYellow
                 }
-                style={{height: 64, width: 64}}
+                style={{ height: 64, width: 64 }}
               />
-              <Text style={{color: '#fff', position: 'absolute'}}>
+              <Text style={{ color: '#fff', position: 'absolute' }}>
                 {item.number_table}
               </Text>
             </View>
@@ -171,7 +189,7 @@ const LoginScreen = (props) => {
                                         text: 'Đồng ý',
                                       },
                                     ],
-                                    {cancelable: false},
+                                    { cancelable: false },
                                   );
                                 } else {
                                   Alert.alert(
@@ -182,7 +200,7 @@ const LoginScreen = (props) => {
                                         text: 'Đồng ý',
                                       },
                                     ],
-                                    {cancelable: false},
+                                    { cancelable: false },
                                   );
                                 }
                               } else {
@@ -195,7 +213,7 @@ const LoginScreen = (props) => {
                         text: 'Huỷ',
                       },
                     ],
-                    {cancelable: false},
+                    { cancelable: false },
                   );
                 }}
                 style={{
@@ -206,7 +224,7 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                   borderRadius: 4,
                 }}>
-                <Text style={{fontSize: 11}}>Xóa</Text>
+                <Text style={{ fontSize: 11 }}>Xóa</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() =>
@@ -225,7 +243,7 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                   borderRadius: 4,
                 }}>
-                <Text style={{fontSize: 11}}>Sửa</Text>
+                <Text style={{ fontSize: 11 }}>Sửa</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -240,28 +258,32 @@ const LoginScreen = (props) => {
         <ImageBackground
           source={Images.backgroundHome}
           resizeMode="cover"
-          style={{width: '100%', height: '100%'}}>
+          style={{ width: '100%', height: '100%' }}>
           <Modal
             onBackdropPress={() => setModalVisible(false)}
-            style={{alignItems: 'center', justifyContent: 'center'}}
+            style={{ alignItems: 'center', justifyContent: 'center' }}
             isVisible={modalVisible}>
             <View
               style={{
                 height: '40%',
                 width: '80%',
-                backgroundColor: '#fff',
+                backgroundColor: 'white',
                 borderRadius: 10,
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'space-around',
               }}>
-              <Text style={{fontSize: 16, fontWeight: '700'}}>
-                QR code bàn số {chooseTable.number_table}
-              </Text>
-              <QRCode value={chooseTable.code}
-              size = {250}
-              getRef={refSvg }
+              <Image
+                style={{ width: "80%", height: '80%', }}
+                source={{ uri: urlImage }}
               />
+              {/* <Text style={{ fontSize: 16, fontWeight: '700' }}>
+                QR code bàn số {chooseTable.number_table}
+              </Text> */}
+              {/* <QRCode value={chooseTable.code}
+                size={250}
+                getRef={refSvg}
+              /> */}
               <TouchableOpacity
                 style={{
                   height: 40,
@@ -272,12 +294,11 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                 }}>
                 <Text
-                onPress = {() => {
-                  console.log("ne");
-                //  console.log(this.svg.toDataURL()); 
-                saveQRCode()
-                }}
-                  style={{color: Color.white, fontSize: 16, fontWeight: '700'}}>
+                  onPress={() => {
+
+                 
+                  }}
+                  style={{ color: Color.white, fontSize: 16, fontWeight: '700' }}>
                   Tải xuống
                 </Text>
               </TouchableOpacity>
@@ -327,9 +348,9 @@ const LoginScreen = (props) => {
                 data={dataOrderTable}
                 renderItem={renderProduct}
                 keyExtractor={(item, index) => index.toString()}
-                // onEndReached={handleLoadMore}
-                // onEndReachedThreshold={0}
-                // ListFooterComponent={renderFooter}
+              // onEndReached={handleLoadMore}
+              // onEndReachedThreshold={0}
+              // ListFooterComponent={renderFooter}
               />
             </View>
           ) : null}

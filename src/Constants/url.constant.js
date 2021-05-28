@@ -113,6 +113,7 @@ const API_BASE_URL = {
     ROOT_DOMAIN + '/category/delete-category-store-food',
   DELETE_FOOD: ROOT_DOMAIN + '/food/delete-food',
   DELETE_TABLE: ROOT_DOMAIN + '/table-store/delete-table-store',
+  GEN_QR_CODE: ROOT_DOMAIN + '/table-store/gen-image-qr-code',
 
   RATE_OF_USER: ROOT_DOMAIN + '/order/list-evaluate-with-store',
   GET_STORE_DETAIL_WITH_BOOK_TABLE_IN_STORE:
@@ -142,7 +143,7 @@ const API_BASE_URL = {
 
   SUBMIT_ORDER_FOOD: ROOT_DOMAIN + '/book-table/submit-order-food-with-staff',
   QR_CODE: ROOT_DOMAIN + '/book-table/book-table-qr-code-with-staff ',
-  
+
 };
 
-export {API_BASE_URL};
+export { API_BASE_URL };
