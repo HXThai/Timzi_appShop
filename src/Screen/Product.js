@@ -312,7 +312,7 @@ const Home = (props) => {
                     />
                   </TouchableOpacity>
                 ) : null}
-                <View
+                {/* <View
                   style={{
                     // marginTop: 20,
                     alignItems: 'center',
@@ -366,7 +366,7 @@ const Home = (props) => {
                       />
                     </TouchableOpacity>
                   </View>
-                </View>
+                </View> */}
                 <TouchableOpacity
                   style={{marginTop: 10}}
                   onPress={() =>

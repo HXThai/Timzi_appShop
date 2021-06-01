@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -10,6 +10,8 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -21,25 +23,26 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import services from '../../Redux/Service/productService';
 import QRCode from 'react-native-qrcode-svg';
 import reactotron from 'reactotron-react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const LoginScreen = (props) => {
   const store_id = props?.route?.params?.store_id || null;
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [urlImage, setUrlImage] = useState("")
+  const [urlImage, setUrlImage] = useState('');
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
-  const refSvg = useRef("refSvg")
+  const refSvg = useRef('refSvg');
 
   const getData = () => {
     setModalVisibleLoading(true);
@@ -66,10 +69,8 @@ const LoginScreen = (props) => {
     refSvg.current.toDataURL(callback);
   };
 
-
-
   const callback = (dataURL) => {
-    reactotron.log(dataURL)
+    reactotron.log(dataURL);
     let shareImageBase64 = {
       title: 'React Native',
       url: `data:image/png;base64,${dataURL}`,
@@ -77,29 +78,26 @@ const LoginScreen = (props) => {
     };
     // reactotron.log(shareImageBase64);
     // Share.open(shareImageBase64).catch(error => console.log(error));
-  }
+  };
   const handleItem = (item) => {
     const payload = {
-      table_store_id: item.id
-    }
+      table_store_id: item.id,
+    };
     services.genQrCode(payload).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
-          // console.log(response?.data.data);
-          setUrlImage(response?.data.data)
-          // setDataOrderTable(response?.data?.data?.store?.table_store);
-          // setModalVisibleLoading(false);
+          setUrlImage(response?.data.data);
         }
       } else {
         return;
       }
     });
-  }
-  const renderProduct = ({ item }) => {
+  };
+  const renderProduct = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          handleItem(item)
+          handleItem(item);
           // setChooseTable(item);
           setModalVisible(true);
         }}
@@ -133,9 +131,9 @@ const LoginScreen = (props) => {
                     ? Images.iconOrderOfflineGrey
                     : Images.iconOrderOfflineYellow
                 }
-                style={{ height: 64, width: 64 }}
+                style={{height: 64, width: 64}}
               />
-              <Text style={{ color: '#fff', position: 'absolute' }}>
+              <Text style={{color: '#fff', position: 'absolute'}}>
                 {item.number_table}
               </Text>
             </View>
@@ -189,7 +187,7 @@ const LoginScreen = (props) => {
                                         text: 'Đồng ý',
                                       },
                                     ],
-                                    { cancelable: false },
+                                    {cancelable: false},
                                   );
                                 } else {
                                   Alert.alert(
@@ -200,7 +198,7 @@ const LoginScreen = (props) => {
                                         text: 'Đồng ý',
                                       },
                                     ],
-                                    { cancelable: false },
+                                    {cancelable: false},
                                   );
                                 }
                               } else {
@@ -213,7 +211,7 @@ const LoginScreen = (props) => {
                         text: 'Huỷ',
                       },
                     ],
-                    { cancelable: false },
+                    {cancelable: false},
                   );
                 }}
                 style={{
@@ -224,7 +222,7 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                   borderRadius: 4,
                 }}>
-                <Text style={{ fontSize: 11 }}>Xóa</Text>
+                <Text style={{fontSize: 11}}>Xóa</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() =>
@@ -243,7 +241,7 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                   borderRadius: 4,
                 }}>
-                <Text style={{ fontSize: 11 }}>Sửa</Text>
+                <Text style={{fontSize: 11}}>Sửa</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -252,16 +250,105 @@ const LoginScreen = (props) => {
     );
   };
 
+  const checkPermission = async () => {
+    // Function to check the platform
+    // If iOS then start downloading
+    // If Android then ask for permission
+
+    if (Platform.OS === 'ios') {
+      downloadImage();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Yêu cầu quyền lưu trữ',
+            message:
+              'Ứng dụng cần quyền truy cập vào bộ nhớ của bạn để tải xuống ảnh.',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // Once user grant the permission start downloading
+          console.log('Đã cấp quyền lưu trữ.');
+          downloadImage();
+        } else {
+          // If permission denied then show alert
+          alert('Quyền lưu trữ không được cấp.');
+        }
+      } catch (err) {
+        // To handle permission related exception
+        console.warn(err);
+      }
+    }
+  };
+
+  const downloadImage = () => {
+    // Main function to download the image
+
+    // To add the time suffix in filename
+    let date = new Date();
+    // Image URL which we want to download
+    let image_URL = urlImage;
+    // Getting the extention of the file
+    let ext = getExtention(image_URL);
+    ext = '.' + ext[0];
+    // Get config and fs from RNFetchBlob
+    // config: To pass the downloading related options
+    // fs: Directory path where we want our image to download
+    const {config, fs} = RNFetchBlob;
+    let PictureDir = fs.dirs.PictureDir;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        // Related to the Android only
+        useDownloadManager: true,
+        notification: true,
+        path:
+          PictureDir +
+          '/image_' +
+          Math.floor(date.getTime() + date.getSeconds() / 2) +
+          ext,
+        description: 'Image',
+      },
+    };
+    config(options)
+      .fetch('GET', image_URL)
+      .then((res) => {
+        // Showing alert after successful downloading
+        console.log('res -> ', JSON.stringify(res));
+        Alert.alert(
+          'Thông báo!',
+          'Tải ảnh thành công!',
+          [
+            {
+              text: 'Đồng ý',
+              onPress: () => {
+                setModalVisible(false);
+                // setModalVisibleLoading(false);
+                // setModalVisible(false);
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      });
+  };
+
+  const getExtention = (filename) => {
+    // To get the file extension
+    return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
         <ImageBackground
           source={Images.backgroundHome}
           resizeMode="cover"
-          style={{ width: '100%', height: '100%' }}>
+          style={{width: '100%', height: '100%'}}>
           <Modal
             onBackdropPress={() => setModalVisible(false)}
-            style={{ alignItems: 'center', justifyContent: 'center' }}
+            style={{alignItems: 'center', justifyContent: 'center'}}
             isVisible={modalVisible}>
             <View
               style={{
@@ -274,8 +361,8 @@ const LoginScreen = (props) => {
                 justifyContent: 'space-around',
               }}>
               <Image
-                style={{ width: "80%", height: '80%', }}
-                source={{ uri: urlImage }}
+                style={{width: '80%', height: '80%'}}
+                source={{uri: urlImage}}
               />
               {/* <Text style={{ fontSize: 16, fontWeight: '700' }}>
                 QR code bàn số {chooseTable.number_table}
@@ -285,6 +372,9 @@ const LoginScreen = (props) => {
                 getRef={refSvg}
               /> */}
               <TouchableOpacity
+                onPress={() => {
+                  checkPermission();
+                }}
                 style={{
                   height: 40,
                   width: 100,
@@ -294,11 +384,7 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                 }}>
                 <Text
-                  onPress={() => {
-
-                 
-                  }}
-                  style={{ color: Color.white, fontSize: 16, fontWeight: '700' }}>
+                  style={{color: Color.white, fontSize: 16, fontWeight: '700'}}>
                   Tải xuống
                 </Text>
               </TouchableOpacity>
@@ -348,9 +434,9 @@ const LoginScreen = (props) => {
                 data={dataOrderTable}
                 renderItem={renderProduct}
                 keyExtractor={(item, index) => index.toString()}
-              // onEndReached={handleLoadMore}
-              // onEndReachedThreshold={0}
-              // ListFooterComponent={renderFooter}
+                // onEndReached={handleLoadMore}
+                // onEndReachedThreshold={0}
+                // ListFooterComponent={renderFooter}
               />
             </View>
           ) : null}

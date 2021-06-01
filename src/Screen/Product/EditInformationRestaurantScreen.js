@@ -89,6 +89,7 @@ const LoginScreen = (props) => {
   }, []);
 
   useEffect(() => {
+    reactotron.log(props?.route?.params?.dataStore);
     setName(props?.route?.params?.dataStore?.name.toString());
     setAddress(props?.route?.params?.dataStore?.address.toString());
     setAveragePrice(props?.route?.params?.dataStore?.average_price.toString());
@@ -98,6 +99,11 @@ const LoginScreen = (props) => {
     setImage(props?.route?.params?.dataStore?.image);
     setCategoryId(props?.route?.params?.dataStore?.category);
     setCategoryBusiness(props?.route?.params?.dataStore?.category_store_detail);
+    var dataLoc = {
+      lat: props?.route?.params?.dataStore?.latitude,
+      lng: props?.route?.params?.dataStore?.longtidue,
+    };
+    setDataLocation(dataLoc);
     services.getListProvince(null).then(function (response) {
       if (response) {
         // console.log('thai mai', response);
@@ -162,7 +168,7 @@ const LoginScreen = (props) => {
       if (address != '' && isCheckChangeAdress == false) {
         services.getLocationSuggest(null, address).then(function (response) {
           if (response) {
-            reactotron.log(response);
+            // reactotron.log(response);
             setIsSearchAddress(true);
             setDataLocationSuggest(response.data.predictions);
           } else {

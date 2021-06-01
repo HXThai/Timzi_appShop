@@ -37,7 +37,7 @@ import reactotron from 'reactotron-react-native';
 const LoginScreen = (props) => {
   const [name, setName] = useState(props?.route?.params?.name?.toString());
   const [price, setPrice] = useState(props?.route?.params?.price?.toString());
-  const [status, setStatus] = useState(props.route.params.statusFood);
+  const [status, setStatus] = useState(props.route.params.statusFood || 1);
   const [promotion, setPromotion] = useState(props.route.params.promotion);
   const [image, setImage] = useState(props.route.params.image);
   const [imageName, setImageName] = useState(null);
@@ -615,7 +615,7 @@ const LoginScreen = (props) => {
               isVisible={modalVisibleCategory}>
               <View
                 style={{
-                  height: '20%',
+                  height: '25%',
                   width: '80%',
                   backgroundColor: '#fff',
                   borderRadius: 10,
@@ -623,7 +623,7 @@ const LoginScreen = (props) => {
                   alignItems: 'center',
                   justifyContent: 'space-around',
                 }}>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                   {dataCateWithStore.map((item, index) => {
                     return (
                       <TouchableOpacity
@@ -656,7 +656,7 @@ const LoginScreen = (props) => {
               isVisible={modalVisibleStoreFood}>
               <View
                 style={{
-                  height: '20%',
+                  height: '25%',
                   width: '80%',
                   backgroundColor: '#fff',
                   borderRadius: 10,
@@ -664,7 +664,7 @@ const LoginScreen = (props) => {
                   alignItems: 'center',
                   justifyContent: 'space-around',
                 }}>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                   {dataCateStoreFood.map((item, index) => {
                     return (
                       <TouchableOpacity
@@ -1241,6 +1241,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setPrice(text)}
                   defaultValue={price}
+                  keyboardType={'number-pad'}
                 />
               </View>
               {statusFood === 'edit' ? (
@@ -1264,6 +1265,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setPromotion(text)}
                   defaultValue={promotion}
+                  keyboardType={'number-pad'}
                 />
               </View>
 

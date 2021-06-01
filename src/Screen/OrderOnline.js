@@ -159,6 +159,19 @@ const Home = (props) => {
                 reactotron.log('Thaiiiiiiitest4');
               }
             } else {
+              Alert.alert(
+                'Thông báo',
+                'Không tìm thấy cửa hàng!',
+                [
+                  {
+                    text: 'Đồng ý',
+                    onPress: async () => {
+                      setModalVisibleLoading(false);
+                    },
+                  },
+                ],
+                {cancelable: false},
+              );
               return;
             }
           });
@@ -180,6 +193,17 @@ const Home = (props) => {
                     reactotron.log('Thaiiiiiiitest3');
                   }
                 } else {
+                  Alert.alert(
+                    'Thông báo',
+                    'Không tìm thấy cửa hàng!',
+                    [
+                      {
+                        text: 'Đồng ý',
+                        onPress: async () => {},
+                      },
+                    ],
+                    {cancelable: false},
+                  );
                   return;
                 }
               });
@@ -227,6 +251,17 @@ const Home = (props) => {
                   reactotron.log('Thaiiiiiii');
                 }
               } else {
+                Alert.alert(
+                  'Thông báo',
+                  'Không tìm thấy cửa hàng!',
+                  [
+                    {
+                      text: 'Đồng ý',
+                      onPress: async () => {},
+                    },
+                  ],
+                  {cancelable: false},
+                );
                 return;
               }
             });
@@ -266,6 +301,17 @@ const Home = (props) => {
                           reactotron.log('Thaiiiiiiitest2');
                         }
                       } else {
+                        Alert.alert(
+                          'Thông báo',
+                          'Không tìm thấy cửa hàng!',
+                          [
+                            {
+                              text: 'Đồng ý',
+                              onPress: async () => {},
+                            },
+                          ],
+                          {cancelable: false},
+                        );
                         return;
                       }
                     });
@@ -292,8 +338,33 @@ const Home = (props) => {
             setTab(index);
             setDataOrder(response?.data?.data?.data);
             setModalVisibleLoading(false);
+          } else {
+            Alert.alert(
+              'Thông báo',
+              response.data.message,
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {},
+                },
+              ],
+              {cancelable: false},
+            );
           }
         } else {
+          Alert.alert(
+            'Thông báo',
+            'Không tìm thấy cửa hàng!',
+            [
+              {
+                text: 'Đồng ý',
+                onPress: async () => {
+                  setModalVisibleLoading(false);
+                },
+              },
+            ],
+            {cancelable: false},
+          );
           return;
         }
       });
@@ -729,7 +800,7 @@ const Home = (props) => {
                       />
                     </TouchableOpacity>
                   ) : null}
-                  <View
+                  {/* <View
                     style={{
                       // marginTop: 20,
                       alignItems: 'center',
@@ -754,7 +825,6 @@ const Home = (props) => {
                           style={{
                             height: 45,
                             color: '#000000',
-
                             borderColor: Color.main,
                             borderWidth: 1,
                             borderRadius: 20,
@@ -783,11 +853,11 @@ const Home = (props) => {
                         />
                       </TouchableOpacity>
                     </View>
-                  </View>
+                  </View> */}
                   <View
                     style={{
                       flexDirection: 'row',
-                      marginTop: 20,
+                      marginTop: 10,
                       justifyContent: 'space-between',
                       width: Dimensions.get('window').width - 20,
                     }}>

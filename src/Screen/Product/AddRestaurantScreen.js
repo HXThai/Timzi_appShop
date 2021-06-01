@@ -143,8 +143,8 @@ const LoginScreen = (props) => {
                       if (responseW) {
                         if (responseW.data.code === 200) {
                           setDataWard(responseW?.data?.data);
-                          setCurrentWard(responseW?.data?.data[24].name);
-                          setCurrentWardId(responseW?.data?.data[24].id);
+                          setCurrentWard(responseW?.data?.data[21].name);
+                          setCurrentWardId(responseW?.data?.data[21].id);
                         }
                       } else {
                         return;

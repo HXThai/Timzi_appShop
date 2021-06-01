@@ -184,7 +184,7 @@ const Home = (props) => {
       props.navigation.navigate('ChangePasswordScreen');
     } else if (index === 5) {
       // props.navigation.navigate('ChangePasswordScreen');
-      Linking.openURL(`tel:${phone}`);
+      // Linking.openURL(`tel:${phone}`);
     } else {
       Alert.alert(
         'Đăng xuất',
@@ -225,6 +225,7 @@ const Home = (props) => {
     } else if (index === 6) {
       // props.navigation.navigate('ChangePasswordScreen');
       // Linking.openURL(`tel:${phone}`);
+      console.log('test');
     } else {
       Alert.alert(
         'Đăng xuất',
@@ -389,10 +390,10 @@ const Home = (props) => {
                     <Text style={{fontSize: 15, fontWeight: '700'}}>
                       {dataUser?.name}
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Địa chỉ: {dataUser?.address}
-                    </Text>
+                    </Text> */}
                     {/* <Text
                       style={{fontSize: 13, fontWeight: '400', marginTop: 10}}>
                       Số điện thoại: {dataUser?.phone}
@@ -402,7 +403,7 @@ const Home = (props) => {
                       Ngày tham gia: {dataUser.date}
                     </Text> */}
                     <View style={{flexDirection: 'row', marginTop: 10}}>
-                      <TouchableOpacity
+                      {/* <TouchableOpacity
                         style={{
                           width: 80,
                           height: 22,
@@ -421,7 +422,7 @@ const Home = (props) => {
                           }}>
                           Chỉnh sửa
                         </Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                       <TouchableOpacity
                         onPress={() =>
                           props.navigation.navigate('WalletScreen')

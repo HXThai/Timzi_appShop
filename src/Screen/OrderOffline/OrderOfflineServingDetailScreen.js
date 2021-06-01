@@ -173,13 +173,13 @@ const LoginScreen = (props) => {
     services.confirmPaymentBookfoodWithStaff(body).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
-          // props.navigation.reset({
-          //   routes: [
-          //     {
-          //       name: 'Utilities',
-          //     },
-          //   ],
-          // });
+          props.navigation.reset({
+            routes: [
+              {
+                name: 'Utilities',
+              },
+            ],
+          });
           props.navigation.navigate('Utilities');
         } else {
           Alert.alert(
@@ -803,14 +803,18 @@ const LoginScreen = (props) => {
                                 // padding: 5,
                                 borderRadius: 4,
                                 borderWidth: 1,
-                                borderColor: Color.main,
+                                borderColor: Color.buttonColor,
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 width: Dimensions.get('window').width * 0.2,
                                 justifyContent: 'center',
                                 marginTop: 8,
                               }}>
-                              <Text style={{fontSize: 11, color: Color.main}}>
+                              <Text
+                                style={{
+                                  fontSize: 11,
+                                  color: Color.buttonColor,
+                                }}>
                                 Hoàn trả
                               </Text>
                             </TouchableOpacity>

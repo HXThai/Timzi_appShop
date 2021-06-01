@@ -647,7 +647,7 @@ const LoginScreen = (props) => {
               snapPoints={[80, -100]}
               initialSnap={0}
               renderContent={() => (
-                <View style={{borderRadius: 8 ,marginLeft: 20, backgroundColor: 'white', height: 80, alignItems: 'center', paddingHorizontal: 10, flexDirection: 'row' }}>
+                <View style={{borderRadius: 8, backgroundColor: 'white', height: 80, alignItems: 'center', paddingHorizontal: 10, flexDirection: 'row' }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                     {/* <FstImage
                       source={R.images.ic_table}
@@ -717,7 +717,7 @@ const LoginScreen = (props) => {
 
                     }}
                     title='Thêm món'
-                    style={{ paddingVertical: 8, paddingHorizontal: 20, borderRadius: 10, backgroundColor: Color.main, }}
+                    style={{ paddingVertical: 8, paddingHorizontal: 20, borderRadius: 10, backgroundColor: Color.main,}}
                     titleStyle={{ fontSize: 15 }}
                   />
                 </View>

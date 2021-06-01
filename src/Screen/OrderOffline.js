@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   Image,
   Text,
@@ -15,7 +15,7 @@ import {
   Platform,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Color from '../Theme/Color';
 import Images from '../Theme/Images';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -23,14 +23,14 @@ import Images from '../Theme/Images';
 
 // Styles
 import styles from './Styles/HomeStyles';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import services from '../Redux/Service/orderOfflineService';
 import reactotron from 'reactotron-react-native';
-import { get } from 'react-native/Libraries/Utilities/PixelRatio';
+import {get} from 'react-native/Libraries/Utilities/PixelRatio';
 import moment from 'moment';
 // import {
 //   USBPrinter,
@@ -43,23 +43,27 @@ const wait = (timeout) => {
 };
 
 const Home = (props) => {
-  const [isVisibleTime, setIsVisibleTime] = useState(false)
-  const [minimumDate, setMinimumDate] = useState(false)
-  const [isVisibleTime2, setIsVisibleTime2] = useState(false)
-  const [selectTime, setSelectTime] = useState(false)
-  const [date1, setDate1] = useState(moment((new Date)).utcOffset(7).format("DD/MM/YYYY"))
-  const [timestamp1, setTimeStamp1] = useState(new Date(Date.now()))
-  const [timestamp2, setTimeStamp2] = useState(new Date(Date.now()))
-  const [date2, setDate2] = useState(moment((new Date)).utcOffset(7).format("DD/MM/YYYY"))
+  const [isVisibleTime, setIsVisibleTime] = useState(false);
+  const [minimumDate, setMinimumDate] = useState(false);
+  const [isVisibleTime2, setIsVisibleTime2] = useState(false);
+  const [selectTime, setSelectTime] = useState(false);
+  const [date1, setDate1] = useState(
+    moment(new Date()).utcOffset(7).format('DD/MM/YYYY'),
+  );
+  const [timestamp1, setTimeStamp1] = useState(new Date(Date.now()));
+  const [timestamp2, setTimeStamp2] = useState(new Date(Date.now()));
+  const [date2, setDate2] = useState(
+    moment(new Date()).utcOffset(7).format('DD/MM/YYYY'),
+  );
   const [tab, setTab] = useState(0);
-  const refDateEnd = useRef("refDateEnd");
+  const refDateEnd = useRef('refDateEnd');
   const [dataTab, setDataTab] = useState([
-    { id: 0, name: 'Danh sách bàn' },
-    { id: 1, name: 'Mới' },
-    { id: 2, name: 'Đã nhận' },
-    { id: 3, name: 'Đang phục vụ' },
-    { id: 4, name: 'Đã thanh toán' },
-    { id: 5, name: 'Đã hủy' },
+    {id: 0, name: 'Danh sách bàn'},
+    {id: 1, name: 'Mới'},
+    {id: 2, name: 'Đã nhận'},
+    {id: 3, name: 'Đang phục vụ'},
+    {id: 4, name: 'Đã thanh toán'},
+    {id: 5, name: 'Đã hủy'},
   ]);
 
   const [dataOrder, setDataOrder] = useState([]);
@@ -85,20 +89,20 @@ const Home = (props) => {
 
   useEffect(() => {
     page > 1 ? getData() : null;
-    return () => { };
+    return () => {};
   }, [page]);
   useEffect(() => {
     if (selectTime) {
-      setSelectTime(false)
-      setPage(1)
-      getData()
+      setSelectTime(false);
+      setPage(1);
+      getData();
     }
-  }, [selectTime])
+  }, [selectTime]);
   const getData = () => {
     // console.log('page', page);
     if (tab === 0) {
       services
-        .getListTableOrderOffline(null, storeId, page,)
+        .getListTableOrderOffline(null, storeId, page)
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
@@ -111,7 +115,14 @@ const Home = (props) => {
         });
     } else {
       services
-        .getListOrderOffline(null, storeId, tab, page, moment(timestamp1).utcOffset(7).format("YYYY-MM-DD"), moment(timestamp2).utcOffset(7).format("YYYY-MM-DD"))
+        .getListOrderOffline(
+          null,
+          storeId,
+          tab,
+          page,
+          moment(timestamp1).utcOffset(7).format('YYYY-MM-DD'),
+          moment(timestamp2).utcOffset(7).format('YYYY-MM-DD'),
+        )
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
@@ -127,17 +138,17 @@ const Home = (props) => {
 
   const onClickDetail = (id) => {
     if (tab === 1) {
-      props.navigation.navigate('NewOrderOfflineDetailScreen', { id: id });
+      props.navigation.navigate('NewOrderOfflineDetailScreen', {id: id});
     } else if (tab === 2) {
-      props.navigation.navigate('OrderOfflineReceivedDetailScreen', { id: id });
+      props.navigation.navigate('OrderOfflineReceivedDetailScreen', {id: id});
     } else if (tab === 3) {
-      props.navigation.navigate('OrderOfflineServingDetailScreen', { id: id });
+      props.navigation.navigate('OrderOfflineServingDetailScreen', {id: id});
     } else if (tab === 4) {
-      props.navigation.navigate('OrderOfflineServedDetailScreen', { id: id });
+      props.navigation.navigate('OrderOfflineServedDetailScreen', {id: id});
     } else if (tab === 5) {
-      props.navigation.navigate('OrderOfflineCancelledDetailScreen', { id: id });
+      props.navigation.navigate('OrderOfflineCancelledDetailScreen', {id: id});
     } else if (tab == 0) {
-      props.navigation.navigate('OrderTable', { id: id });
+      props.navigation.navigate('OrderTable', {id: id});
     }
   };
 
@@ -185,7 +196,14 @@ const Home = (props) => {
         });
     } else {
       services
-        .getListOrderOffline(null, storeId, tab, 1, moment(timestamp1).utcOffset(7).format("YYYY-MM-DD"), moment(timestamp2).utcOffset(7).format("YYYY-MM-DD"))
+        .getListOrderOffline(
+          null,
+          storeId,
+          tab,
+          1,
+          moment(timestamp1).utcOffset(7).format('YYYY-MM-DD'),
+          moment(timestamp2).utcOffset(7).format('YYYY-MM-DD'),
+        )
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
@@ -276,7 +294,14 @@ const Home = (props) => {
         });
     } else {
       services
-        .getListOrderOffline(null, storeId, index, 1, moment(timestamp1).utcOffset(7).format("YYYY-MM-DD"), moment(timestamp2).utcOffset(7).format("YYYY-MM-DD"))
+        .getListOrderOffline(
+          null,
+          storeId,
+          index,
+          1,
+          moment(timestamp1).utcOffset(7).format('YYYY-MM-DD'),
+          moment(timestamp2).utcOffset(7).format('YYYY-MM-DD'),
+        )
         .then(function (response) {
           if (response) {
             if (response.data.code === 200) {
@@ -290,7 +315,7 @@ const Home = (props) => {
     }
   };
 
-  const renderProduct = ({ item }) => {
+  const renderProduct = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -307,7 +332,7 @@ const Home = (props) => {
                     text: 'Đồng ý',
                   },
                 ],
-                { cancelable: false },
+                {cancelable: false},
               );
             }
           } else {
@@ -339,15 +364,15 @@ const Home = (props) => {
                   ? item.status === 1
                     ? Color.buttonColor
                     : item.status === 2
-                      ? '#828282'
-                      : Color.main
+                    ? '#828282'
+                    : Color.main
                   : tab === 1
-                    ? Color.buttonColor
-                    : tab === 4
-                      ? '#828282'
-                      : tab === 5
-                        ? Color.red
-                        : Color.main,
+                  ? Color.buttonColor
+                  : tab === 4
+                  ? '#828282'
+                  : tab === 5
+                  ? Color.red
+                  : Color.main,
               borderWidth: 1,
               alignItems: 'center',
               justifyContent: 'center',
@@ -359,15 +384,15 @@ const Home = (props) => {
                     ? item.status === 1
                       ? Color.buttonColor
                       : item.status === 2
-                        ? '#828282'
-                        : Color.main
+                      ? '#828282'
+                      : Color.main
                     : tab === 1
-                      ? Color.buttonColor
-                      : tab === 4
-                        ? '#828282'
-                        : tab === 5
-                          ? Color.red
-                          : Color.main,
+                    ? Color.buttonColor
+                    : tab === 4
+                    ? '#828282'
+                    : tab === 5
+                    ? Color.red
+                    : Color.main,
                 fontSize: 11,
               }}>
               {tab === 0
@@ -375,14 +400,14 @@ const Home = (props) => {
                   ? 'Còn chỗ'
                   : 'Hết chỗ'
                 : tab === 1
-                  ? 'Chờ duyệt'
-                  : tab === 2
-                    ? 'Đã nhận'
-                    : tab === 3
-                      ? 'Đang pv'
-                      : tab === 4
-                        ? 'Đã TT'
-                        : 'Đã hủy'}
+                ? 'Chờ duyệt'
+                : tab === 2
+                ? 'Đã nhận'
+                : tab === 3
+                ? 'Đang pv'
+                : tab === 4
+                ? 'Đã TT'
+                : 'Đã hủy'}
             </Text>
           </View>
           <View
@@ -397,15 +422,15 @@ const Home = (props) => {
                   ? item.status === 1
                     ? Color.buttonColor
                     : item.status === 2
-                      ? '#828282'
-                      : Color.main
+                    ? '#828282'
+                    : Color.main
                   : tab === 1
-                    ? Color.buttonColor
-                    : tab === 4
-                      ? '#828282'
-                      : tab === 5
-                        ? Color.red
-                        : Color.main,
+                  ? Color.buttonColor
+                  : tab === 4
+                  ? '#828282'
+                  : tab === 5
+                  ? Color.red
+                  : Color.main,
               borderWidth: 1,
               alignItems: 'center',
               justifyContent: 'center',
@@ -416,20 +441,20 @@ const Home = (props) => {
                   ? item.status === 1
                     ? Images.iconOrderOfflineYellow
                     : item.status === 2
-                      ? Images.iconOrderOfflineGrey
-                      : Images.iconOrderOfflineGreen
+                    ? Images.iconOrderOfflineGrey
+                    : Images.iconOrderOfflineGreen
                   : tab === 1
-                    ? Images.iconOrderOfflineYellow
-                    : tab === 5
-                      ? Images.iconOrderOfflineRed
-                      : tab === 4
-                        ? Images.iconOrderOfflineGrey
-                        : Images.iconOrderOfflineGreen
+                  ? Images.iconOrderOfflineYellow
+                  : tab === 5
+                  ? Images.iconOrderOfflineRed
+                  : tab === 4
+                  ? Images.iconOrderOfflineGrey
+                  : Images.iconOrderOfflineGreen
               }
-              style={{ height: 44, width: 44 }}
+              style={{height: 44, width: 44}}
             />
-            <View style={{ position: 'absolute' }}>
-              <Text style={{ color: '#fff' }}>
+            <View style={{position: 'absolute'}}>
+              <Text style={{color: '#fff'}}>
                 {tab === 0
                   ? item?.number_table
                   : item?.table_store?.number_table}
@@ -457,7 +482,7 @@ const Home = (props) => {
               }}>
               <Image
                 source={Images.iconPersonal}
-                style={{ height: 10, width: 10 }}
+                style={{height: 10, width: 10}}
               />
               <Text
                 style={{
@@ -472,7 +497,7 @@ const Home = (props) => {
               </Text>
             </View>
             <View>
-              <Text style={{ fontSize: 12, color: '#828282' }}>
+              <Text style={{fontSize: 12, color: '#828282'}}>
                 {'Vị trí: Tầng '}
                 {tab === 0
                   ? item?.number_floor
@@ -507,7 +532,7 @@ const Home = (props) => {
               </Text>
             </View>
             <View>
-              <Text style={{ fontSize: 12, color: '#828282' }}>
+              <Text style={{fontSize: 12, color: '#828282'}}>
                 {item?.time_booking}
               </Text>
             </View>
@@ -527,7 +552,7 @@ const Home = (props) => {
               }}>
               <Image
                 source={Images.iconPersonal}
-                style={{ height: 10, width: 10 }}
+                style={{height: 10, width: 10}}
               />
               <Text
                 style={{
@@ -547,7 +572,7 @@ const Home = (props) => {
                 alignItems: 'center',
               }}>
               {tab === 1 ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TouchableOpacity
                     onPress={() => {
                       // setTab(2);
@@ -555,7 +580,7 @@ const Home = (props) => {
                         'Xác nhận đơn hàng',
                         'Bạn chắc chắn muốn xác nhận đơn hàng?',
                         [
-                          { text: 'Hủy', onPress: () => { } },
+                          {text: 'Hủy', onPress: () => {}},
                           {
                             text: 'Đồng ý',
                             onPress: async () => {
@@ -569,8 +594,8 @@ const Home = (props) => {
                                       Alert.alert(
                                         'Thông báo',
                                         response.data.message,
-                                        [{ text: 'Đồng ý', onPress: () => { } }],
-                                        { cancelable: false },
+                                        [{text: 'Đồng ý', onPress: () => {}}],
+                                        {cancelable: false},
                                       );
                                     }
                                   } else {
@@ -580,7 +605,7 @@ const Home = (props) => {
                             },
                           },
                         ],
-                        { cancelable: false },
+                        {cancelable: false},
                       );
                     }}
                     style={{
@@ -593,10 +618,71 @@ const Home = (props) => {
                       justifyContent: 'center',
                       marginRight: 5,
                     }}>
-                    <Text style={{ color: Color.main, fontSize: 12 }}>
+                    <Text style={{color: Color.main, fontSize: 12}}>
                       Xác nhận
                     </Text>
                   </TouchableOpacity>
+                </View>
+              ) : tab === 2 ? (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {item.is_shop_book === 1 ? (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setBookTableId(item?.id);
+                          reactotron.log(item);
+                          services
+                            .getListTableEmpty(null, item?.id)
+                            .then(function (response) {
+                              if (response) {
+                                if (response.data.code === 200) {
+                                  setDataMergeTable(response.data.data);
+                                  var data = [];
+                                  response.data.data.forEach((element) => {
+                                    data.push(0);
+                                  });
+                                  setDataChooseTable(data);
+                                }
+                              } else {
+                                return;
+                              }
+                            });
+                          setModalVisibleMergeTable(true);
+                        }}
+                        style={{
+                          padding: 3,
+                          borderRadius: 4,
+                          borderColor: Color.buttonColor,
+                          borderWidth: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginRight: 5,
+                        }}>
+                        <Text style={{color: Color.buttonColor, fontSize: 12}}>
+                          Gộp bàn
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          props.navigation.navigate('OrderFoodScreen', {
+                            id: item.id,
+                          });
+                        }}
+                        style={{
+                          padding: 3,
+                          borderRadius: 4,
+                          borderColor: Color.main,
+                          borderWidth: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginRight: 5,
+                        }}>
+                        <Text style={{color: Color.main, fontSize: 12}}>
+                          Gọi món
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : null}
                   <TouchableOpacity
                     onPress={() => {
                       // setTab(5);
@@ -604,7 +690,7 @@ const Home = (props) => {
                         'Huỷ đơn hàng',
                         'Bạn chắc chắn muốn huỷ đơn hàng?',
                         [
-                          { text: 'Hủy', onPress: () => { } },
+                          {text: 'Hủy', onPress: () => {}},
                           {
                             text: 'Đồng ý',
                             onPress: async () => {
@@ -618,8 +704,8 @@ const Home = (props) => {
                                       Alert.alert(
                                         'Thông báo',
                                         response.data.message,
-                                        [{ text: 'Đồng ý', onPress: () => { } }],
-                                        { cancelable: false },
+                                        [{text: 'Đồng ý', onPress: () => {}}],
+                                        {cancelable: false},
                                       );
                                     }
                                   } else {
@@ -629,28 +715,28 @@ const Home = (props) => {
                             },
                           },
                         ],
-                        { cancelable: false },
+                        {cancelable: false},
                       );
                     }}
                     style={{
-                      height: 19,
-                      width: 40,
+                      padding: 3,
                       borderRadius: 4,
                       borderColor: Color.red,
                       borderWidth: 1,
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginRight: 5,
+                      paddingHorizontal: 8,
                     }}>
-                    <Text style={{ color: Color.red, fontSize: 12 }}>Hủy</Text>
+                    <Text style={{color: Color.red, fontSize: 12}}>Hủy</Text>
                   </TouchableOpacity>
                 </View>
-              ) : tab === 2 && item.is_shop_book === 1 ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              ) : tab === 3 ? (
+                <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity
                     onPress={() => {
                       setBookTableId(item?.id);
-                      reactotron.log(item);
+                      // reactotron.log(item);
                       services
                         .getListTableEmpty(null, item?.id)
                         .then(function (response) {
@@ -670,8 +756,7 @@ const Home = (props) => {
                       setModalVisibleMergeTable(true);
                     }}
                     style={{
-                      height: 19,
-                      width: 65,
+                      padding: 3,
                       borderRadius: 4,
                       borderColor: Color.buttonColor,
                       borderWidth: 1,
@@ -679,88 +764,9 @@ const Home = (props) => {
                       justifyContent: 'center',
                       marginRight: 5,
                     }}>
-                    <Text style={{ color: Color.buttonColor, fontSize: 12 }}>
+                    <Text style={{color: Color.buttonColor, fontSize: 12}}>
                       Gộp bàn
                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-
-                      props.navigation.navigate('OrderFoodScreen', {
-                        id: item.id,
-                      });
-                    }}
-                    style={{
-                      height: 19,
-                      width: 65,
-                      borderRadius: 4,
-                      borderColor: Color.main,
-                      borderWidth: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginRight: 5,
-                    }}>
-                    <Text style={{ color: Color.main, fontSize: 12 }}>
-                      Gọi món
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ) : tab === 3 ? (
-                <View style={{ flexDirection: 'row' }} >
-                  <TouchableOpacity
-                    onPress={() => {
-                      // setTab(4);
-                      Alert.alert(
-                        'Xác nhận thanh toán',
-                        'Bạn chắc chắn muốn thanh toán bàn này?',
-                        [
-                          { text: 'Hủy', onPress: () => { } },
-                          {
-                            text: 'Đồng ý',
-                            onPress: async () => {
-                              services
-                                .confirmPaymentBookfood(null, item?.id)
-                                .then(function (response) {
-                                  if (response) {
-                                    if (response.data.code === 200) {
-                                      handleChangeTab(4);
-                                    } else {
-                                      Alert.alert(
-                                        'Thông báo',
-                                        response.data.message,
-                                        [{ text: 'Đồng ý', onPress: () => { } }],
-                                        { cancelable: false },
-                                      );
-                                    }
-                                  } else {
-                                    Alert.alert(
-                                      'Thông báo',
-                                      'Khách hàng chưa xác nhận thanh toán!',
-                                      [{ text: 'Đồng ý', onPress: () => { } }],
-                                      { cancelable: false },
-                                    );
-                                    return;
-                                  }
-                                });
-                            },
-                          },
-                        ],
-                        { cancelable: false },
-                      );
-                    }}
-                    style={{
-                      height: 19,
-                      width: 70,
-                      borderRadius: 4,
-                      borderColor: Color.main,
-                      borderWidth: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginRight: 5,
-                    }}>
-                    <Text style={{ color: Color.main, fontSize: 12 }}>
-                      Thanh toán
-                  </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
@@ -770,8 +776,7 @@ const Home = (props) => {
                       });
                     }}
                     style={{
-                      height: 19,
-                      width: 70,
+                      padding: 3,
                       borderRadius: 4,
                       borderColor: Color.main,
                       borderWidth: 1,
@@ -779,9 +784,9 @@ const Home = (props) => {
                       justifyContent: 'center',
                       marginRight: 5,
                     }}>
-                    <Text style={{ color: Color.main, fontSize: 12 }}>
+                    <Text style={{color: Color.main, fontSize: 12}}>
                       Gọi món
-                  </Text>
+                    </Text>
                   </TouchableOpacity>
                 </View>
               ) : null}
@@ -800,7 +805,7 @@ const Home = (props) => {
                             text: 'Đồng ý',
                           },
                         ],
-                        { cancelable: false },
+                        {cancelable: false},
                       );
                     }
                   } else {
@@ -817,7 +822,7 @@ const Home = (props) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text style={{ color: Color.main, fontSize: 12 }}>
+                <Text style={{color: Color.main, fontSize: 12}}>
                   {tab === 0 ? 'Đặt bàn' : 'Chi tiết'}
                 </Text>
               </TouchableOpacity>
@@ -828,10 +833,10 @@ const Home = (props) => {
     );
   };
 
-  const renderTable = ({ item, index }) => {
+  const renderTable = ({item, index}) => {
     return (
       <View
-        onPress={() => { }}
+        onPress={() => {}}
         style={{
           width: Dimensions.get('window').width * 0.4,
           marginBottom: 15,
@@ -862,9 +867,9 @@ const Home = (props) => {
                     ? Images.iconOrderOfflineGrey
                     : Images.iconOrderOfflineYellow
                 }
-                style={{ height: 64, width: 64 }}
+                style={{height: 64, width: 64}}
               />
-              <Text style={{ color: '#fff', position: 'absolute' }}>
+              <Text style={{color: '#fff', position: 'absolute'}}>
                 {item.number_table}
               </Text>
             </View>
@@ -917,7 +922,7 @@ const Home = (props) => {
                       borderRadius: 4,
                       padding: 5,
                     }}>
-                    <Text style={{ fontSize: 11, color: Color.white }}>
+                    <Text style={{fontSize: 11, color: Color.white}}>
                       Gộp bàn
                     </Text>
                   </TouchableOpacity>
@@ -929,7 +934,7 @@ const Home = (props) => {
                     alignItems: 'center',
                   }}>
                   <MaterialIcons
-                    style={{ marginRight: 5 }}
+                    style={{marginRight: 5}}
                     name={'check-circle'}
                     size={20}
                     color={Color.buttonColor}
@@ -942,7 +947,7 @@ const Home = (props) => {
                       borderRadius: 4,
                       padding: 5,
                     }}>
-                    <Text style={{ fontSize: 11, color: Color.white }}>
+                    <Text style={{fontSize: 11, color: Color.white}}>
                       Đã chọn
                     </Text>
                   </View>
@@ -961,7 +966,7 @@ const Home = (props) => {
         <ImageBackground
           source={Images.backgroundHome}
           resizeMode="cover"
-          style={{ width: '100%', height: '100%' }}>
+          style={{width: '100%', height: '100%'}}>
           {modalVisibleLoading === true ? (
             <View
               style={{
@@ -977,7 +982,7 @@ const Home = (props) => {
               <ActivityIndicator size="large" color={Color.main} />
             </View>
           ) : null}
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={{flex: 1}}>
             <ScrollView
               nestedScrollEnabled={true}
               contentContainerStyle={{
@@ -989,9 +994,9 @@ const Home = (props) => {
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }>
-              <View style={{ padding: 10 }}>
+              <View style={{padding: 10}}>
                 <Modal
-                  style={{ alignItems: 'center', justifyContent: 'center' }}
+                  style={{alignItems: 'center', justifyContent: 'center'}}
                   isVisible={modalVisible}>
                   <View
                     style={{
@@ -1015,7 +1020,7 @@ const Home = (props) => {
                                 storage.setItem('dataStore', item);
                                 props.navigation.reset({
                                   // index: 0,
-                                  routes: [{ name: 'TabNav' }],
+                                  routes: [{name: 'TabNav'}],
                                 });
                                 setModalVisible(false);
                               }}
@@ -1043,7 +1048,7 @@ const Home = (props) => {
                       })}
                     </ScrollView>
                     <TouchableOpacity
-                      style={{ marginTop: 10 }}
+                      style={{marginTop: 10}}
                       onPress={() => setModalVisible(false)}>
                       <View
                         style={{
@@ -1055,14 +1060,14 @@ const Home = (props) => {
                           borderRadius: 25,
                           marginBottom: 10,
                         }}>
-                        <Text style={[styles.text, { color: '#fff' }]}>Đóng</Text>
+                        <Text style={[styles.text, {color: '#fff'}]}>Đóng</Text>
                       </View>
                     </TouchableOpacity>
                   </View>
                 </Modal>
                 <Modal
                   onBackdropPress={() => setModalVisibleMergeTable(false)}
-                  style={{ alignItems: 'center', justifyContent: 'center' }}
+                  style={{alignItems: 'center', justifyContent: 'center'}}
                   isVisible={modalVisibleMergeTable}>
                   <View
                     style={{
@@ -1096,9 +1101,9 @@ const Home = (props) => {
                       data={dataMergeTable}
                       renderItem={renderTable}
                       keyExtractor={(item, index) => index.toString()}
-                    // onEndReached={handleLoadMore}
-                    // onEndReachedThreshold={0}
-                    // ListFooterComponent={renderFooter}
+                      // onEndReached={handleLoadMore}
+                      // onEndReachedThreshold={0}
+                      // ListFooterComponent={renderFooter}
                     />
                     <TouchableOpacity
                       onPress={() => {
@@ -1106,7 +1111,7 @@ const Home = (props) => {
                           'Xác nhận gộp bàn',
                           'Bạn chắc chắn muốn gộp những bàn này?',
                           [
-                            { text: 'Hủy', onPress: () => { } },
+                            {text: 'Hủy', onPress: () => {}},
                             {
                               text: 'Đồng ý',
                               onPress: async () => {
@@ -1133,14 +1138,14 @@ const Home = (props) => {
                                               },
                                             },
                                           ],
-                                          { cancelable: false },
+                                          {cancelable: false},
                                         );
                                       } else {
                                         Alert.alert(
                                           'Thông báo',
                                           'Gộp bàn thất bại!',
-                                          [{ text: 'Đồng ý', onPress: () => { } }],
-                                          { cancelable: false },
+                                          [{text: 'Đồng ý', onPress: () => {}}],
+                                          {cancelable: false},
                                         );
                                       }
                                     } else {
@@ -1150,7 +1155,7 @@ const Home = (props) => {
                               },
                             },
                           ],
-                          { cancelable: false },
+                          {cancelable: false},
                         );
                       }}
                       style={{
@@ -1161,7 +1166,7 @@ const Home = (props) => {
                         justifyContent: 'center',
                         borderRadius: 8,
                       }}>
-                      <Text style={{ fontSize: 15, color: Color.white }}>
+                      <Text style={{fontSize: 15, color: Color.white}}>
                         Xác nhận
                       </Text>
                     </TouchableOpacity>
@@ -1200,16 +1205,27 @@ const Home = (props) => {
                       />
                     </TouchableOpacity>
                   ) : null}
-                  {!(tab == 0) && <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text children='Lọc theo thời gian' style={{ fontSize: 15, fontWeight: '500' }} />
-                    <TouchableOpacity
-                      onPress={() => { setIsVisibleTime(true) }}
-                      style={{ flexDirection: 'row' }} >
-                      <Text children={date1 || '212-111'} />
-                      <Text children=' - ' />
-                      <Text children={date2 || '212-111'} />
-                    </TouchableOpacity>
-                  </View>}
+                  {!(tab == 0) && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text
+                        children="Lọc theo thời gian"
+                        style={{fontSize: 15, fontWeight: '500'}}
+                      />
+                      <TouchableOpacity
+                        onPress={() => {
+                          setIsVisibleTime(true);
+                        }}
+                        style={{flexDirection: 'row'}}>
+                        <Text children={date1 || '212-111'} />
+                        <Text children=" - " />
+                        <Text children={date2 || '212-111'} />
+                      </TouchableOpacity>
+                    </View>
+                  )}
                   {/* <View
                     style={{
                       // marginTop: 20,
@@ -1268,7 +1284,7 @@ const Home = (props) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      marginTop: 20,
+                      marginTop: 5,
                       // justifyContent: 'space-between',
                       width: Dimensions.get('window').width - 20,
                       flexWrap: 'wrap',
@@ -1293,7 +1309,7 @@ const Home = (props) => {
                             padding: 10,
                             margin: 5,
                           }}>
-                          <Text style={{ fontSize: 11 }}>{item.name}</Text>
+                          <Text style={{fontSize: 11}}>{item.name}</Text>
                         </TouchableOpacity>
                       );
                     })}
@@ -1316,45 +1332,47 @@ const Home = (props) => {
                     // extraData={dataOrder}
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
-                  // ListFooterComponent={renderFooter}
+                    // ListFooterComponent={renderFooter}
                   />
                 </View>
               </View>
             </ScrollView>
             <DateTimePickerModal
-              headerTextIOS='Chọn ngày bắt đầu'
+              headerTextIOS="Chọn ngày bắt đầu"
               // minimumDate={new Date(Date.now())}
               maximumDate={new Date(Date.now())}
               isVisible={isVisibleTime}
               mode="date"
               onConfirm={(date) => {
                 console.log(date);
-                setMinimumDate(date)
-                setDate1(moment(date).utcOffset(7).format("DD/MM/YYYY"))
-                setTimeStamp1(date)
-                setIsVisibleTime(false)
+                setMinimumDate(date);
+                setDate1(moment(date).utcOffset(7).format('DD/MM/YYYY'));
+                setTimeStamp1(date);
+                setIsVisibleTime(false);
                 setTimeout(() => {
-                  setIsVisibleTime2(true)
-                }, 400)
+                  setIsVisibleTime2(true);
+                }, 400);
                 // setIsVisibleTime2(true)
               }}
               onCancel={() => setIsVisibleTime(false)}
             />
             <DateTimePickerModal
               // ref = {refDateEnd}
-              headerTextIOS='Chọn ngày kết thúc'
+              headerTextIOS="Chọn ngày kết thúc"
               minimumDate={new Date(minimumDate)}
               maximumDate={new Date(Date.now())}
               isVisible={isVisibleTime2}
               mode="date"
               onConfirm={(date) => {
-                setDate2(moment(date).utcOffset(7).format("DD/MM/YYYY"))
-                setIsVisibleTime2(false)
-                setTimeStamp2(date)
-                setSelectTime(true)
-
+                setDate2(moment(date).utcOffset(7).format('DD/MM/YYYY'));
+                setIsVisibleTime2(false);
+                setTimeStamp2(date);
+                setSelectTime(true);
+                handleChangeTab(2);
               }}
-              onCancel={() => setIsVisibleTime2(false)}
+              onCancel={() => {
+                setIsVisibleTime2(false);
+              }}
             />
           </SafeAreaView>
         </ImageBackground>
