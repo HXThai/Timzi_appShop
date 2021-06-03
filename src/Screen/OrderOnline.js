@@ -138,25 +138,59 @@ const Home = (props) => {
   );
 
   useEffect(() => {
-    setModalVisibleLoading(true);
+    // setModalVisibleLoading(true);
     props.onGetListStore({});
   }, [props.onGetListStore]);
 
   useEffect(() => {
-    storage.getItem('dataStore').then((data) => {
-      if (data) {
-        reactotron.log(data);
-        setStoreName(data.name);
-        setStoreId(data.id);
+    // storage.getItem('dataStore').then((data) => {
+    //   if (data) {
+    //     reactotron.log(data);
+    //     setStoreName(data.name);
+    //     setStoreId(data.id);
+    //     services
+    //       .getListOrderOnline(null, data?.id, 2, 1)
+    //       .then(function (response) {
+    //         if (response) {
+    //           if (response.data.code === 200) {
+    //             setDataOrder(response?.data?.data?.data);
+    //             setModalVisibleLoading(false);
+    //           } else {
+    //             reactotron.log('Thaiiiiiiitest4');
+    //           }
+    //         } else {
+    //           Alert.alert(
+    //             'Thông báo',
+    //             'Không tìm thấy cửa hàng!',
+    //             [
+    //               {
+    //                 text: 'Đồng ý',
+    //                 onPress: async () => {
+    //                   setModalVisibleLoading(false);
+    //                 },
+    //               },
+    //             ],
+    //             {cancelable: false},
+    //           );
+    //           return;
+    //         }
+    //       });
+    //   } else {
+    props.data.responseListStore?.data.forEach((element, index) => {
+      reactotron.log(props.data.responseListStore);
+      if (element.status === 1) {
+        setStoreName(element.name);
+        setStoreId(element.id);
+        storage.setItem('dataStore', element);
         services
-          .getListOrderOnline(null, data?.id, 2, 1)
+          .getListOrderOnline(null, element.id, 2, 1)
           .then(function (response) {
             if (response) {
-              if (response.data.code === 200) {
+              if (response?.data?.code === 200) {
                 setDataOrder(response?.data?.data?.data);
                 setModalVisibleLoading(false);
               } else {
-                reactotron.log('Thaiiiiiiitest4');
+                reactotron.log('Thaiiiiiiitest3');
               }
             } else {
               Alert.alert(
@@ -165,9 +199,7 @@ const Home = (props) => {
                 [
                   {
                     text: 'Đồng ý',
-                    onPress: async () => {
-                      setModalVisibleLoading(false);
-                    },
+                    onPress: async () => {},
                   },
                 ],
                 {cancelable: false},
@@ -175,42 +207,10 @@ const Home = (props) => {
               return;
             }
           });
-      } else {
-        props.data.responseListStore?.data.forEach((element, index) => {
-          reactotron.log(props.data.responseListStore);
-          if (element.status === 1) {
-            setStoreName(element.name);
-            setStoreId(element.id);
-            storage.setItem('dataStore', element);
-            services
-              .getListOrderOnline(null, element.id, 2, 1)
-              .then(function (response) {
-                if (response) {
-                  if (response?.data?.code === 200) {
-                    setDataOrder(response?.data?.data?.data);
-                    setModalVisibleLoading(false);
-                  } else {
-                    reactotron.log('Thaiiiiiiitest3');
-                  }
-                } else {
-                  Alert.alert(
-                    'Thông báo',
-                    'Không tìm thấy cửa hàng!',
-                    [
-                      {
-                        text: 'Đồng ý',
-                        onPress: async () => {},
-                      },
-                    ],
-                    {cancelable: false},
-                  );
-                  return;
-                }
-              });
-          }
-        });
       }
     });
+    //   }
+    // });
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
 
@@ -248,6 +248,7 @@ const Home = (props) => {
                   );
                   setModalVisibleLoading(false);
                 } else {
+                  setModalVisibleLoading(false);
                   reactotron.log('Thaiiiiiii');
                 }
               } else {
@@ -266,59 +267,60 @@ const Home = (props) => {
               }
             });
         } else {
-          storage.getItem('dataStore').then((data) => {
-            if (data) {
-              setStoreName(data?.name);
-              setStoreId(data?.id);
+          // storage.getItem('dataStore').then((data) => {
+          //   if (data) {
+          //     setStoreName(data?.name);
+          //     setStoreId(data?.id);
+          //     services
+          //       .getListOrderOnline(null, data?.id, 2, 1)
+          //       .then(function (response) {
+          //         if (response) {
+          //           if (response.data.code === 200) {
+          //             setDataOrder(response?.data?.data?.data);
+          //             setModalVisibleLoading(false);
+          //           } else {
+          //             reactotron.log('Thaiiiiiiitest1');
+          //           }
+          //         } else {
+          //           return;
+          //         }
+          //       });
+          //   } else {
+          props.data.responseListStore?.data.forEach((element, index) => {
+            if (element.status === 1) {
+              setStoreName(element.name);
+              setStoreId(element.id);
+              storage.setItem('dataStore', element);
               services
-                .getListOrderOnline(null, data?.id, 2, 1)
+                .getListOrderOnline(null, element.id, 2, 1)
                 .then(function (response) {
                   if (response) {
-                    if (response.data.code === 200) {
+                    if (response?.data?.code === 200) {
                       setDataOrder(response?.data?.data?.data);
                       setModalVisibleLoading(false);
                     } else {
-                      reactotron.log('Thaiiiiiiitest1');
+                      reactotron.log('Thaiiiiiiitest2');
+                      setModalVisibleLoading(false);
                     }
                   } else {
+                    Alert.alert(
+                      'Thông báo',
+                      'Không tìm thấy cửa hàng!',
+                      [
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {},
+                        },
+                      ],
+                      {cancelable: false},
+                    );
                     return;
                   }
                 });
-            } else {
-              props.data.responseListStore?.data.forEach((element, index) => {
-                if (element.status === 1) {
-                  setStoreName(element.name);
-                  setStoreId(element.id);
-                  storage.setItem('dataStore', element);
-                  services
-                    .getListOrderOnline(null, element.id, 2, 1)
-                    .then(function (response) {
-                      if (response) {
-                        if (response?.data?.code === 200) {
-                          setDataOrder(response?.data?.data?.data);
-                          setModalVisibleLoading(false);
-                        } else {
-                          reactotron.log('Thaiiiiiiitest2');
-                        }
-                      } else {
-                        Alert.alert(
-                          'Thông báo',
-                          'Không tìm thấy cửa hàng!',
-                          [
-                            {
-                              text: 'Đồng ý',
-                              onPress: async () => {},
-                            },
-                          ],
-                          {cancelable: false},
-                        );
-                        return;
-                      }
-                    });
-                }
-              });
             }
           });
+          //   }
+          // });
         }
       } else {
       }
@@ -345,7 +347,9 @@ const Home = (props) => {
               [
                 {
                   text: 'Đồng ý',
-                  onPress: async () => {},
+                  onPress: async () => {
+                    setModalVisibleLoading(false);
+                  },
                 },
               ],
               {cancelable: false},

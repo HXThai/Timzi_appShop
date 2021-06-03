@@ -77,6 +77,21 @@ const LoginScreen = (props) => {
             if (response.data.code === 200) {
               setDataRate(response?.data?.data?.data);
               setModalVisibleLoading(false);
+            } else {
+              setModalVisibleLoading(false);
+              Alert.alert(
+                'Thông báo',
+                response.data.message,
+                [
+                  {
+                    text: 'Đồng ý',
+                    onPress: async () => {
+                      props.navigation.goBack();
+                    },
+                  },
+                ],
+                {cancelable: false},
+              );
             }
           } else {
             return;

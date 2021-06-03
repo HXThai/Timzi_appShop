@@ -98,39 +98,39 @@ const Home = (props) => {
   };
 
   useEffect(() => {
-    storage.getItem('dataStore').then((data) => {
-      if (data) {
-        setStoreName(data.name);
-        setStoreId(data.id);
-        services.storeDetail(data.id).then(function (response) {
+    // storage.getItem('dataStore').then((data) => {
+    //   if (data) {
+    //     setStoreName(data.name);
+    //     setStoreId(data.id);
+    //     services.storeDetail(data.id).then(function (response) {
+    //       if (response) {
+    //         if (response.data.code === 200) {
+    //           setData(response?.data?.data);
+    //         }
+    //       } else {
+    //         return;
+    //       }
+    //     });
+    //   } else {
+    props.data.responseListStore?.data.forEach((element, index) => {
+      // console.log(element.status);
+      if (element.status === 1) {
+        setStoreName(element.name);
+        setStoreId(element.id);
+        storage.setItem('dataStore', element);
+        services.storeDetail(element.id).then(function (response) {
           if (response) {
-            if (response.data.code === 200) {
+            if (response?.data?.code === 200) {
               setData(response?.data?.data);
             }
           } else {
             return;
           }
         });
-      } else {
-        props.data.responseListStore?.data.forEach((element, index) => {
-          // console.log(element.status);
-          if (element.status === 1) {
-            setStoreName(element.name);
-            setStoreId(element.id);
-            storage.setItem('dataStore', element);
-            services.storeDetail(element.id).then(function (response) {
-              if (response) {
-                if (response?.data?.code === 200) {
-                  setData(response?.data?.data);
-                }
-              } else {
-                return;
-              }
-            });
-          }
-        });
       }
     });
+    //   }
+    // });
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
 
@@ -367,150 +367,166 @@ const Home = (props) => {
                     </TouchableOpacity>
                   </View>
                 </View> */}
-                <TouchableOpacity
-                  style={{marginTop: 10}}
-                  onPress={() =>
-                    props.navigation.navigate('InformationRestaurantScreen', {
-                      store_params: storeId,
-                    })
-                  }>
+                {storeId == null ? (
                   <View
                     style={{
-                      flexDirection: 'column',
-                      backgroundColor: '#fff',
-                      borderRadius: 8,
+                      height: Dimensions.get('window').height,
+                      width: Dimensions.get('window').width,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      paddingBottom: 100,
                     }}>
-                    <Image
-                      source={{uri: data?.store?.image}}
-                      style={{height: 200, width: '100%', borderRadius: 8}}
-                    />
+                    <Text>Không tìm thấy cửa hàng!</Text>
+                  </View>
+                ) : null}
+                {data != null ? (
+                  <TouchableOpacity
+                    style={{marginTop: 10}}
+                    onPress={() =>
+                      props.navigation.navigate('InformationRestaurantScreen', {
+                        store_params: storeId,
+                      })
+                    }>
                     <View
                       style={{
-                        flexDirection: 'row',
-                        padding: 10,
-                        width: '100%',
+                        flexDirection: 'column',
+                        backgroundColor: '#fff',
+                        borderRadius: 8,
                       }}>
-                      <View style={{width: '10%'}}>
-                        <MaterialIcons
-                          name={'check-circle'}
-                          size={25}
-                          style={{color: Color.buttonColor}}
-                        />
-                      </View>
+                      <Image
+                        source={{uri: data?.store?.image}}
+                        style={{height: 200, width: '100%', borderRadius: 8}}
+                      />
                       <View
                         style={{
-                          justifyContent: 'space-between',
-                          flexDirection: 'column',
-                          width: '90%',
+                          flexDirection: 'row',
+                          padding: 10,
+                          width: '100%',
                         }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-
-                            alignItems: 'center',
-                          }}>
-                          <Text style={{fontSize: 19, fontWeight: '600'}}>
-                            {data?.store?.name}
-                          </Text>
-                          <View
-                            style={{
-                              padding: 5,
-                              backgroundColor: Color.buttonColor,
-                              borderRadius: 4,
-                            }}>
-                            <Text
-                              style={{
-                                fontSize: 12,
-                                color: '#fff',
-                              }}>
-                              Yêu thích
-                            </Text>
-                          </View>
+                        <View style={{width: '10%'}}>
+                          <MaterialIcons
+                            name={'check-circle'}
+                            size={25}
+                            style={{color: Color.buttonColor}}
+                          />
                         </View>
                         <View
                           style={{
-                            flexDirection: 'row',
                             justifyContent: 'space-between',
-                            marginTop: 5,
-                            alignItems: 'center',
+                            flexDirection: 'column',
+                            width: '90%',
                           }}>
                           <View
                             style={{
-                              width: Dimensions.get('window').width - 120,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+
+                              alignItems: 'center',
                             }}>
-                            <Text
-                              numberOfLines={1}
-                              style={{fontSize: 13, fontWeight: '400'}}>
-                              {data?.store?.address}
+                            <Text style={{fontSize: 19, fontWeight: '600'}}>
+                              {data?.store?.name}
                             </Text>
+                            <View
+                              style={{
+                                padding: 5,
+                                backgroundColor: Color.buttonColor,
+                                borderRadius: 4,
+                              }}>
+                              <Text
+                                style={{
+                                  fontSize: 12,
+                                  color: '#fff',
+                                }}>
+                                Yêu thích
+                              </Text>
+                            </View>
                           </View>
                           <View
                             style={{
                               flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              marginTop: 5,
                               alignItems: 'center',
                             }}>
-                            <Text
+                            <View
                               style={{
-                                fontSize: 13,
-                                color: 'black',
+                                width: Dimensions.get('window').width - 120,
                               }}>
-                              {data?.store?.star}
-                            </Text>
-                            <MaterialIcons
-                              name={'star'}
-                              size={20}
-                              color={Color.buttonColor}
-                            />
+                              <Text
+                                numberOfLines={1}
+                                style={{fontSize: 13, fontWeight: '400'}}>
+                                {data?.store?.address}
+                              </Text>
+                            </View>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  color: 'black',
+                                }}>
+                                {data?.store?.star}
+                              </Text>
+                              <MaterialIcons
+                                name={'star'}
+                                size={20}
+                                color={Color.buttonColor}
+                              />
+                            </View>
                           </View>
                         </View>
                       </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 20,
-                    alignItems: 'center',
-                  }}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{fontSize: 15, fontWeight: '700'}}>
-                      Đặt bàn
-                    </Text>
+                  </TouchableOpacity>
+                ) : null}
+                {data != null ? (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: 20,
+                      alignItems: 'center',
+                    }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text style={{fontSize: 15, fontWeight: '700'}}>
+                        Đặt bàn
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          props.navigation.navigate('EditTableScreen', {
+                            status: 'add',
+                            store_id: storeId,
+                          })
+                        }
+                        style={{
+                          padding: 5,
+                          borderRadius: 4,
+                          marginLeft: 10,
+                          borderWidth: 1,
+                          borderColor: Color.main,
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            color: Color.main,
+                          }}>
+                          Thêm bàn
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                     <TouchableOpacity
                       onPress={() =>
-                        props.navigation.navigate('EditTableScreen', {
-                          status: 'add',
+                        props.navigation.navigate('ListTableScreen', {
                           store_id: storeId,
                         })
-                      }
-                      style={{
-                        padding: 5,
-                        borderRadius: 4,
-                        marginLeft: 10,
-                        borderWidth: 1,
-                        borderColor: Color.main,
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: Color.main,
-                        }}>
-                        Thêm bàn
-                      </Text>
+                      }>
+                      <Text style={{fontStyle: 'italic'}}>Quản lý bàn</Text>
                     </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                    onPress={() =>
-                      props.navigation.navigate('ListTableScreen', {
-                        store_id: storeId,
-                      })
-                    }>
-                    <Text style={{fontStyle: 'italic'}}>Quản lý bàn</Text>
-                  </TouchableOpacity>
-                </View>
+                ) : null}
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
@@ -661,54 +677,56 @@ const Home = (props) => {
                     );
                   })}
                 </ScrollView>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 20,
-                    alignItems: 'center',
-                  }}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      props.navigation.navigate('ListCategoryStoreFood')
-                    }
+                {data != null ? (
+                  <View
                     style={{
-                      padding: 5,
-                      borderRadius: 4,
-                      borderWidth: 1,
-                      borderColor: Color.main,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: 20,
+                      alignItems: 'center',
                     }}>
-                    <Text
+                    <TouchableOpacity
+                      onPress={() =>
+                        props.navigation.navigate('ListCategoryStoreFood')
+                      }
                       style={{
-                        fontSize: 12,
-                        color: Color.main,
+                        padding: 5,
+                        borderRadius: 4,
+                        borderWidth: 1,
+                        borderColor: Color.main,
                       }}>
-                      Quản lý danh mục món ăn
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                      props.navigation.navigate('EditProductScreen', {
-                        status: 'add',
-                        // category_food_id: item?.id,
-                        store_id: storeId,
-                      })
-                    }
-                    style={{
-                      padding: 5,
-                      borderRadius: 4,
-                      borderWidth: 1,
-                      borderColor: Color.main,
-                    }}>
-                    <Text
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: Color.main,
+                        }}>
+                        Quản lý danh mục món ăn
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        props.navigation.navigate('EditProductScreen', {
+                          status: 'add',
+                          // category_food_id: item?.id,
+                          store_id: storeId,
+                        })
+                      }
                       style={{
-                        fontSize: 12,
-                        color: Color.main,
+                        padding: 5,
+                        borderRadius: 4,
+                        borderWidth: 1,
+                        borderColor: Color.main,
                       }}>
-                      Thêm món ăn
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: Color.main,
+                        }}>
+                        Thêm món ăn
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
                 {data?.category_food?.map((item, index) => {
                   return (
                     <View key={index}>

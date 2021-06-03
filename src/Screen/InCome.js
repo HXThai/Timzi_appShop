@@ -36,12 +36,30 @@ const Home = (props) => {
   const [dataDiscount, setDataDiscount] = useState([]);
 
   useEffect(() => {
-    dataStore = storage.getItem('dataStore').then((data) => {
-      if (data) {
-        setStoreName(data.name);
-        setStoreId(data.id);
+    // dataStore = storage.getItem('dataStore').then((data) => {
+    //   if (data) {
+    //     setStoreName(data.name);
+    //     setStoreId(data.id);
+    //     services
+    //       .getListDiscountThisMonthStore(null, data.id)
+    //       .then(function (response) {
+    //         if (response) {
+    //           if (response.data.code === 200) {
+    //             setDataDiscount(response?.data?.data);
+    //             // setModalVisibleLoading(false);
+    //           }
+    //         } else {
+    //           return;
+    //         }
+    //       });
+    //   } else {
+    props.data.responseListStore?.data.forEach((element, index) => {
+      if (element.status === 1) {
+        setStoreName(element.name);
+        setStoreId(element.id);
+        storage.setItem('dataStore', element);
         services
-          .getListDiscountThisMonthStore(null, data.id)
+          .getListDiscountThisMonthStore(null, element.id)
           .then(function (response) {
             if (response) {
               if (response.data.code === 200) {
@@ -52,28 +70,10 @@ const Home = (props) => {
               return;
             }
           });
-      } else {
-        props.data.responseListStore?.data.forEach((element, index) => {
-          if (element.status === 1) {
-            setStoreName(element.name);
-            setStoreId(element.id);
-            storage.setItem('dataStore', element);
-            services
-              .getListDiscountThisMonthStore(null, element.id)
-              .then(function (response) {
-                if (response) {
-                  if (response.data.code === 200) {
-                    setDataDiscount(response?.data?.data);
-                    // setModalVisibleLoading(false);
-                  }
-                } else {
-                  return;
-                }
-              });
-          }
-        });
       }
     });
+    //   }
+    // });
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
 
@@ -208,56 +208,72 @@ const Home = (props) => {
                       />
                     </TouchableOpacity>
                   ) : null}
-                  <TouchableOpacity
-                    onPress={() => {
-                      props.navigation.navigate('IncomeHistoryScreen');
-                    }}
-                    style={{
-                      width: Dimensions.get('window').width - 20,
-                      height: 50,
-                      paddingLeft: 15,
-                      paddingRight: 15,
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      borderRadius: 8,
-                      backgroundColor: Color.white,
-                      flexDirection: 'row',
-                      marginTop: 10,
-                    }}>
-                    <Text style={{fontSize: 15}}>
-                      Tra cứu lịch sử doanh thu
-                    </Text>
-                    <MaterialIcons
-                      name={'navigate-next'}
-                      size={28}
-                      color={Color.main}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      props.navigation.navigate('DiscountScreen');
-                    }}
-                    style={{
-                      width: Dimensions.get('window').width - 20,
-                      height: 50,
-                      paddingLeft: 15,
-                      paddingRight: 15,
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      borderRadius: 8,
-                      backgroundColor: Color.white,
-                      flexDirection: 'row',
-                      marginTop: 20,
-                    }}>
-                    <Text style={{fontSize: 15}}>
-                      Tra cứu lịch sử chiết khấu
-                    </Text>
-                    <MaterialIcons
-                      name={'navigate-next'}
-                      size={28}
-                      color={Color.main}
-                    />
-                  </TouchableOpacity>
+                  {storeId != null ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        props.navigation.navigate('IncomeHistoryScreen');
+                      }}
+                      style={{
+                        width: Dimensions.get('window').width - 20,
+                        height: 50,
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        borderRadius: 8,
+                        backgroundColor: Color.white,
+                        flexDirection: 'row',
+                        marginTop: 10,
+                      }}>
+                      <Text style={{fontSize: 15}}>
+                        Tra cứu lịch sử doanh thu
+                      </Text>
+                      <MaterialIcons
+                        name={'navigate-next'}
+                        size={28}
+                        color={Color.main}
+                      />
+                    </TouchableOpacity>
+                  ) : null}
+                  {storeId != null ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        props.navigation.navigate('DiscountScreen');
+                      }}
+                      style={{
+                        width: Dimensions.get('window').width - 20,
+                        height: 50,
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        borderRadius: 8,
+                        backgroundColor: Color.white,
+                        flexDirection: 'row',
+                        marginTop: 20,
+                      }}>
+                      <Text style={{fontSize: 15}}>
+                        Tra cứu lịch sử chiết khấu
+                      </Text>
+                      <MaterialIcons
+                        name={'navigate-next'}
+                        size={28}
+                        color={Color.main}
+                      />
+                    </TouchableOpacity>
+                  ) : null}
+                  {storeId == null ? (
+                    <View
+                      style={{
+                        height: Dimensions.get('window').height,
+                        width: Dimensions.get('window').width,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingBottom: 100,
+                      }}>
+                      <Text>Không tìm thấy cửa hàng!</Text>
+                    </View>
+                  ) : null}
                   {dataDiscount.map((item, index) => {
                     return (
                       <View>

@@ -11,7 +11,13 @@ import EarnCoin from '../Screen/Product';
 import Personal from '../Screen/Personal';
 import Utilities from '../Screen/OrderOffline';
 import Images from '../Theme/Images';
-import { check, openSettings, PERMISSIONS, requestMultiple, RESULTS } from 'react-native-permissions';
+import {
+  check,
+  openSettings,
+  PERMISSIONS,
+  requestMultiple,
+  RESULTS,
+} from 'react-native-permissions';
 import {
   Image,
   View,
@@ -20,7 +26,7 @@ import {
   Dimensions,
   Platform,
   Alert,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
@@ -92,8 +98,8 @@ import OrderOfflineCancelledDetailScreen from '../Screen/OrderOffline/OrderOffli
 import ChooseRestaurantScreen from '../Screen/Staff/ChooseRestaurantScreen';
 import FindRestaurantScreen from '../Screen/Staff/FindRestaurantScreen';
 import OrderTableScreen from '../Screen/OrderTableScreen';
-import { QrCodeScreen } from '../Screen/QrCodeScreen';
-import { checkCam } from '../utils/Utilities';
+import {QrCodeScreen} from '../Screen/QrCodeScreen';
+import {checkCam} from '../utils/Utilities';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -2736,10 +2742,9 @@ function UtilitiesStack(props) {
           ),
           headerRight: () => (
             <TouchableOpacity
-              onPress={async() => {
-                checkCam(props)
+              onPress={async () => {
+                checkCam(props);
                 // props.navigation.navigate('LoginScreen');
-                
               }}>
               <View
                 style={{
@@ -2752,8 +2757,8 @@ function UtilitiesStack(props) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                  <Text>qrcode</Text>
-                </View>
+                <Text>qrcode</Text>
+              </View>
             </TouchableOpacity>
           ),
         }}
@@ -2772,7 +2777,7 @@ function UtilitiesStack(props) {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.navigate("OrderTable");
+                props.navigation.navigate('OrderTable');
                 // console.log(props);
               }}>
               <View style={{marginLeft: 20}}>
@@ -2800,8 +2805,7 @@ function UtilitiesStack(props) {
                   backgroundColor: null,
                   alignItems: 'center',
                   justifyContent: 'center',
-                }}>
-                </View>
+                }}></View>
             </TouchableOpacity>
           ),
         }}

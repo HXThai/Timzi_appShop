@@ -111,7 +111,7 @@ const LoginScreen = (props) => {
               book_food_id: idFoodReturn,
               quantity: quantityReturn,
             };
-            console.log(body);
+            // console.log(body);
             services.returnBookFood(body).then(function (response) {
               if (response) {
                 if (response.data.code === 200) {
@@ -377,6 +377,7 @@ const LoginScreen = (props) => {
                 }}
                 style={{
                   height: 40,
+                  // padding: 3,
                   marginTop: 20,
                   width: Dimensions.get('window').width * 0.7,
                   backgroundColor: Color.main,
@@ -384,7 +385,10 @@ const LoginScreen = (props) => {
                   justifyContent: 'center',
                   borderRadius: 8,
                 }}>
-                <Text style={{color: Color.white, fontSize: 15}}>Hoàn trả</Text>
+                <Text
+                  style={{color: Color.white, fontSize: 15, fontWeight: '700'}}>
+                  Hoàn trả
+                </Text>
               </TouchableOpacity>
             </View>
           </Modal>
@@ -663,6 +667,9 @@ const LoginScreen = (props) => {
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                           margin: 5,
+                          borderBottomWidth: 0.5,
+                          borderBottomColor: Color.main,
+                          paddingBottom: 10,
                         }}>
                         <View
                           style={{
@@ -673,6 +680,10 @@ const LoginScreen = (props) => {
                             {item?.food === null
                               ? item?.combo_food?.name
                               : item?.food?.name}
+                          </Text>
+                          <Text style={{fontWeight: '400', fontSize: 12}}>
+                            Số lượng đã hoàn trả:{' '}
+                            {item?.quantity_minus_group_food}
                           </Text>
                         </View>
                         <View
@@ -769,9 +780,9 @@ const LoginScreen = (props) => {
                               }
                             }}
                             style={{
-                              height: 22,
-                              width: 80,
-                              // padding: 5,
+                              // height: 22,
+                              // width: 80,
+                              padding: 3,
                               borderRadius: 4,
                               borderWidth: 1,
                               borderColor: Color.main,
@@ -798,9 +809,9 @@ const LoginScreen = (props) => {
                                 }
                               }}
                               style={{
-                                height: 22,
-                                width: 80,
-                                // padding: 5,
+                                // height: 22,
+                                // width: 80,
+                                padding: 3,
                                 borderRadius: 4,
                                 borderWidth: 1,
                                 borderColor: Color.buttonColor,

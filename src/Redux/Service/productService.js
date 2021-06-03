@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../Constants/url.constant';
+import {API_BASE_URL} from '../../Constants/url.constant';
 import callApiService from '../../utils/callAPI.service';
 
 export default homeService = {
@@ -104,14 +104,16 @@ export default homeService = {
   },
 
   getLocationSuggest: async (params, suggest) => {
-    let url = `${API_BASE_URL.GET_LOCATION_SUGGEST
-      }?input=${suggest}&language=${'vi'}&components=${'country:vn'}&key=AIzaSyA9lHRlKdfwlUKG7BGmzN7V0N8Kn6ozxhE`;
+    let url = `${
+      API_BASE_URL.GET_LOCATION_SUGGEST
+    }?input=${suggest}&language=${'vi'}&components=${'country:vn'}&key=AIzaSyBHjXxLuwO-WlPntKafi23T7sHBdsSvSKk`;
     let response = callApiService.get(url);
     return response;
   },
   getLocationDetail: async (params, place_id) => {
-    let url = `${API_BASE_URL.GET_LOCATION_DETAIL
-      }?placeid=${place_id}&language=${'vi'}&key=AIzaSyA9lHRlKdfwlUKG7BGmzN7V0N8Kn6ozxhE`;
+    let url = `${
+      API_BASE_URL.GET_LOCATION_DETAIL
+    }?placeid=${place_id}&language=${'vi'}&key=AIzaSyBHjXxLuwO-WlPntKafi23T7sHBdsSvSKk`;
     let response = callApiService.get(url);
     return response;
   },
@@ -152,7 +154,7 @@ export default homeService = {
     let response = callApiService.delete(url, params);
     return response;
   },
-  genQrCode: async (params,) => {
+  genQrCode: async (params) => {
     let url = `${API_BASE_URL.GEN_QR_CODE}`;
     let response = callApiService.post(url, params);
     return response;

@@ -144,6 +144,7 @@ const API_BASE_URL = {
   SUBMIT_ORDER_FOOD: ROOT_DOMAIN + '/book-table/submit-order-food-with-staff',
   QR_CODE: ROOT_DOMAIN + '/book-table/book-table-qr-code-with-staff ',
 
+  CHANGE_TABLE: ROOT_DOMAIN + '/book-table/change-table-with-staff',
 };
 
-export { API_BASE_URL };
+export {API_BASE_URL};

@@ -72,6 +72,8 @@ const Home = (props) => {
 
   const [modalVisibleMergeTable, setModalVisibleMergeTable] = useState(false);
 
+  const [modalVisibleChangeTable, setModalVisibleChangeTable] = useState(false);
+
   const [page, setPage] = useState(1);
 
   const [dataMergeTable, setDataMergeTable] = useState([]);
@@ -108,8 +110,11 @@ const Home = (props) => {
             if (response.data.code === 200) {
               setDataOrder((prev) => [...prev, ...response?.data?.data?.data]);
               setModalVisibleLoading(false);
+            } else {
+              setModalVisibleLoading(false);
             }
           } else {
+            setModalVisibleLoading(false);
             return;
           }
         });
@@ -128,8 +133,11 @@ const Home = (props) => {
             if (response.data.code === 200) {
               setDataOrder((prev) => [...prev, ...response?.data?.data?.data]);
               setModalVisibleLoading(false);
+            } else {
+              setModalVisibleLoading(false);
             }
           } else {
+            setModalVisibleLoading(false);
             return;
           }
         });
@@ -221,44 +229,58 @@ const Home = (props) => {
   });
 
   useEffect(() => {
-    storage.getItem('dataStore').then((data) => {
-      if (data) {
-        setStoreName(data.name);
-        setStoreId(data.id);
+    // storage.getItem('dataStore').then((data) => {
+    //   if (data) {
+    //     setStoreName(data.name);
+    //     setStoreId(data.id);
+    //     services
+    //       .getListTableOrderOffline(null, data.id, 1)
+    //       .then(function (response) {
+    //         if (response) {
+    //           if (response.data.code === 200) {
+    //             setDataOrder(response?.data?.data?.data);
+    //             setModalVisibleLoading(false);
+    //           }
+    //         } else {
+    //           return;
+    //         }
+    //       });
+    //   } else {
+    props.data.responseListStore?.data.forEach((element, index) => {
+      if (element.status === 1) {
+        setStoreName(element.name);
+        setStoreId(element.id);
+        storage.setItem('dataStore', element);
         services
-          .getListTableOrderOffline(null, data.id, 1)
+          .getListTableOrderOffline(null, element.id, 1)
           .then(function (response) {
             if (response) {
               if (response.data.code === 200) {
                 setDataOrder(response?.data?.data?.data);
                 setModalVisibleLoading(false);
+              } else {
+                setModalVisibleLoading(false);
               }
             } else {
+              setModalVisibleLoading(false);
+              Alert.alert(
+                'Thông báo',
+                'Không tìm thấy cửa hàng!',
+                [
+                  {
+                    text: 'Đồng ý',
+                    onPress: async () => {},
+                  },
+                ],
+                {cancelable: false},
+              );
               return;
             }
           });
-      } else {
-        props.data.responseListStore?.data.forEach((element, index) => {
-          if (element.status === 1) {
-            setStoreName(element.name);
-            setStoreId(element.id);
-            storage.setItem('dataStore', element);
-            services
-              .getListTableOrderOffline(null, element.id, 1)
-              .then(function (response) {
-                if (response) {
-                  if (response.data.code === 200) {
-                    setDataOrder(response?.data?.data?.data);
-                    setModalVisibleLoading(false);
-                  }
-                } else {
-                  return;
-                }
-              });
-          }
-        });
       }
     });
+    //   }
+    // });
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
 
@@ -269,6 +291,7 @@ const Home = (props) => {
     storage.getItem('role_id').then((data) => {
       if (data) {
         setRoleId(data);
+        setModalVisibleLoading(false);
       } else {
       }
     });
@@ -287,8 +310,33 @@ const Home = (props) => {
             if (response.data.code === 200) {
               setDataOrder(response?.data?.data?.data);
               setModalVisibleLoading(false);
+            } else {
+              Alert.alert(
+                'Thông báo',
+                'Không tìm thấy cửa hàng!',
+                [
+                  {
+                    text: 'Đồng ý',
+                    onPress: async () => {},
+                  },
+                ],
+                {cancelable: false},
+              );
+              setModalVisibleLoading(false);
             }
           } else {
+            Alert.alert(
+              'Thông báo',
+              'Không tìm thấy cửa hàng!',
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {},
+                },
+              ],
+              {cancelable: false},
+            );
+            setModalVisibleLoading(false);
             return;
           }
         });
@@ -307,8 +355,33 @@ const Home = (props) => {
             if (response.data.code === 200) {
               setDataOrder(response?.data?.data?.data);
               setModalVisibleLoading(false);
+            } else {
+              Alert.alert(
+                'Thông báo',
+                'Không tìm thấy cửa hàng!',
+                [
+                  {
+                    text: 'Đồng ý',
+                    onPress: async () => {},
+                  },
+                ],
+                {cancelable: false},
+              );
+              setModalVisibleLoading(false);
             }
           } else {
+            Alert.alert(
+              'Thông báo',
+              'Không tìm thấy cửa hàng!',
+              [
+                {
+                  text: 'Đồng ý',
+                  onPress: async () => {},
+                },
+              ],
+              {cancelable: false},
+            );
+            setModalVisibleLoading(false);
             return;
           }
         });
@@ -629,41 +702,6 @@ const Home = (props) => {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <TouchableOpacity
                         onPress={() => {
-                          setBookTableId(item?.id);
-                          reactotron.log(item);
-                          services
-                            .getListTableEmpty(null, item?.id)
-                            .then(function (response) {
-                              if (response) {
-                                if (response.data.code === 200) {
-                                  setDataMergeTable(response.data.data);
-                                  var data = [];
-                                  response.data.data.forEach((element) => {
-                                    data.push(0);
-                                  });
-                                  setDataChooseTable(data);
-                                }
-                              } else {
-                                return;
-                              }
-                            });
-                          setModalVisibleMergeTable(true);
-                        }}
-                        style={{
-                          padding: 3,
-                          borderRadius: 4,
-                          borderColor: Color.buttonColor,
-                          borderWidth: 1,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginRight: 5,
-                        }}>
-                        <Text style={{color: Color.buttonColor, fontSize: 12}}>
-                          Gộp bàn
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => {
                           props.navigation.navigate('OrderFoodScreen', {
                             id: item.id,
                           });
@@ -683,6 +721,41 @@ const Home = (props) => {
                       </TouchableOpacity>
                     </View>
                   ) : null}
+                  <TouchableOpacity
+                    onPress={() => {
+                      setBookTableId(item?.id);
+                      reactotron.log(item);
+                      services
+                        .getListTableEmpty(null, item?.id)
+                        .then(function (response) {
+                          if (response) {
+                            if (response.data.code === 200) {
+                              setDataMergeTable(response.data.data);
+                              var data = [];
+                              response.data.data.forEach((element) => {
+                                data.push(0);
+                              });
+                              setDataChooseTable(data);
+                            }
+                          } else {
+                            return;
+                          }
+                        });
+                      setModalVisibleMergeTable(true);
+                    }}
+                    style={{
+                      padding: 3,
+                      borderRadius: 4,
+                      borderColor: Color.buttonColor,
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 5,
+                    }}>
+                    <Text style={{color: Color.buttonColor, fontSize: 12}}>
+                      Gộp bàn
+                    </Text>
+                  </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
                       // setTab(5);
@@ -736,7 +809,40 @@ const Home = (props) => {
                   <TouchableOpacity
                     onPress={() => {
                       setBookTableId(item?.id);
-                      // reactotron.log(item);
+                      services
+                        .getListTableEmpty(null, item?.id)
+                        .then(function (response) {
+                          if (response) {
+                            if (response.data.code === 200) {
+                              setDataMergeTable(response.data.data);
+                              var data = [];
+                              response.data.data.forEach((element) => {
+                                data.push(0);
+                              });
+                              setDataChooseTable(data);
+                            }
+                          } else {
+                            return;
+                          }
+                        });
+                      setModalVisibleChangeTable(true);
+                    }}
+                    style={{
+                      padding: 3,
+                      borderRadius: 4,
+                      borderColor: Color.buttonColor,
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 5,
+                    }}>
+                    <Text style={{color: Color.buttonColor, fontSize: 12}}>
+                      Đổi bàn
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setBookTableId(item?.id);
                       services
                         .getListTableEmpty(null, item?.id)
                         .then(function (response) {
@@ -960,6 +1066,183 @@ const Home = (props) => {
     );
   };
 
+  const renderChangeTable = ({item, index}) => {
+    return (
+      <View
+        onPress={() => {}}
+        style={{
+          width: Dimensions.get('window').width * 0.4,
+          marginBottom: 15,
+        }}>
+        <View
+          style={{
+            width: '85%',
+            borderRadius: 8,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            // marginRight: 10,
+            marginTop: 15,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              width: '100%',
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 10,
+              }}>
+              <Image
+                source={
+                  item.status === 'Hết chỗ'
+                    ? Images.iconOrderOfflineGrey
+                    : Images.iconOrderOfflineYellow
+                }
+                style={{height: 64, width: 64}}
+              />
+              <Text style={{color: '#fff', position: 'absolute'}}>
+                {item.number_table}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: '700',
+                marginTop: 10,
+              }}>
+              Bàn số {item.number_table}
+            </Text>
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: '400',
+                marginTop: 5,
+              }}>
+              {item.number_people_min} - {item.number_people_max} chỗ ngồi
+            </Text>
+            <View
+              style={{
+                height: 35,
+                width: 128,
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                marginTop: 10,
+                borderTopWidth: 1,
+                borderTopColor: '#E0E0E0',
+                flexDirection: 'row',
+              }}>
+              {dataChooseTable[index] === 0 && item.is_merge === 0 ? (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      reactotron.log('thai', bookTableId);
+                      console.log(item.id);
+                      var dataTableChange = {
+                        table_store_id: item.id,
+                        book_table_id: bookTableId,
+                      };
+                      Alert.alert(
+                        'Đổi bàn',
+                        'Bạn chắc chắn muốn đổi bàn?',
+                        [
+                          {text: 'Hủy', onPress: () => {}},
+                          {
+                            text: 'Đồng ý',
+                            onPress: async () => {
+                              services
+                                .changeTable(dataTableChange)
+                                .then(function (response) {
+                                  if (response) {
+                                    if (response.data.code === 200) {
+                                      Alert.alert(
+                                        'Thông báo',
+                                        response.data.message,
+                                        [
+                                          {
+                                            text: 'Đồng ý',
+                                            onPress: () => {
+                                              setModalVisibleChangeTable(false);
+                                              props.navigation.reset({
+                                                routes: [
+                                                  {
+                                                    name: 'Utilities',
+                                                  },
+                                                ],
+                                              });
+                                            },
+                                          },
+                                        ],
+                                        {cancelable: false},
+                                      );
+                                    } else {
+                                      Alert.alert(
+                                        'Thông báo',
+                                        response.data.message,
+                                        [{text: 'Đồng ý', onPress: () => {}}],
+                                        {cancelable: false},
+                                      );
+                                    }
+                                  } else {
+                                    return;
+                                  }
+                                });
+                            },
+                          },
+                        ],
+                        {cancelable: false},
+                      );
+                    }}
+                    style={{
+                      backgroundColor: Color.main,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 4,
+                      padding: 5,
+                    }}>
+                    <Text style={{fontSize: 11, color: Color.white}}>
+                      Đổi bàn
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <MaterialIcons
+                    style={{marginRight: 5}}
+                    name={'check-circle'}
+                    size={20}
+                    color={Color.buttonColor}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: Color.grey,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 4,
+                      padding: 5,
+                    }}>
+                    <Text style={{fontSize: 11, color: Color.white}}>
+                      Đã gộp
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -1065,6 +1348,7 @@ const Home = (props) => {
                     </TouchableOpacity>
                   </View>
                 </Modal>
+                {/* Merge Table */}
                 <Modal
                   onBackdropPress={() => setModalVisibleMergeTable(false)}
                   style={{alignItems: 'center', justifyContent: 'center'}}
@@ -1172,6 +1456,114 @@ const Home = (props) => {
                     </TouchableOpacity>
                   </View>
                 </Modal>
+                {/* Change Table */}
+                <Modal
+                  onBackdropPress={() => setModalVisibleChangeTable(false)}
+                  style={{alignItems: 'center', justifyContent: 'center'}}
+                  isVisible={modalVisibleChangeTable}>
+                  <View
+                    style={{
+                      height: '60%',
+                      width: '100%',
+                      backgroundColor: '#fff',
+                      borderRadius: 10,
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'space-around',
+                      backgroundColor: '#E8E8E8',
+                    }}>
+                    <FlatList
+                      showsVerticalScrollIndicator={false}
+                      contentContainerStyle={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-evenly',
+                        alignItems: 'center',
+                      }}
+                      style={{
+                        width: Dimensions.get('window').width - 10,
+                        marginTop: 5,
+                        marginLeft: 25,
+                        borderRadius: 5,
+                        marginBottom: 10,
+                        flex: 1,
+                        paddingLeft: 5,
+                        paddingRight: 5,
+                      }}
+                      data={dataMergeTable}
+                      renderItem={renderChangeTable}
+                      keyExtractor={(item, index) => index.toString()}
+                      // onEndReached={handleLoadMore}
+                      // onEndReachedThreshold={0}
+                      // ListFooterComponent={renderFooter}
+                    />
+                    {/* <TouchableOpacity
+                      onPress={() => {
+                        // Alert.alert(
+                        //   'Xác nhận gộp bàn',
+                        //   'Bạn chắc chắn muốn gộp những bàn này?',
+                        //   [
+                        //     {text: 'Hủy', onPress: () => {}},
+                        //     {
+                        //       text: 'Đồng ý',
+                        //       onPress: async () => {
+                        //         services
+                        //           .mergeTableWithOwner({
+                        //             book_table_id: bookTableId,
+                        //             table_store_id: totalTableMerge,
+                        //           })
+                        //           .then(function (response) {
+                        //             if (response) {
+                        //               if (response.data.code === 200) {
+                        //                 Alert.alert(
+                        //                   'Thông báo',
+                        //                   response.data.message,
+                        //                   [
+                        //                     {
+                        //                       text: 'Đồng ý',
+                        //                       onPress: () => {
+                        //                         setDataMergeTable([]);
+                        //                         setBookTableId(null);
+                        //                         setModalVisibleMergeTable(
+                        //                           false,
+                        //                         );
+                        //                       },
+                        //                     },
+                        //                   ],
+                        //                   {cancelable: false},
+                        //                 );
+                        //               } else {
+                        //                 Alert.alert(
+                        //                   'Thông báo',
+                        //                   'Gộp bàn thất bại!',
+                        //                   [{text: 'Đồng ý', onPress: () => {}}],
+                        //                   {cancelable: false},
+                        //                 );
+                        //               }
+                        //             } else {
+                        //               return;
+                        //             }
+                        //           });
+                        //       },
+                        //     },
+                        //   ],
+                        //   {cancelable: false},
+                        // );
+                      }}
+                      style={{
+                        height: 45,
+                        width: '100%',
+                        backgroundColor: Color.main,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 8,
+                      }}>
+                      <Text style={{fontSize: 15, color: Color.white}}>
+                        Xác nhận
+                      </Text>
+                    </TouchableOpacity> */}
+                  </View>
+                </Modal>
                 <View>
                   {roleId === 2 ? (
                     <TouchableOpacity
@@ -1226,61 +1618,6 @@ const Home = (props) => {
                       </TouchableOpacity>
                     </View>
                   )}
-                  {/* <View
-                    style={{
-                      // marginTop: 20,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '100%',
-                    }}>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        width: '100%',
-                        height: '100%',
-                        position: 'absolute',
-                        alignItems: 'center',
-                      }}>
-                      <View
-                        style={{
-                          height: 70,
-                          width: '100%',
-                          marginTop: 25,
-                        }}>
-                        <TextInput
-                          style={{
-                            height: 45,
-                            color: '#000000',
-
-                            borderColor: Color.main,
-                            borderWidth: 1,
-                            borderRadius: 20,
-                            paddingLeft: 20,
-                          }}
-                          placeholder="Tìm đơn?"
-                          placeholderTextColor="gray"
-                        />
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        // width: '100%',
-                        justifyContent: 'flex-end',
-                        alignSelf: 'flex-end',
-                        height: 45,
-                        alignItems: 'center',
-                        marginRight: 10,
-                      }}>
-                      <TouchableOpacity onPress={() => {}}>
-                        <MaterialIcons
-                          name={'search'}
-                          size={26}
-                          color={Color.main}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View> */}
                   <View
                     style={{
                       flexDirection: 'row',
@@ -1314,7 +1651,6 @@ const Home = (props) => {
                       );
                     })}
                   </View>
-
                   <FlatList
                     nestedScrollEnabled={true}
                     showsVerticalScrollIndicator={false}
