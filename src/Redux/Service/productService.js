@@ -106,14 +106,14 @@ export default homeService = {
   getLocationSuggest: async (params, suggest) => {
     let url = `${
       API_BASE_URL.GET_LOCATION_SUGGEST
-    }?input=${suggest}&language=${'vi'}&components=${'country:vn'}&key=AIzaSyBHjXxLuwO-WlPntKafi23T7sHBdsSvSKk`;
+    }?input=${suggest}&language=${'vi'}&components=${'country:vn'}&key=AIzaSyAWWFzb1uMxLnm_DaD0ZVfZXrBzeEfrJTM`;
     let response = callApiService.get(url);
     return response;
   },
   getLocationDetail: async (params, place_id) => {
     let url = `${
       API_BASE_URL.GET_LOCATION_DETAIL
-    }?placeid=${place_id}&language=${'vi'}&key=AIzaSyBHjXxLuwO-WlPntKafi23T7sHBdsSvSKk`;
+    }?placeid=${place_id}&language=${'vi'}&key=AIzaSyAWWFzb1uMxLnm_DaD0ZVfZXrBzeEfrJTM`;
     let response = callApiService.get(url);
     return response;
   },

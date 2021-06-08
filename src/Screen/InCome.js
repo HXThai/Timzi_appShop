@@ -53,7 +53,7 @@ const Home = (props) => {
     //         }
     //       });
     //   } else {
-    props.data.responseListStore?.data.forEach((element, index) => {
+    props?.data?.responseListStore?.data?.forEach((element, index) => {
       if (element.status === 1) {
         setStoreName(element.name);
         setStoreId(element.id);
@@ -79,14 +79,49 @@ const Home = (props) => {
 
   const [roleId, setRoleId] = useState('');
 
+  // useEffect(() => {
+  //   storage.getItem('role_id').then((data) => {
+  //     if (data) {
+  //       setRoleId(data);
+  //     } else {
+  //     }
+  //   });
+  // }, []);
+
   useEffect(() => {
+    // setModalVisibleLoading(true);
     storage.getItem('role_id').then((data) => {
       if (data) {
         setRoleId(data);
+        if (data === 6) {
+          // reactotron.log('thai 6');
+          setStoreName(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.name,
+          );
+          setStoreId(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+          );
+        } else {
+          services
+            .getListDiscountThisMonthStore(
+              null,
+              props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+            )
+            .then(function (response) {
+              if (response) {
+                if (response.data.code === 200) {
+                  setDataDiscount(response?.data?.data);
+                  // setModalVisibleLoading(false);
+                }
+              } else {
+                return;
+              }
+            });
+        }
       } else {
       }
     });
-  }, []);
+  }, [props.dataLogin.responseUserInformation]);
 
   return (
     <View style={styles.container}>
@@ -340,12 +375,16 @@ const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
     data: state.orderOnlineReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onGetListStore: (params) => {
     dispatch(actionsGetListStore.getListStore(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
   },
 });
 

@@ -66,7 +66,7 @@ const Home = (props) => {
     NetPrinter.init().then(() => {
       // setPrinters([{host: ipAđdress, port: 9100}]);
       // console.log('success');
-      NetPrinter.connectPrinter(ipAđdress, 9100).then(
+      NetPrinter.connectPrinter(ipAddress, 9100).then(
         (value) => {
           // console.log(value);
           console.log('test');
@@ -77,6 +77,7 @@ const Home = (props) => {
               {
                 text: 'Đồng ý',
                 onPress: () => {
+                  storage.setItem('ipaddress', ipAddress);
                   setModalVisibleLoading(false);
                   setModalVisible(false);
                 },
@@ -128,7 +129,7 @@ const Home = (props) => {
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
-  const [ipAđdress, setIpAddress] = useState('192.168.2.222');
+  const [ipAddress, setIpAddress] = useState('192.168.2.222');
 
   useEffect(() => {
     storage.getItem('role_id').then((data) => {
@@ -298,7 +299,7 @@ const Home = (props) => {
                         placeholder="Địa chỉ ip máy in"
                         placeholderTextColor="#9C9C9C"
                         onChangeText={(text) => setIpAddress(text)}
-                        defaultValue={ipAđdress}
+                        defaultValue={ipAddress}
                       />
                       <TouchableOpacity
                         onPress={() => {

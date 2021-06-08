@@ -32,6 +32,7 @@ import services from '../Redux/Service/orderOfflineService';
 import reactotron from 'reactotron-react-native';
 import {get} from 'react-native/Libraries/Utilities/PixelRatio';
 import moment from 'moment';
+import * as actionsLogin from '../Redux/Action/loginAction';
 // import {
 //   USBPrinter,
 //   NetPrinter,
@@ -246,7 +247,7 @@ const Home = (props) => {
     //         }
     //       });
     //   } else {
-    props.data.responseListStore?.data.forEach((element, index) => {
+    props?.data?.responseListStore?.data?.forEach((element, index) => {
       if (element.status === 1) {
         setStoreName(element.name);
         setStoreId(element.id);
@@ -263,17 +264,17 @@ const Home = (props) => {
               }
             } else {
               setModalVisibleLoading(false);
-              Alert.alert(
-                'Thông báo',
-                'Không tìm thấy cửa hàng!',
-                [
-                  {
-                    text: 'Đồng ý',
-                    onPress: async () => {},
-                  },
-                ],
-                {cancelable: false},
-              );
+              // Alert.alert(
+              //   'Thông báo',
+              //   'Không tìm thấy cửa hàng!',
+              //   [
+              //     {
+              //       text: 'Đồng ý',
+              //       onPress: async () => {},
+              //     },
+              //   ],
+              //   {cancelable: false},
+              // );
               return;
             }
           });
@@ -287,15 +288,82 @@ const Home = (props) => {
   const [roleId, setRoleId] = useState('');
 
   useEffect(() => {
-    setModalVisibleLoading(true);
     storage.getItem('role_id').then((data) => {
       if (data) {
         setRoleId(data);
-        setModalVisibleLoading(false);
+        if (data === 6) {
+          reactotron.log(
+            'thai',
+            props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+          );
+          storage.setItem(
+            'dataStore',
+            props.dataLogin.responseUserInformation?.data?.data?.store,
+          );
+          setStoreName(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.name,
+          );
+          setStoreId(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+          );
+          services
+            .getListTableOrderOffline(
+              null,
+              props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+              1,
+            )
+            .then(function (response) {
+              if (response) {
+                if (response.data.code === 200) {
+                  setDataOrder(response?.data?.data?.data);
+                  setModalVisibleLoading(false);
+                } else {
+                  setModalVisibleLoading(false);
+                }
+              } else {
+                setModalVisibleLoading(false);
+                return;
+              }
+            });
+        } else {
+          props?.data?.responseListStore?.data?.forEach((element, index) => {
+            if (element.status === 1) {
+              setStoreName(element.name);
+              setStoreId(element.id);
+              storage.setItem('dataStore', element);
+              services
+                .getListOrderOnline(null, element.id, 2, 1)
+                .then(function (response) {
+                  if (response) {
+                    if (response?.data?.code === 200) {
+                      setDataOrder(response?.data?.data?.data);
+                      setModalVisibleLoading(false);
+                    } else {
+                      reactotron.log('Thaiiiiiiitest2');
+                      setModalVisibleLoading(false);
+                    }
+                  } else {
+                    Alert.alert(
+                      'Thông báo',
+                      'Không tìm thấy cửa hàng!',
+                      [
+                        {
+                          text: 'Đồng ý',
+                          onPress: async () => {},
+                        },
+                      ],
+                      {cancelable: false},
+                    );
+                    return;
+                  }
+                });
+            }
+          });
+        }
       } else {
       }
     });
-  }, []);
+  }, [props.dataLogin.responseUserInformation]);
 
   const handleChangeTab = async (index) => {
     await setDataOrder([]);
@@ -1721,12 +1789,16 @@ const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
     data: state.orderOnlineReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onGetListStore: (params) => {
     dispatch(actionsGetListStore.getListStore(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
   },
 });
 

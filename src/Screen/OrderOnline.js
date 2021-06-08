@@ -176,7 +176,7 @@ const Home = (props) => {
     //         }
     //       });
     //   } else {
-    props.data.responseListStore?.data.forEach((element, index) => {
+    props?.data?.responseListStore?.data?.forEach((element, index) => {
       reactotron.log(props.data.responseListStore);
       if (element.status === 1) {
         setStoreName(element.name);
@@ -193,6 +193,7 @@ const Home = (props) => {
                 reactotron.log('Thaiiiiiiitest3');
               }
             } else {
+              console.log('test');
               Alert.alert(
                 'Thông báo',
                 'Không tìm thấy cửa hàng!',
@@ -221,6 +222,10 @@ const Home = (props) => {
       if (data) {
         setRoleId(data);
         if (data === 6) {
+          reactotron.log(
+            'thai',
+            props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+          );
           storage.setItem(
             'dataStore',
             props.dataLogin.responseUserInformation?.data?.data?.store,
@@ -252,17 +257,17 @@ const Home = (props) => {
                   reactotron.log('Thaiiiiiii');
                 }
               } else {
-                Alert.alert(
-                  'Thông báo',
-                  'Không tìm thấy cửa hàng!',
-                  [
-                    {
-                      text: 'Đồng ý',
-                      onPress: async () => {},
-                    },
-                  ],
-                  {cancelable: false},
-                );
+                // Alert.alert(
+                //   'Thông báo',
+                //   'Không tìm thấy cửa hànggggggg!',
+                //   [
+                //     {
+                //       text: 'Đồng ý',
+                //       onPress: async () => {},
+                //     },
+                //   ],
+                //   {cancelable: false},
+                // );
                 return;
               }
             });
@@ -286,7 +291,7 @@ const Home = (props) => {
           //         }
           //       });
           //   } else {
-          props.data.responseListStore?.data.forEach((element, index) => {
+          props?.data?.responseListStore?.data?.forEach((element, index) => {
             if (element.status === 1) {
               setStoreName(element.name);
               setStoreId(element.id);

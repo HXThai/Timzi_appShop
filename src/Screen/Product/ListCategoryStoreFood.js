@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import Images from '../../Theme/Images';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -20,7 +21,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,9 +43,22 @@ const LoginScreen = (props) => {
   const [categoryId, setCategoryId] = useState('');
 
   useEffect(() => {
+    setModalVisibleLoading(true);
     storage.getItem('dataStore').then((data) => {
       if (data) {
         setStoreId(data.id);
+        services
+          .getListCategoryStoreFood(null, data.id)
+          .then(function (response) {
+            if (response) {
+              if (response.data.code === 200) {
+                setDataOrderTable(response?.data?.data);
+                setModalVisibleLoading(false);
+              }
+            } else {
+              return;
+            }
+          });
       } else {
       }
     });
@@ -52,7 +66,7 @@ const LoginScreen = (props) => {
 
   const getData = () => {
     setModalVisibleLoading(true);
-    services.getListCategoryStoreFood(null).then(function (response) {
+    services.getListCategoryStoreFood(null, storeId).then(function (response) {
       if (response) {
         if (response.data.code === 200) {
           setDataOrderTable(response?.data?.data);
@@ -63,10 +77,6 @@ const LoginScreen = (props) => {
       }
     });
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const [dataOrderTable, setDataOrderTable] = useState([]);
 

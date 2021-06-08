@@ -28,6 +28,8 @@ import {connect} from 'react-redux';
 import storage from './asyncStorage/Storage';
 import services from '../Redux/Service/productService';
 import ImageView from 'react-native-image-viewing';
+import * as actionsLogin from '../Redux/Action/loginAction';
+import reactotron from 'reactotron-react-native';
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -98,21 +100,7 @@ const Home = (props) => {
   };
 
   useEffect(() => {
-    // storage.getItem('dataStore').then((data) => {
-    //   if (data) {
-    //     setStoreName(data.name);
-    //     setStoreId(data.id);
-    //     services.storeDetail(data.id).then(function (response) {
-    //       if (response) {
-    //         if (response.data.code === 200) {
-    //           setData(response?.data?.data);
-    //         }
-    //       } else {
-    //         return;
-    //       }
-    //     });
-    //   } else {
-    props.data.responseListStore?.data.forEach((element, index) => {
+    props?.data?.responseListStore?.data?.forEach((element, index) => {
       // console.log(element.status);
       if (element.status === 1) {
         setStoreName(element.name);
@@ -122,6 +110,7 @@ const Home = (props) => {
           if (response) {
             if (response?.data?.code === 200) {
               setData(response?.data?.data);
+              setModalVisibleLoading(false);
             }
           } else {
             return;
@@ -129,43 +118,130 @@ const Home = (props) => {
         });
       }
     });
-    //   }
-    // });
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
 
   const [roleId, setRoleId] = useState('');
+
+  // useEffect(() => {
+  //   setModalVisibleLoading(true);
+  //   storage.getItem('role_id').then((data) => {
+  //     if (data) {
+  //       setRoleId(data);
+  //     } else {
+  //     }
+  //   });
+  //   services.getListCategoryWithStore(null).then(function (response) {
+  //     if (response) {
+  //       // console.log('thai', response);
+  //       if (response.data.code === 200) {
+  //         setDataCateWithStore(response.data.data);
+  //       }
+  //     } else {
+  //       return;
+  //     }
+  //   });
+  //   services.getListCategoryStoreFood(null, storeId).then(function (response) {
+  //     if (response) {
+  //       // console.log('thai', response);
+  //       if (response.data.code === 200) {
+  //         setDataCateStoreFood(response.data.data);
+  //       }
+  //     } else {
+  //       return;
+  //     }
+  //   });
+  // }, []);
 
   useEffect(() => {
     setModalVisibleLoading(true);
     storage.getItem('role_id').then((data) => {
       if (data) {
         setRoleId(data);
-      } else {
-      }
-    });
-    services.getListCategoryWithStore(null).then(function (response) {
-      if (response) {
-        // console.log('thai', response);
-        if (response.data.code === 200) {
-          setDataCateWithStore(response.data.data);
+        if (data === 6) {
+          // reactotron.log('thai 6');
+          setStoreName(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.name,
+          );
+          setStoreId(
+            props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+          );
+          services
+            .storeDetail(
+              props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+            )
+            .then(function (response) {
+              if (response) {
+                // console.log('thai', response);
+                if (response.data.code === 200) {
+                  setData(response?.data?.data);
+                  setModalVisibleLoading(false);
+                }
+              } else {
+                return;
+              }
+            });
+          services.getListCategoryWithStore(null).then(function (response) {
+            if (response) {
+              // console.log('thai', response);
+              if (response.data.code === 200) {
+                setDataCateWithStore(response.data.data);
+              }
+            } else {
+              return;
+            }
+          });
+          services
+            .getListCategoryStoreFood(
+              null,
+              props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+            )
+            .then(function (response) {
+              if (response) {
+                // console.log('thai', response);
+                if (response.data.code === 200) {
+                  setDataCateStoreFood(response.data.data);
+                }
+              } else {
+                return;
+              }
+            });
+        } else {
+          // reactotron.log('thai 7');
+          props?.data?.responseListStore?.data?.forEach((element, index) => {
+            if (element.status === 1) {
+              setStoreName(element.name);
+              setStoreId(element.id);
+              storage.setItem('dataStore', element);
+              services.getListCategoryWithStore(null).then(function (response) {
+                if (response) {
+                  // console.log('thai', response);
+                  if (response.data.code === 200) {
+                    setDataCateWithStore(response.data.data);
+                  }
+                } else {
+                  return;
+                }
+              });
+              services
+                .getListCategoryStoreFood(null, element.id)
+                .then(function (response) {
+                  if (response) {
+                    // console.log('thai', response);
+                    if (response.data.code === 200) {
+                      setDataCateStoreFood(response.data.data);
+                    }
+                  } else {
+                    return;
+                  }
+                });
+            }
+          });
         }
       } else {
-        return;
       }
     });
-    services.getListCategoryStoreFood(null, storeId).then(function (response) {
-      if (response) {
-        // console.log('thai', response);
-        if (response.data.code === 200) {
-          setDataCateStoreFood(response.data.data);
-          setModalVisibleLoading(false);
-        }
-      } else {
-        return;
-      }
-    });
-  }, []);
+  }, [props.dataLogin.responseUserInformation]);
 
   const onShowImage = (uriImage) => {
     var img = [{uri: uriImage}];
@@ -395,7 +471,12 @@ const Home = (props) => {
                       }}>
                       <Image
                         source={{uri: data?.store?.image}}
-                        style={{height: 200, width: '100%', borderRadius: 8}}
+                        style={{
+                          height: 220,
+                          width: '100%',
+                          borderRadius: 8,
+                          // resizeMode: 'stretch',
+                        }}
                       />
                       <View
                         style={{
@@ -1229,12 +1310,16 @@ const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
     data: state.orderOnlineReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onGetListStore: (params) => {
     dispatch(actionsGetListStore.getListStore(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
   },
 });
 

@@ -132,6 +132,7 @@ const API_BASE_URL = {
   GET_LIST_DISCOUNT_STORE: ROOT_DOMAIN + '/store/list-discount-store',
   GET_LIST_DISCOUNT_THIS_MONTH_STORE:
     ROOT_DOMAIN + '/store/discount-this-month-store',
+  GET_LIST_REVENUE_FOOD_STORE: ROOT_DOMAIN + '/store/list-revenue-food-store',
 
   CONFIRM_OTP_REGISTER: ROOT_DOMAIN + '/check-otp-register',
   CONFIRM_OTP_FORGOT_PASSWORD: ROOT_DOMAIN + '/check-otp-verify',

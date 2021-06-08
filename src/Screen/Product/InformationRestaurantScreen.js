@@ -87,7 +87,12 @@ const LoginScreen = (props) => {
                 }}>
                 <Image
                   source={{uri: data?.image}}
-                  style={{height: 200, width: '100%', borderRadius: 8}}
+                  style={{
+                    height: 220,
+                    width: '100%',
+                    borderRadius: 8,
+                    // resizeMode: 'stretch',
+                  }}
                 />
               </TouchableOpacity>
               <View

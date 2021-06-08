@@ -17,6 +17,11 @@ import loginService from '../Redux/Service/LoginService';
 import * as actionsLogin from '../Redux/Action/loginAction';
 import {connect} from 'react-redux';
 import OneSignal from 'react-native-onesignal';
+import {
+  USBPrinter,
+  NetPrinter,
+  BLEPrinter,
+} from 'react-native-thermal-receipt-printer';
 
 // let uniqueId = DeviceInfo.getUniqueId();
 // console.log(getUniqueId());
@@ -25,6 +30,25 @@ const SplashScreen = (props) => {
     setTimeout(async () => {
       const userId = await OneSignal.getDeviceState();
       // console.log('userSP', userId.userId);
+      storage.getItem('ipaddress').then((data) => {
+        if (data) {
+          NetPrinter.init().then(() => {
+            // setPrinters([{host: ipAđdress, port: 9100}]);
+            // console.log('success');
+            NetPrinter.connectPrinter(DataTransfer, 9100).then(
+              (value) => {
+                // console.log(value);
+                console.log('test');
+              },
+              (error) => {
+                console.log(error);
+              },
+            );
+          });
+        } else {
+          // props.navigation.navigate('Login');
+        }
+      });
       storage.getItem('dataLogin').then((data) => {
         if (data) {
           // console.log(userId.userId);

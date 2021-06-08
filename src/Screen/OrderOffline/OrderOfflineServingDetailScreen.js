@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import Images from '../../Theme/Images';
@@ -19,7 +20,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // Styles
 import styles from '../Styles/NotificationStyles';
 import Color from '../../Theme/Color';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Swipeout from 'react-native-swipeout';
 // import loginService from '../Redux/Service/LoginService';
 // import AsyncStorage from '@react-native-async-storage/async-storage';

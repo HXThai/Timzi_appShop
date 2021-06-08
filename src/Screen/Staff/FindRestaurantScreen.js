@@ -55,10 +55,10 @@ const LoginScreen = (props) => {
         // console.log('thai mai', response);
         if (response.data.code === 200) {
           setDataProvince(response?.data?.data);
-          setProvince(response?.data?.data[0].name);
-          setProvinceId(response?.data?.data[0].id);
+          setProvince(response?.data?.data[35].name);
+          setProvinceId(response?.data?.data[35].id);
           staffService
-            .searchStore(null, dataSearch, response?.data?.data[0].id)
+            .searchStore(null, dataSearch, response?.data?.data[35].id)
             .then(function (response) {
               // console.log(response);
               if (response) {
@@ -219,7 +219,9 @@ const LoginScreen = (props) => {
                 justifyContent: 'space-between',
                 height: '100%',
               }}>
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={{marginBottom: 40}}>
                 <View
                   style={{
                     // marginTop: 20,
@@ -324,14 +326,20 @@ const LoginScreen = (props) => {
                                 size={20}
                                 color={Color.buttonColor}
                               />
-                              <Text
+                              <View
                                 style={{
-                                  fontSize: 13,
-                                  fontWeight: '600',
-                                  marginLeft: 5,
+                                  width: Dimensions.get('window').width - 180,
                                 }}>
-                                {item.name}
-                              </Text>
+                                <Text
+                                  numberOfLines={1}
+                                  style={{
+                                    fontSize: 13,
+                                    fontWeight: '600',
+                                    marginLeft: 5,
+                                  }}>
+                                  {item.name}
+                                </Text>
+                              </View>
                             </View>
                             <TouchableOpacity
                               onPress={() => {
@@ -427,14 +435,20 @@ const LoginScreen = (props) => {
                               size={18}
                               color={'black'}
                             />
-                            <Text
+                            <View
                               style={{
-                                fontSize: 12,
-                                fontWeight: '400',
-                                marginLeft: 5,
+                                width: Dimensions.get('window').width - 150,
                               }}>
-                              {item.address}
-                            </Text>
+                              <Text
+                                numberOfLines={1}
+                                style={{
+                                  fontSize: 12,
+                                  fontWeight: '400',
+                                  marginLeft: 5,
+                                }}>
+                                {item.address}
+                              </Text>
+                            </View>
                           </View>
                           <View
                             style={{

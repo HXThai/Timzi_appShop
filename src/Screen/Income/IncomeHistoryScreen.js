@@ -45,6 +45,10 @@ const LoginScreen = (props) => {
 
   const [totalMoney, setTotalMoney] = useState('');
 
+  const [dataRevenueFood, setDataRevenueFood] = useState([]);
+
+  const [isVisibleTime, setIsVisibleTime] = useState(false);
+
   const handleLoadMore = () => {
     dataRate.length >= 12 ? setPage(page + 1) : null;
   };
@@ -55,6 +59,19 @@ const LoginScreen = (props) => {
       if (data) {
         setStoreName(data.name);
         setStoreId(data.id);
+        services
+          .getListRevenueFoodStore(null, data.id, 1)
+          .then(function (response) {
+            if (response) {
+              if (response.data.code === 200) {
+                // setDataRevenueFood(response?.data?.data?.list_food);
+                // setModalVisibleLoading(false);
+                // setTotalMoney(response?.data?.data?.total_money);
+              }
+            } else {
+              return;
+            }
+          });
         services
           .getListRevenueStore(null, data.id, 1)
           .then(function (response) {
@@ -148,7 +165,7 @@ const LoginScreen = (props) => {
             style={{
               padding: 10,
               flexDirection: 'column',
-              justifyContent: 'space-between',
+              // justifyContent: 'space-between',
               height: '100%',
             }}>
             <View
@@ -166,7 +183,7 @@ const LoginScreen = (props) => {
               <Text>Tổng doanh thu</Text>
               <Text>{styles.dynamicSort(totalMoney)} đ</Text>
             </View>
-            <FlatList
+            {/* <FlatList
               nestedScrollEnabled={true}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
@@ -175,7 +192,9 @@ const LoginScreen = (props) => {
               }}
               style={{
                 marginTop: 10,
-                marginBottom: 40,
+                // marginBottom: 40,
+                paddingBottom: 10,
+                backgroundColor: 'red',
               }}
               data={dataRate}
               renderItem={renderProduct}
@@ -184,7 +203,43 @@ const LoginScreen = (props) => {
               onEndReached={handleLoadMore}
               onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
               // ListFooterComponent={renderFooter}
-            />
+            /> */}
+
+            {/* <View
+              style={{
+                backgroundColor: Color.main,
+                height: 10,
+                width: Dimensions.get('window').width,
+                marginTop: 10,
+              }}></View> */}
+            {dataRate.map((item, index) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    // alignItems: 'center',
+                    marginBottom: 10,
+                  }}>
+                  <View
+                    style={{
+                      justifyContent: 'space-between',
+                      width: Dimensions.get('window').width - 20,
+                      padding: 10,
+                      backgroundColor: Color.white,
+                      borderRadius: 8,
+                      height: 50,
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    <Text>
+                      Doanh thu tháng{' '}
+                      {item.month.substring(5, 8) + item.month.substring(0, 4)}
+                    </Text>
+                    <Text>{styles.dynamicSort(item.money)} đ</Text>
+                  </View>
+                </View>
+              );
+            })}
           </View>
         </ImageBackground>
       </View>
