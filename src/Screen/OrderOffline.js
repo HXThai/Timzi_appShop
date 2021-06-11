@@ -363,6 +363,23 @@ const Home = (props) => {
       } else {
       }
     });
+    // storage.getItem('ipaddress').then((data) => {
+    //   if (data) {
+    //     // reactotron.log(data);
+    //     NetPrinter.init().then(() => {
+    //       NetPrinter.connectPrinter(data, 9100).then(
+    //         (value) => {
+    //           console.log('test');
+    //         },
+    //         (error) => {
+    //           console.log(error);
+    //         },
+    //       );
+    //     });
+    //   } else {
+    //     // props.navigation.navigate('Login');
+    //   }
+    // });
   }, [props.dataLogin.responseUserInformation]);
 
   const handleChangeTab = async (index) => {

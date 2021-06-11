@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   Image,
   Text,
@@ -14,6 +14,7 @@ import {
   Alert,
   RefreshControl,
   Platform,
+  AppState,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from '../Theme/Color';
@@ -60,6 +61,33 @@ const Home = (props) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const [page, setPage] = useState(1);
+
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    };
+  }, []);
+
+  const _handleAppStateChange = (nextAppState) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      // TODO SET USERS ONLINE STATUS TO TRUE
+    } else {
+      // TODO SET USERS ONLINE STATUS TO FALSE
+      console.log('off');
+    }
+
+    appState.current = nextAppState;
+    setAppStateVisible(appState.current);
+    console.log('AppState', appState.current);
+  };
 
   const handleLoadMore = () => {
     dataOrder.length >= 12 ? setPage(page + 1) : null;
@@ -222,10 +250,7 @@ const Home = (props) => {
       if (data) {
         setRoleId(data);
         if (data === 6) {
-          reactotron.log(
-            'thai',
-            props.dataLogin.responseUserInformation?.data?.data?.store?.id,
-          );
+          reactotron.log('thai', props.dataLogin.responseUserInformation);
           storage.setItem(
             'dataStore',
             props.dataLogin.responseUserInformation?.data?.data?.store,

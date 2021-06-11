@@ -91,7 +91,7 @@ const LoginScreen = (props) => {
                     height: 220,
                     width: '100%',
                     borderRadius: 8,
-                    // resizeMode: 'stretch',
+                    resizeMode: 'cover',
                   }}
                 />
               </TouchableOpacity>

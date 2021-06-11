@@ -35,6 +35,8 @@ const Home = (props) => {
 
   const [dataDiscount, setDataDiscount] = useState([]);
 
+  const [totalMoney, setTotalMoney] = useState(0);
+
   useEffect(() => {
     // dataStore = storage.getItem('dataStore').then((data) => {
     //   if (data) {
@@ -65,6 +67,19 @@ const Home = (props) => {
               if (response.data.code === 200) {
                 setDataDiscount(response?.data?.data);
                 // setModalVisibleLoading(false);
+              }
+            } else {
+              return;
+            }
+          });
+        services
+          .getListRevenueStore(null, element.id, 1)
+          .then(function (response) {
+            if (response) {
+              if (response.data.code === 200) {
+                // setDataRate(response?.data?.data?.list_revenue?.data);
+                // setModalVisibleLoading(false);
+                setTotalMoney(response?.data?.data?.total_money);
               }
             } else {
               return;
@@ -112,6 +127,23 @@ const Home = (props) => {
                 if (response.data.code === 200) {
                   setDataDiscount(response?.data?.data);
                   // setModalVisibleLoading(false);
+                }
+              } else {
+                return;
+              }
+            });
+          services
+            .getListRevenueStore(
+              null,
+              props.dataLogin.responseUserInformation?.data?.data?.store?.id,
+              1,
+            )
+            .then(function (response) {
+              if (response) {
+                if (response.data.code === 200) {
+                  // setDataRate(response?.data?.data?.list_revenue?.data);
+                  // setModalVisibleLoading(false);
+                  setTotalMoney(response?.data?.data?.total_money);
                 }
               } else {
                 return;
@@ -243,6 +275,23 @@ const Home = (props) => {
                       />
                     </TouchableOpacity>
                   ) : null}
+                  {storeId && (
+                    <View
+                      style={{
+                        justifyContent: 'space-between',
+                        width: Dimensions.get('window').width - 20,
+                        padding: 10,
+                        backgroundColor: Color.white,
+                        borderRadius: 8,
+                        height: 50,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginBottom: 10,
+                      }}>
+                      <Text>Tổng doanh thu của cửa hàng</Text>
+                      <Text>{styles.dynamicSort(totalMoney)} đ</Text>
+                    </View>
+                  )}
                   {storeId != null ? (
                     <TouchableOpacity
                       onPress={() => {

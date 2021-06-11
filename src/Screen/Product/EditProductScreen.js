@@ -76,11 +76,7 @@ const LoginScreen = (props) => {
 
   const [modalVisibleStoreFood, setModalVisibleStoreFood] = useState(false);
 
-  const [dataIsStatusFood, setDataIsStatusFood] = useState([
-    {status: 0, title: 'Món mới'},
-    {status: 0, title: 'Đặc sản'},
-    {status: 0, title: 'Tạm hết'},
-  ]);
+  const [dataIsStatusFood, setDataIsStatusFood] = useState([]);
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -224,6 +220,10 @@ const LoginScreen = (props) => {
     props?.route?.params?.productDetail?.is_group_food,
   );
 
+  const [isCheckTypeFood, setIsCheckTypeFood] = useState(
+    props?.route?.params?.productDetail?.type_food_id,
+  );
+
   useEffect(() => {
     setName(props?.route?.params?.name?.toString());
     setPrice(props?.route?.params?.price?.toString());
@@ -272,6 +272,16 @@ const LoginScreen = (props) => {
           return;
         }
       });
+    services.getListTypeFood(null).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          setDataIsStatusFood(response.data.data);
+        }
+      } else {
+        return;
+      }
+    });
+    reactotron.log('thai meo', props?.route?.params?.productDetail);
   }, []);
 
   const handleAddFood = () => {
@@ -289,9 +299,10 @@ const LoginScreen = (props) => {
       body.append('price', price);
       body.append('category_food_id', category.id);
       body.append('price_discount', promotion);
-      body.append('is_new', dataIsStatusFood[0].status);
-      body.append('is_specialties', dataIsStatusFood[1].status);
-      body.append('is_out_of_food', dataIsStatusFood[2].status);
+      // body.append('is_new', dataIsStatusFood[0].status);
+      // body.append('is_specialties', dataIsStatusFood[1].status);
+      // body.append('is_out_of_food', dataIsStatusFood[2].status);
+      body.append('type_food_id', isCheckTypeFood);
       body.append('category_store_food_id', storeFood.id);
       body.append('description', description);
       if (isCheckGroupFood === 1) {
@@ -388,9 +399,10 @@ const LoginScreen = (props) => {
     body.append('price', price);
     body.append('category_food_id', category.id);
     body.append('price_discount', promotion);
-    body.append('is_new', dataIsStatusFood[0].status);
-    body.append('is_specialties', dataIsStatusFood[1].status);
-    body.append('is_out_of_food', dataIsStatusFood[2].status);
+    // body.append('is_new', dataIsStatusFood[0].status);
+    // body.append('is_specialties', dataIsStatusFood[1].status);
+    // body.append('is_out_of_food', dataIsStatusFood[2].status);
+    body.append('type_food_id', isCheckTypeFood);
     body.append('category_store_food_id', storeFood.id);
     body.append('description', description);
     if (isCheckGroupFood === 1) {
@@ -465,13 +477,14 @@ const LoginScreen = (props) => {
   };
 
   const handeChooseStatusFood = (index) => {
-    var data = [...dataIsStatusFood];
-    if (data[index].status === 0) {
-      data[index].status = 1;
-    } else {
-      data[index].status = 0;
-    }
-    setDataIsStatusFood(data);
+    // var data = [...dataIsStatusFood];
+    // if (data[index].id === (index + 1)) {
+    //   data[index].status = 1;
+    // } else {
+    //   data[index].status = 0;
+    // }
+    // setDataIsStatusFood(data);
+    setIsCheckTypeFood(index);
   };
 
   return (
@@ -1378,7 +1391,7 @@ const LoginScreen = (props) => {
                     key={index}
                     onPress={() => {
                       // setIsStatusFood(index);
-                      handeChooseStatusFood(index);
+                      handeChooseStatusFood(item.id);
                     }}
                     style={{
                       flexDirection: 'row',
@@ -1387,7 +1400,7 @@ const LoginScreen = (props) => {
                     }}>
                     <MaterialIcons
                       name={
-                        item.status === 1
+                        item.id === isCheckTypeFood
                           ? 'check-box'
                           : 'check-box-outline-blank'
                       }
@@ -1395,7 +1408,7 @@ const LoginScreen = (props) => {
                       color={Color.main}
                       style={{marginRight: 10}}
                     />
-                    <Text>{item.title}</Text>
+                    <Text>{item.name}</Text>
                   </TouchableOpacity>
                 );
               })}

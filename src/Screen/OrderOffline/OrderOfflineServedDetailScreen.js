@@ -27,6 +27,11 @@ import {connect} from 'react-redux';
 // import * as actionsLogin from '../Redux/Action/loginAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import services from '../../Redux/Service/orderOfflineService';
+import {
+  USBPrinter,
+  NetPrinter,
+  BLEPrinter,
+} from 'react-native-thermal-receipt-printer';
 
 const LoginScreen = (props) => {
   const [dataMenu, setDataMenu] = useState([
@@ -46,16 +51,31 @@ const LoginScreen = (props) => {
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
+  const [store, setStore] = useState('');
+
+  const [totalMoneyWithStaffLocal, setTotalMoneyWithStaffLocal] = useState(0);
+
   useEffect(() => {
     setModalVisibleLoading(true);
+    storage.getItem('dataStore').then((data) => {
+      if (data) {
+        // reactotron.log(data);
+        setStore(data);
+      }
+    });
     services
       .orderOfflineDetail(null, props?.route?.params?.id)
       .then(function (response) {
         if (response) {
           if (response.data.code === 200) {
             setDataOrderOffline(response.data.data);
-            // setDataOrder(response.data.data);
-            // setDataMenu(response.data.data.order_food_detail);
+            var oldMoney = 0;
+            response.data.data.book_food?.forEach((element) => {
+              if (element.status === 4) {
+                oldMoney += element.price;
+              }
+            });
+            setTotalMoneyWithStaffLocal(oldMoney);
             setModalVisibleLoading(false);
           }
         } else {
@@ -63,6 +83,125 @@ const LoginScreen = (props) => {
         }
       });
   }, []);
+
+  function nonAccentVietnamese(str) {
+    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, 'A');
+    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, 'E');
+    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, 'i');
+    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, 'O');
+    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, 'U');
+    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, 'Y');
+    str = str.replace(/Đ/g, 'D');
+
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+    str = str.replace(/đ/g, 'd');
+    // Some system encode vietnamese combining accent as individual utf-8 characters
+    str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ''); // Huyền sắc hỏi ngã nặng
+    str = str.replace(/\u02C6|\u0306|\u031B/g, ''); // Â, Ê, Ă, Ơ, Ư
+    return str;
+  }
+
+  const getCurrentDate = () => {
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+
+    //Alert.alert(date + '-' + month + '-' + year);
+    // You can turn it in to your desired format
+    return date + '/' + month + '/' + year; //format: dd-mm-yyyy;
+  };
+
+  const getCurrenTime = () => {
+    var hours = new Date().getHours(); //To get the Current Hours
+    var min = new Date().getMinutes(); //To get the Current Minutes
+    var sec = new Date().getSeconds(); //To get the Current Seconds
+
+    //Alert.alert(date + '-' + month + '-' + year);
+    // You can turn it in to your desired format
+    return hours + ':' + min + ':' + sec; //format: dd-mm-yyyy;
+  };
+
+  const printBillTest = () => {
+    var dataPrint =
+      '<R>Timzi.vn</R>\n\n<C><D>' +
+      store?.name +
+      '</D></C>\n<C>' +
+      store?.address +
+      '</C>\n\n<C><B>Hoá đơn bán hàng</B></C>\n\n\n<L>Ngay: </L>\t<L>' +
+      getCurrentDate() +
+      '</L>\t\t\t<L>So: 1243</L>\n\n<L>Nhan vien xuat: </L>\t<L>' +
+      'Chu shop</L>\n\n<L>In luc: </L>\t<L>' +
+      getCurrenTime() +
+      '</L>\n<C>-------------------------------------------</C>' +
+      '\n<L>Ten khach hang: </L>\t<L>' +
+      dataOrderOffline?.name +
+      '</L>\n\n<L>So dien thoai: </L>\t<L>' +
+      dataOrderOffline?.phone +
+      '</L>\n\n<L>So ban: </L>\t<L>' +
+      dataOrderOffline?.table_store?.number_table +
+      '</L>\t\t' +
+      ' ' +
+      '<L>So khach: </L><L>' +
+      dataOrderOffline?.number_people +
+      '</L>\n<C>-------------------------------------------</C>';
+
+    dataOrderOffline?.book_food?.forEach((element, index) => {
+      if (element?.food === null) {
+        dataPrint +=
+          '\n\n<L>' +
+          element?.combo_food?.name +
+          '</L>\t\t<L>\tx' +
+          element?.quantity +
+          '</L>\t<L>' +
+          styles.dynamicSort(parseFloat(element?.price)) +
+          ' vnd</L>';
+      } else {
+        dataPrint +=
+          '\n\n<L>' +
+          element?.food?.name +
+          '</L>\t<L>\tx' +
+          element?.quantity +
+          '</L>\t<L>' +
+          styles.dynamicSort(parseFloat(element?.price)) +
+          ' vnd</L>';
+      }
+    });
+    dataPrint +=
+      '\n<C>-------------------------------------------</C>\n\n<D>Thanh tien: </D><L>' +
+      styles.dynamicSort(dataOrderOffline.total_money) +
+      ' vnd</L>\n\n\n<C>     *** CAM ON QUY KHACH VA HEN GAP LAI ***</C>' +
+      '<L>\n  Hotline: </L><L>' +
+      store?.hotline +
+      '</L><L>   Website: Timzi.vn</L>' +
+      '<C>\n\n.</C>';
+
+    // -----------------
+    var newData = nonAccentVietnamese(dataPrint);
+    // console.log(newData);
+    // var name = 'Hoang Xuan Thai';
+    // var dataPrint =
+    //   '<C><B>Hoa don ban hang</B></C>\n\n<L>Ten khach hang: </L> \t<L>' +
+    //   name +
+    //   '</L>';
+    //------------------
+
+    // var dataPrint = '<C>Con mèo ngu ngốc</C>';
+
+    // NetPrinter.printBill(dataPrint);
+    // NetPrinter.printBill('\x1D\x56\x01');
+
+    // const newData = '<L>Thai meo</L>\n<L>x3\t\t\t\t230000</L>';
+    // NetPrinter.printBill('\x00');
+    NetPrinter.printBill(newData);
+    NetPrinter.printBill('\x00');
+    // NetPrinter.printBill('\x1D\x56\x00');
+    // NetPrinter.printBill('\n');
+  };
 
   return (
     <View style={styles.container}>
@@ -400,7 +539,13 @@ const LoginScreen = (props) => {
                             justifyContent: 'center',
                           }}>
                           <Text style={{fontSize: 11, color: Color.grey}}>
-                            Đã thanh toán
+                            {item.status === 1
+                              ? 'Chưa gọi món'
+                              : item.status === 2
+                              ? 'Chờ lên bàn'
+                              : item.status === 3
+                              ? 'Đã lên bàn'
+                              : 'Đã hoàn thành'}
                           </Text>
                         </TouchableOpacity>
                         <View
@@ -444,9 +589,43 @@ const LoginScreen = (props) => {
                   />
                   <Text
                     style={{fontSize: 17, fontWeight: '700', marginLeft: 10}}>
-                    {styles.dynamicSort(dataOrderOffline.total_money)} đ
+                    {styles.dynamicSort(totalMoneyWithStaffLocal)} đ
                   </Text>
                 </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    storage.getItem('isConnect').then((data) => {
+                      if (data === 'true') {
+                        printBillTest();
+                      } else {
+                        Alert.alert(
+                          'Thông báo!',
+                          'Bạn chưa kết nối với máy in!',
+                          [
+                            {
+                              text: 'Đồng ý',
+                              onPress: async () => {},
+                            },
+                          ],
+                          {cancelable: false},
+                        );
+                      }
+                    });
+                  }}
+                  style={{
+                    height: 40,
+                    width: 40,
+                    borderRadius: 6,
+                    borderColor: Color.main,
+                    borderWidth: 0.5,
+                    // position: 'absolute',
+                    // alignSelf: 'flex-end',
+                    // marginTop: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <MaterialIcons name={'print'} size={28} color={Color.main} />
+                </TouchableOpacity>
                 <View
                   style={{
                     height: 44,

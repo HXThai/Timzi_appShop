@@ -258,8 +258,8 @@ const LoginScreen = (props) => {
   const captureImage = async (type) => {
     let options = {
       mediaType: type,
-      maxWidth: 300,
-      maxHeight: 550,
+      maxWidth: 1920,
+      maxHeight: 1080,
       quality: 1,
       videoQuality: 'low',
       durationLimit: 30, //Video max duration in seconds
@@ -302,8 +302,8 @@ const LoginScreen = (props) => {
   const chooseFile = async (type) => {
     let options = {
       mediaType: type,
-      maxWidth: 300,
-      maxHeight: 550,
+      maxWidth: 1920,
+      maxHeight: 1080,
       // quality: 1,
     };
     launchImageLibrary(options, (response) => {

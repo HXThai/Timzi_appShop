@@ -22,6 +22,7 @@ import {
   NetPrinter,
   BLEPrinter,
 } from 'react-native-thermal-receipt-printer';
+import reactotron from 'reactotron-react-native';
 
 // let uniqueId = DeviceInfo.getUniqueId();
 // console.log(getUniqueId());
@@ -29,18 +30,18 @@ const SplashScreen = (props) => {
   useEffect(() => {
     setTimeout(async () => {
       const userId = await OneSignal.getDeviceState();
-      // console.log('userSP', userId.userId);
+      console.log('userSP', userId.userId);
       storage.getItem('ipaddress').then((data) => {
         if (data) {
+          // reactotron.log(data);
           NetPrinter.init().then(() => {
-            // setPrinters([{host: ipAđdress, port: 9100}]);
-            // console.log('success');
-            NetPrinter.connectPrinter(DataTransfer, 9100).then(
+            NetPrinter.connectPrinter(data, 9100).then(
               (value) => {
-                // console.log(value);
                 console.log('test');
+                storage.setItem('isConnect', 'true');
               },
               (error) => {
+                storage.setItem('isConnect', 'false');
                 console.log(error);
               },
             );

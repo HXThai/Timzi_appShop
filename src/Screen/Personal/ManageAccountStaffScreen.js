@@ -217,7 +217,8 @@ const LoginScreen = (props) => {
                                       // index: 0,
                                       routes: [
                                         {
-                                          name: 'ManageAccountStaffScreen',
+                                          name: 'TabNav',
+                                          // name: 'ManageAccountStaffScreen',
                                           params: {
                                             store_id: store_id,
                                           },

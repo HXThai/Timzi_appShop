@@ -127,6 +127,11 @@ export default homeService = {
     let response = callApiService.get(url);
     return response;
   },
+  getListTypeFood: async (params) => {
+    let url = `${API_BASE_URL.GET_LIST_TYPE_FOOD}`;
+    let response = callApiService.get(url);
+    return response;
+  },
 
   createCategoryStoreFood: async (params) => {
     let url = `${API_BASE_URL.CREATE_CATEGORY_STORE_FOOD}`;

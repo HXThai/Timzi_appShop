@@ -35,6 +35,7 @@ import {
 } from 'react-native-thermal-receipt-printer';
 import reactotron from 'reactotron-react-native';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = (props) => {
   const [dataMenu, setDataMenu] = useState([
@@ -93,6 +94,11 @@ const LoginScreen = (props) => {
           return;
         }
       });
+
+    // return () => {
+    //   console.log('thai test');
+    //   AsyncStorage.removeItem('isConnect');
+    // };
   }, []);
 
   const handleReturnFood = () => {
@@ -245,77 +251,77 @@ const LoginScreen = (props) => {
   };
 
   const printBillTest = () => {
+    var dataPrint =
+      '<R>Timzi.vn</R>\n\n<C><D>' +
+      store?.name +
+      '</D></C>\n<C>' +
+      store?.address +
+      '</C>\n\n<C><B>Hoá đơn bán hàng</B></C>\n\n\n<L>Ngay: </L>\t<L>' +
+      getCurrentDate() +
+      '</L>\t\t\t<L>So: 1243</L>\n\n<L>Nhan vien xuat: </L>\t<L>' +
+      'Chu shop</L>\n\n<L>In luc: </L>\t<L>' +
+      getCurrenTime() +
+      '</L>\n<C>-------------------------------------------</C>' +
+      '\n<L>Ten khach hang: </L>\t<L>' +
+      dataOrderOffline?.name +
+      '</L>\n\n<L>So dien thoai: </L>\t<L>' +
+      dataOrderOffline?.phone +
+      '</L>\n\n<L>So ban: </L>\t<L>' +
+      dataOrderOffline?.table_store?.number_table +
+      '</L>\t\t' +
+      ' ' +
+      '<L>So khach: </L><L>' +
+      dataOrderOffline?.number_people +
+      '</L>\n<C>------------------------------------------</C>';
+
+    dataOrderOffline?.book_food?.forEach((element, index) => {
+      if (element?.food === null) {
+        dataPrint +=
+          '\n\n<L>' +
+          element?.combo_food?.name +
+          '</L>\t\t<L>\tx' +
+          element?.quantity +
+          '</L>\t<L>' +
+          styles.dynamicSort(parseFloat(element?.price)) +
+          ' vnd</L>';
+      } else {
+        dataPrint +=
+          '\n\n<L>' +
+          element?.food?.name +
+          '</L>\t<L>\tx' +
+          element?.quantity +
+          '</L>\t<L>' +
+          styles.dynamicSort(parseFloat(element?.price)) +
+          ' vnd</L>';
+      }
+    });
+    dataPrint +=
+      '\n<C>-------------------------------------------</C>\n\n<D>Thanh tien: </D><L>' +
+      totalMoneyWithStaffLocal +
+      ' vnd</L>\n\n\n<C>     ***CAM ON QUY KHACH VA HEN GAP LAI***</C>' +
+      '<L>\n  Hotline: </L><L>' +
+      store?.hotline +
+      '</L><L>   Website: Timzi.vn</L>' +
+      '<C>\n\n.</C>';
+
+    // -----------------
+    var newData = nonAccentVietnamese(dataPrint);
+    // console.log(newData);
+    // var name = 'Hoang Xuan Thai';
     // var dataPrint =
-    //   '<R>Timzi.vn</R>\n\n<C><D>' +
-    //   store.name +
-    //   '</D></C>\n<C>' +
-    //   store.address +
-    //   '</C>\n\n<C><B>Hoá đơn bán hàng</B></C>\n\n\n<L>Ngay: </L>\t<L>' +
-    //   getCurrentDate() +
-    //   '</L>\t\t\t<L>So: 1243</L>\n\n<L>Nhan vien xuat: </L>\t<L>' +
-    //   'Chu shop</L>\n\n<L>In luc: </L>\t<L>' +
-    //   getCurrenTime() +
-    //   '</L>\n<C>-------------------------------------------</C>' +
-    //   '\n<L>Ten khach hang: </L>\t<L>' +
-    //   dataOrderOffline?.name +
-    //   '</L>\n\n<L>So dien thoai: </L>\t<L>' +
-    //   dataOrderOffline?.phone +
-    //   '</L>\n\n<L>So ban: </L>\t<L>' +
-    //   dataOrderOffline?.table_store?.number_table +
-    //   '</L>\t\t\t' +
-    //   '   ' +
-    //   '<L>So khach: </L><L>' +
-    //   dataOrderOffline?.number_people +
-    //   '</L>\n<C>------------------------------------------</C>';
+    //   '<C><B>Hoa don ban hang</B></C>\n\n<L>Ten khach hang: </L> \t<L>' +
+    //   name +
+    //   '</L>';
+    //------------------
 
-    // dataOrderOffline?.book_food?.forEach((element, index) => {
-    //   if (element?.food === null) {
-    //     dataPrint +=
-    //       '\n\n<L>' +
-    //       element?.combo_food?.name +
-    //       '</L>\t\t<L>\tx' +
-    //       element?.quantity +
-    //       '</L>\t<L>' +
-    //       element?.price +
-    //       '</L>';
-    //   } else {
-    //     dataPrint +=
-    //       '\n\n<L>' +
-    //       element?.food?.name +
-    //       '</L>\t<L>\tx' +
-    //       element?.quantity +
-    //       '</L>\t<L>' +
-    //       element?.price +
-    //       '</L>';
-    //   }
-    // });
-    // dataPrint +=
-    //   '\n<C>-------------------------------------------</C>\n\n<D>Thanh tien: </D><L>' +
-    //   dataOrderOffline?.total_money +
-    //   ' d</L>\n\n\n<C>     ***CAM ON QUY KHACH VA HEN GAP LAI***</C>' +
-    //   '<L>\n  Hotline: </L><L>' +
-    //   store.hotline +
-    //   '</L><L>   Website: Timzi.vn</L>' +
-    //   '<C>\n\n\n\n\n.</C>';
+    // var dataPrint = '<C>Con mèo ngu ngốc</C>';
 
-    // // -----------------
-    // var newData = nonAccentVietnamese(dataPrint);
-    // // console.log(newData);
-    // // var name = 'Hoang Xuan Thai';
-    // // var dataPrint =
-    // //   '<C><B>Hoa don ban hang</B></C>\n\n<L>Ten khach hang: </L> \t<L>' +
-    // //   name +
-    // //   '</L>';
-    // //------------------
-
-    var dataPrint = '<C>Con mèo ngu ngốc</C>';
-
-    NetPrinter.printBill(dataPrint);
+    // NetPrinter.printBill(dataPrint);
     // NetPrinter.printBill('\x1D\x56\x01');
 
-    const newData = '<L>Thai meo</L>\n<L>x3\t\t\t\t230000</L>';
+    // const newData = '<L>Thai meo</L>\n<L>x3\t\t\t\t230000</L>';
 
-    NetPrinter.printBill(newData, {encoding: 'UTF-8'});
+    NetPrinter.printBill(newData);
     NetPrinter.printBill('\x00');
   };
 
@@ -881,7 +887,6 @@ const LoginScreen = (props) => {
                 </View>
                 <TouchableOpacity
                   onPress={() => {
-                    // printBillTest();
                     Alert.alert(
                       'Xác nhận thanh toán',
                       'Bạn chắc chắn muốn thanh toán bàn này?',
@@ -890,12 +895,30 @@ const LoginScreen = (props) => {
                         {
                           text: 'Đồng ý',
                           onPress: async () => {
+                            storage.getItem('isConnect').then((data) => {
+                              if (data === 'true') {
+                                printBillTest();
+                              } else {
+                                Alert.alert(
+                                  'Thông báo!',
+                                  'Bạn chưa kết nối với máy in!',
+                                  [
+                                    {
+                                      text: 'Đồng ý',
+                                      onPress: async () => {},
+                                    },
+                                  ],
+                                  {cancelable: false},
+                                );
+                              }
+                            });
                             staffPayment();
                           },
                         },
                       ],
                       {cancelable: false},
                     );
+                    // printBillTest();
                   }}
                   style={{
                     height: 44,

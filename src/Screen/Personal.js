@@ -78,6 +78,7 @@ const Home = (props) => {
                 text: 'Đồng ý',
                 onPress: () => {
                   storage.setItem('ipaddress', ipAddress);
+                  storage.setItem('isConnect', 'true');
                   setModalVisibleLoading(false);
                   setModalVisible(false);
                 },
@@ -129,7 +130,7 @@ const Home = (props) => {
 
   const [modalVisibleLoading, setModalVisibleLoading] = useState(false);
 
-  const [ipAddress, setIpAddress] = useState('192.168.2.222');
+  const [ipAddress, setIpAddress] = useState('');
 
   useEffect(() => {
     storage.getItem('role_id').then((data) => {
@@ -155,7 +156,7 @@ const Home = (props) => {
               // {icon: faUser, name: 'Tài khoản nhân viên'},
               {icon: faUsers, name: 'Chủ cửa hàng'},
               {icon: faClipboardList, name: 'Đánh giá của người dùng'},
-              // {icon: faUser, name: 'Tài khoản shipper ruột'},
+              {icon: faUser, name: 'Tài khoản shipper ruột'},
               {icon: faKey, name: 'Đổi mật khẩu'},
               {icon: faPhone, name: 'Hỗ trợ'},
               {icon: faSignOutAlt, name: 'Đăng xuất'},
@@ -182,8 +183,12 @@ const Home = (props) => {
     } else if (index === 3) {
       props.navigation.navigate('RateOfUserScreen');
     } else if (index === 4) {
-      props.navigation.navigate('ChangePasswordScreen');
+      props.navigation.navigate('AccountShipperScreen', {
+        store_id: storeId,
+      });
     } else if (index === 5) {
+      props.navigation.navigate('ChangePasswordScreen');
+    } else if (index === 6) {
       // props.navigation.navigate('ChangePasswordScreen');
       // Linking.openURL(`tel:${phone}`);
     } else {
