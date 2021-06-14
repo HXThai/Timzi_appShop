@@ -29,6 +29,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import services from '../../Redux/Service/staffService';
+import productServices from '../../Redux/Service/productService';
 
 const LoginScreen = (props) => {
   const [tab, setTab] = useState(0);
@@ -42,6 +43,8 @@ const LoginScreen = (props) => {
 
   const [dataStaff, setDataStaff] = useState([]);
 
+  const [dataStore, setDataStore] = useState({});
+
   useEffect(() => {
     storage.getItem('dataStore').then((data) => {
       if (data) {
@@ -50,6 +53,29 @@ const LoginScreen = (props) => {
           if (response) {
             if (response.data.code === 200) {
               setDataStaff(response.data.data);
+            } else {
+              Alert.alert(
+                'Thông báo',
+                response.data.message,
+                [
+                  {
+                    text: 'Đồng ý',
+                    onPress: async () => {
+                      props.navigation.goBack();
+                    },
+                  },
+                ],
+                {cancelable: false},
+              );
+            }
+          } else {
+            return;
+          }
+        });
+        productServices.storeDetail(data.id).then(function (response) {
+          if (response) {
+            if (response.data.code === 200) {
+              setDataStore(response.data.data.owner_store.user);
             } else {
               Alert.alert(
                 'Thông báo',
@@ -199,22 +225,145 @@ const LoginScreen = (props) => {
               justifyContent: 'space-between',
               height: '100%',
             }}>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-              style={{
-                marginBottom: 230,
-              }}
-              data={dataStaff}
-              renderItem={renderProduct}
-              keyExtractor={(item, index) => index.toString()}
-              // onEndReached={handleLoadMore}
-              // onEndReachedThreshold={0}
-              // ListFooterComponent={renderFooter}
-            />
+            {dataStaff === [] ? (
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                style={{
+                  marginBottom: 230,
+                }}
+                data={dataStaff}
+                renderItem={renderProduct}
+                keyExtractor={(item, index) => index.toString()}
+                // onEndReached={handleLoadMore}
+                // onEndReachedThreshold={0}
+                // ListFooterComponent={renderFooter}
+              />
+            ) : (
+              <View
+                style={{
+                  padding: 10,
+                  flexDirection: 'row',
+                  backgroundColor: Color.white,
+                  borderRadius: 8,
+                  marginTop: 15,
+                }}>
+                <Image
+                  source={{uri: dataStore.avatar}}
+                  style={{width: 48, height: 48}}
+                />
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    marginLeft: 10,
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      width: Dimensions.get('window').width - 100,
+                    }}>
+                    <Text style={{fontSize: 15, fontWeight: '400'}}>
+                      {dataStore.name}
+                    </Text>
+                    <Text style={{fontSize: 15, fontWeight: '400'}}>
+                      {dataStore.phone}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontWeight: '400',
+                        color: 'black',
+                      }}>
+                      Giới tính: {dataStore.gender === 1 ? 'Nam' : 'Nữ'}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert(
+                          'Xoá chủ cửa hàng',
+                          'Bạn có chắc muốn xoá chủ cửa hàng?',
+                          [
+                            {
+                              text: 'Hủy',
+                              onPress: async () => {},
+                            },
+                            {
+                              text: 'Đồng ý',
+                              onPress: async () => {
+                                var body = {
+                                  store_id: storeId,
+                                  owner_id: dataStore.id,
+                                };
+                                services
+                                  .deleteStoreOwner(body)
+                                  .then(function (response) {
+                                    if (response) {
+                                      if (response.data.code === 200) {
+                                        Alert.alert(
+                                          'Thông báo',
+                                          response.data.message,
+                                          [
+                                            {
+                                              text: 'Đồng ý',
+                                              onPress: async () => {
+                                                props.navigation.goBack();
+                                              },
+                                            },
+                                          ],
+                                          {cancelable: false},
+                                        );
+                                      } else {
+                                        Alert.alert(
+                                          'Thông báo',
+                                          response.data.message,
+                                          [
+                                            {
+                                              text: 'Đồng ý',
+                                              onPress: async () => {
+                                                props.navigation.goBack();
+                                              },
+                                            },
+                                          ],
+                                          {cancelable: false},
+                                        );
+                                      }
+                                    } else {
+                                      return;
+                                    }
+                                  });
+                              },
+                            },
+                          ],
+                          {cancelable: false},
+                        );
+                      }}
+                      style={{
+                        padding: 5,
+                        backgroundColor: Color.red,
+                        borderRadius: 4,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Text style={{color: 'white', fontSize: 12}}>
+                        Xoá chủ cửa hàng
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            )}
           </View>
         </ImageBackground>
       </View>

@@ -388,61 +388,7 @@ const Home = (props) => {
                     />
                   </TouchableOpacity>
                 ) : null}
-                {/* <View
-                  style={{
-                    // marginTop: 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                  }}>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      width: '100%',
-                      height: '100%',
-                      position: 'absolute',
-                      alignItems: 'center',
-                    }}>
-                    <View
-                      style={{
-                        height: 70,
-                        width: '100%',
-                        marginTop: 25,
-                      }}>
-                      <TextInput
-                        style={{
-                          height: 45,
-                          color: '#000000',
 
-                          borderColor: Color.main,
-                          borderWidth: 1,
-                          borderRadius: 20,
-                          paddingLeft: 20,
-                        }}
-                        placeholder="Tìm đơn?"
-                        placeholderTextColor="gray"
-                      />
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      // width: '100%',
-                      justifyContent: 'flex-end',
-                      alignSelf: 'flex-end',
-                      height: 45,
-                      alignItems: 'center',
-                      marginRight: 10,
-                    }}>
-                    <TouchableOpacity onPress={() => {}}>
-                      <MaterialIcons
-                        name={'search'}
-                        size={26}
-                        color={Color.main}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View> */}
                 {storeId == null ? (
                   <View
                     style={{
@@ -823,29 +769,6 @@ const Home = (props) => {
                           <Text style={{fontSize: 15, fontWeight: '700'}}>
                             {item?.name}
                           </Text>
-                          {/* <TouchableOpacity
-                            onPress={() =>
-                              props.navigation.navigate('EditProductScreen', {
-                                status: 'add',
-                                category_food_id: item?.id,
-                                store_id: storeId,
-                              })
-                            }
-                            style={{
-                              padding: 5,
-                              borderRadius: 4,
-                              marginLeft: 10,
-                              borderWidth: 1,
-                              borderColor: Color.main,
-                            }}>
-                            <Text
-                              style={{
-                                fontSize: 12,
-                                color: Color.main,
-                              }}>
-                              Thêm món
-                            </Text>
-                          </TouchableOpacity> */}
                         </View>
                         <TouchableOpacity
                           onPress={() =>

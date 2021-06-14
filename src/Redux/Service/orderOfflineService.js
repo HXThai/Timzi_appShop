@@ -111,4 +111,9 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+  openTable: async (params, id) => {
+    let url = `${API_BASE_URL.OPEN_TABLE}/${id}`;
+    let response = callApiService.put(url, params);
+    return response;
+  },
 };

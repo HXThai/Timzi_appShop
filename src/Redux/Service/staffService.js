@@ -80,4 +80,10 @@ export default homeService = {
     let response = callApiService.put(url, params);
     return response;
   },
+
+  deleteStoreOwner: async (params) => {
+    let url = `${API_BASE_URL.DELETE_STORE_OWNER}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
 };

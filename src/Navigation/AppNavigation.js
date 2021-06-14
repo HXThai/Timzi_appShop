@@ -2750,14 +2750,16 @@ function UtilitiesStack(props) {
                 style={{
                   // marginLeft: 20,
                   marginRight: 10,
-                  width: 30,
-                  height: 30,
+                  // width: 40,
+                  // height: 30,
+                  padding: 5,
                   borderRadius: 4,
-                  backgroundColor: null,
+                  backgroundColor: Color.buttonColor,
                   alignItems: 'center',
                   justifyContent: 'center',
+                  // borderRadius: 4,
                 }}>
-                <Text>qrcode</Text>
+                <Text style={{color: 'black'}}>qrcode</Text>
               </View>
             </TouchableOpacity>
           ),

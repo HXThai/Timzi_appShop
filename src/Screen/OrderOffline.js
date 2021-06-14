@@ -30,7 +30,6 @@ import * as actionsGetListStore from '../Redux/Action/orderOnlineAction';
 import {connect} from 'react-redux';
 import services from '../Redux/Service/orderOfflineService';
 import reactotron from 'reactotron-react-native';
-import {get} from 'react-native/Libraries/Utilities/PixelRatio';
 import moment from 'moment';
 import * as actionsLogin from '../Redux/Action/loginAction';
 // import {
@@ -184,8 +183,6 @@ const Home = (props) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  const [currentPrinter, setCurrentPrinter] = useState();
-
   const onRefresh = useCallback(() => {
     // console.log(tab);
     // setDataOrder([]);
@@ -230,23 +227,6 @@ const Home = (props) => {
   });
 
   useEffect(() => {
-    // storage.getItem('dataStore').then((data) => {
-    //   if (data) {
-    //     setStoreName(data.name);
-    //     setStoreId(data.id);
-    //     services
-    //       .getListTableOrderOffline(null, data.id, 1)
-    //       .then(function (response) {
-    //         if (response) {
-    //           if (response.data.code === 200) {
-    //             setDataOrder(response?.data?.data?.data);
-    //             setModalVisibleLoading(false);
-    //           }
-    //         } else {
-    //           return;
-    //         }
-    //       });
-    //   } else {
     props?.data?.responseListStore?.data?.forEach((element, index) => {
       if (element.status === 1) {
         setStoreName(element.name);
@@ -264,24 +244,11 @@ const Home = (props) => {
               }
             } else {
               setModalVisibleLoading(false);
-              // Alert.alert(
-              //   'Thông báo',
-              //   'Không tìm thấy cửa hàng!',
-              //   [
-              //     {
-              //       text: 'Đồng ý',
-              //       onPress: async () => {},
-              //     },
-              //   ],
-              //   {cancelable: false},
-              // );
               return;
             }
           });
       }
     });
-    //   }
-    // });
     setDataListStore(props.data.responseListStore);
   }, [props.data.responseListStore]);
 
@@ -363,24 +330,13 @@ const Home = (props) => {
       } else {
       }
     });
-    // storage.getItem('ipaddress').then((data) => {
-    //   if (data) {
-    //     // reactotron.log(data);
-    //     NetPrinter.init().then(() => {
-    //       NetPrinter.connectPrinter(data, 9100).then(
-    //         (value) => {
-    //           console.log('test');
-    //         },
-    //         (error) => {
-    //           console.log(error);
-    //         },
-    //       );
-    //     });
-    //   } else {
-    //     // props.navigation.navigate('Login');
-    //   }
-    // });
   }, [props.dataLogin.responseUserInformation]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     console.log('thai');
+  //   };
+  // }, []);
 
   const handleChangeTab = async (index) => {
     await setDataOrder([]);
@@ -981,6 +937,39 @@ const Home = (props) => {
                   </TouchableOpacity>
                 </View>
               ) : null}
+              {tab === 0 && item.status !== 1 && (
+                <TouchableOpacity
+                  onPress={() => {
+                    // onClickDetail(item.id);
+                    Alert.alert(
+                      'Thông báo!',
+                      'Bạn xác nhận muốn mở bàn này?',
+                      [
+                        {text: 'Hủy', onPress: () => {}},
+                        {
+                          text: 'Đồng ý',
+                          onPress: () => {
+                            onResetTable(item.id);
+                          },
+                        },
+                      ],
+                      {cancelable: false},
+                    );
+                  }}
+                  style={{
+                    padding: 3,
+                    borderRadius: 4,
+                    borderColor: Color.main,
+                    borderWidth: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 10,
+                  }}>
+                  <Text style={{color: Color.main, fontSize: 12}}>
+                    {tab === 0 ? 'Mở bàn' : null}
+                  </Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 onPress={() => {
                   // onClickDetail(item.id);
@@ -1326,6 +1315,42 @@ const Home = (props) => {
         </View>
       </View>
     );
+  };
+
+  const onResetTable = (id) => {
+    services.openTable(null, id).then(function (response) {
+      if (response) {
+        if (response.data.code === 200) {
+          Alert.alert(
+            'Thông báo!',
+            response.data.message,
+            [
+              {
+                text: 'Đồng ý',
+                onPress: () => {
+                  handleChangeTab(0);
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        } else {
+          Alert.alert(
+            'Thông báo!',
+            response.data.message,
+            [
+              {
+                text: 'Đồng ý',
+                onPress: () => {},
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+      } else {
+        return;
+      }
+    });
   };
 
   return (

@@ -147,6 +147,9 @@ const API_BASE_URL = {
   QR_CODE: ROOT_DOMAIN + '/book-table/book-table-qr-code-with-staff ',
 
   CHANGE_TABLE: ROOT_DOMAIN + '/book-table/change-table-with-staff',
+  OPEN_TABLE: ROOT_DOMAIN + '/book-table/open-table-store-with-owner',
+
+  DELETE_STORE_OWNER: ROOT_DOMAIN + '/store/delete-store-owner',
 };
 
 export {API_BASE_URL};

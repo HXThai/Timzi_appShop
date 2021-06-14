@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, View} from 'react-native';
+import {Image, View, Platform} from 'react-native';
 import Images from '../Theme/Images';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -31,25 +31,26 @@ const SplashScreen = (props) => {
     setTimeout(async () => {
       const userId = await OneSignal.getDeviceState();
       console.log('userSP', userId.userId);
-      storage.getItem('ipaddress').then((data) => {
-        if (data) {
-          // reactotron.log(data);
-          NetPrinter.init().then(() => {
-            NetPrinter.connectPrinter(data, 9100).then(
-              (value) => {
-                console.log('test');
-                storage.setItem('isConnect', 'true');
-              },
-              (error) => {
-                storage.setItem('isConnect', 'false');
-                console.log(error);
-              },
-            );
-          });
-        } else {
-          // props.navigation.navigate('Login');
-        }
-      });
+      Platform.OS === 'android' &&
+        storage.getItem('ipaddress').then((data) => {
+          if (data) {
+            // reactotron.log(data);
+            NetPrinter.init().then(() => {
+              NetPrinter.connectPrinter(data, 9100).then(
+                (value) => {
+                  console.log('test');
+                  storage.setItem('isConnect', 'true');
+                },
+                (error) => {
+                  storage.setItem('isConnect', 'false');
+                  console.log(error);
+                },
+              );
+            });
+          } else {
+            // props.navigation.navigate('Login');
+          }
+        });
       storage.getItem('dataLogin').then((data) => {
         if (data) {
           // console.log(userId.userId);

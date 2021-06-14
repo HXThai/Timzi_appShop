@@ -47,7 +47,9 @@ const LoginScreen = (props) => {
   const [priceSize, setPriceSize] = useState('');
   const [toppingDetail, setToppingDetail] = useState('');
   const [priceTopping, setPriceTopping] = useState('');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(
+    props?.route?.params?.productDetail?.description.toString() || '',
+  );
   const [numberFoodGroup, setNumberFoodGroup] = useState(
     props?.route?.params?.productDetail?.quantity_food.toString() || 0,
   );

@@ -15,6 +15,9 @@ export const OrderTableScreen = (props) => {
   const [note, setNote] = useState('');
   useEffect(() => {
     // handleBookTable();
+    // return () => {
+    //   console.log('thai meo');
+    // };
   }, []);
   const handleBookTable = async () => {
     setIsRequest(true);

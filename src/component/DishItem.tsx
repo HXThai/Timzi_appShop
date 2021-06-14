@@ -46,12 +46,12 @@ export const txtStatus = (value) => {
 }
 export const DishItem = (props: DishItemProps) => {
     const checkComoboIos = (combo) => {
-        if (!combo) return dimension.width * 0.32
-        return dimension.width * 0.37
+        if (!combo) return dimension.width * 0.4
+        return dimension.width * 0.42
     }
     const checkComoboAndroid = (combo) => {
-        if (!combo) return dimension.width * 0.37
-        return dimension.width * 0.4
+        if (!combo) return dimension.width * 0.4
+        return dimension.width * 0.42
     }
     const isCombo = (combo) => {
         if (combo)

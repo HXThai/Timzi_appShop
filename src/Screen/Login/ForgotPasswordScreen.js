@@ -106,7 +106,7 @@ const LoginScreen = (props) => {
                               {
                                 text: 'Đồng ý',
                                 onPress: () => {
-                                  props.navigation.navigate('LoginScreen');
+                                  // props.navigation.navigate('LoginScreen');
                                 },
                               },
                             ]);

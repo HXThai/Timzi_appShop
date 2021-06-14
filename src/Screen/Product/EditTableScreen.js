@@ -325,7 +325,7 @@ const LoginScreen = (props) => {
                   placeholderTextColor="#333333"
                   onChangeText={(text) => setPasswifi(text)}
                   defaultValue={passWifi}
-                  keyboardType={'number-pad'}
+                  // keyboardType={'number-pad'}
                 />
               </View>
             </ScrollView>
