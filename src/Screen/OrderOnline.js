@@ -647,7 +647,6 @@ const Home = (props) => {
                 height: Dimensions.get('window').height,
                 width: Dimensions.get('window').width,
                 position: 'absolute',
-                // backgroundColor: '#fff',
                 borderRadius: 10,
                 flexDirection: 'column',
                 alignItems: 'center',

@@ -30,6 +30,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import services from '../../Redux/Service/staffService';
 import productServices from '../../Redux/Service/productService';
+import reactotron from 'reactotron-react-native';
+import * as actionsLogin from '../../Redux/Action/loginAction';
 
 const LoginScreen = (props) => {
   const [tab, setTab] = useState(0);
@@ -46,6 +48,11 @@ const LoginScreen = (props) => {
   const [dataStore, setDataStore] = useState({});
 
   useEffect(() => {
+    reactotron.log(
+      props.dataLogin.responseUserInformation.data.data
+        .is_store_owner_and_chain_owner,
+    );
+    props.getUserInformation(null);
     storage.getItem('dataStore').then((data) => {
       if (data) {
         setStoreId(data.id);
@@ -53,6 +60,7 @@ const LoginScreen = (props) => {
           if (response) {
             if (response.data.code === 200) {
               setDataStaff(response.data.data);
+              // reactotron.log('thai', response.data.data);
             } else {
               Alert.alert(
                 'Thông báo',
@@ -212,6 +220,120 @@ const LoginScreen = (props) => {
     );
   };
 
+  const handleConfirmDoStoreOwner = () => {
+    Alert.alert(
+      'Thông báo!',
+      'Bạn có chắc xác nhận làm chủ cửa hàng?',
+      [
+        {
+          text: 'Hủy',
+          onPress: async () => {},
+        },
+        {
+          text: 'Đồng ý',
+          onPress: async () => {
+            var body = {
+              store_id: storeId,
+            };
+            services.confirmDoStoreOwner(body).then(function (response) {
+              if (response) {
+                if (response.data.code === 200) {
+                  Alert.alert(
+                    'Thông báo',
+                    response.data.message,
+                    [
+                      {
+                        text: 'Đồng ý',
+                        onPress: async () => {
+                          props.navigation.goBack();
+                        },
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                } else {
+                  Alert.alert(
+                    'Thông báo',
+                    response.data.message,
+                    [
+                      {
+                        text: 'Đồng ý',
+                        onPress: async () => {
+                          props.navigation.goBack();
+                        },
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                }
+              } else {
+                return;
+              }
+            });
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const handleCancelDoStoreOwner = () => {
+    Alert.alert(
+      'Thông báo!',
+      'Bạn có chắc muốn huỷ làm chủ cửa hàng?',
+      [
+        {
+          text: 'Hủy',
+          onPress: async () => {},
+        },
+        {
+          text: 'Đồng ý',
+          onPress: async () => {
+            var body = {
+              store_id: storeId,
+            };
+            services.cancelDoStoreOwner(body).then(function (response) {
+              if (response) {
+                if (response.data.code === 200) {
+                  Alert.alert(
+                    'Thông báo',
+                    response.data.message,
+                    [
+                      {
+                        text: 'Đồng ý',
+                        onPress: async () => {
+                          props.navigation.goBack();
+                        },
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                } else {
+                  Alert.alert(
+                    'Thông báo',
+                    response.data.message,
+                    [
+                      {
+                        text: 'Đồng ý',
+                        onPress: async () => {
+                          props.navigation.goBack();
+                        },
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                }
+              } else {
+                return;
+              }
+            });
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contend}>
@@ -225,23 +347,63 @@ const LoginScreen = (props) => {
               justifyContent: 'space-between',
               height: '100%',
             }}>
-            {dataStaff === [] ? (
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-                style={{
-                  marginBottom: 230,
-                }}
-                data={dataStaff}
-                renderItem={renderProduct}
-                keyExtractor={(item, index) => index.toString()}
-                // onEndReached={handleLoadMore}
-                // onEndReachedThreshold={0}
-                // ListFooterComponent={renderFooter}
-              />
+            {dataStaff !== [] || dataStaff !== null ? (
+              <View>
+                {props?.dataLogin?.responseUserInformation?.data?.data
+                  ?.is_store_owner_and_chain_owner === 0 ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleConfirmDoStoreOwner();
+                    }}
+                    style={{
+                      height: 40,
+                      width: '100%',
+                      backgroundColor: Color.buttonColor,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 8,
+                    }}>
+                    <Text>Tôi là chủ cửa hàng!</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleCancelDoStoreOwner();
+                    }}
+                    style={{
+                      height: 40,
+                      width: '100%',
+                      backgroundColor: Color.red,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 8,
+                    }}>
+                    <Text style={{color: Color.white}}>
+                      Huỷ làm chủ cửa hàng!
+                    </Text>
+                  </TouchableOpacity>
+                )}
+
+                {props?.dataLogin?.responseUserInformation?.data?.data
+                  ?.is_store_owner_and_chain_owner === 0 && (
+                  <FlatList
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                    style={{
+                      marginBottom: 230,
+                    }}
+                    data={dataStaff}
+                    renderItem={renderProduct}
+                    keyExtractor={(item, index) => index.toString()}
+                    // onEndReached={handleLoadMore}
+                    // onEndReachedThreshold={0}
+                    // ListFooterComponent={renderFooter}
+                  />
+                )}
+              </View>
             ) : (
               <View
                 style={{
@@ -375,12 +537,19 @@ const mapStateToProps = (state) => {
   // console.log("data : " ,state.homeReducer);
   return {
     data: state.loginReducer,
+    dataLogin: state.loginReducer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  onGetListStore: (params) => {
+    dispatch(actionsGetListStore.getListStore(params));
+  },
   onLogin: (params) => {
     dispatch(actionsLogin.login(params));
+  },
+  getUserInformation: (params) => {
+    dispatch(actionsLogin.getUserInformation(params));
   },
 });
 

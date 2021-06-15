@@ -150,6 +150,8 @@ const API_BASE_URL = {
   OPEN_TABLE: ROOT_DOMAIN + '/book-table/open-table-store-with-owner',
 
   DELETE_STORE_OWNER: ROOT_DOMAIN + '/store/delete-store-owner',
+  CONFIRM_DO_STORE_OWNER: ROOT_DOMAIN + '/store/confirm-do-store-owner',
+  CANCEL_DO_STORE_OWNER: ROOT_DOMAIN + '/store/cancel-do-store-owner',
 };
 
 export {API_BASE_URL};

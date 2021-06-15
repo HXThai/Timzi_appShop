@@ -86,4 +86,14 @@ export default homeService = {
     let response = callApiService.delete(url, params);
     return response;
   },
+  confirmDoStoreOwner: async (params) => {
+    let url = `${API_BASE_URL.CONFIRM_DO_STORE_OWNER}`;
+    let response = callApiService.post(url, params);
+    return response;
+  },
+  cancelDoStoreOwner: async (params) => {
+    let url = `${API_BASE_URL.CANCEL_DO_STORE_OWNER}`;
+    let response = callApiService.delete(url, params);
+    return response;
+  },
 };
